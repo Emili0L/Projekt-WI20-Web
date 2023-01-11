@@ -1,0 +1,40 @@
+$transition-all: all 0.25s cubic-bezier(0.51, 0.51, 0.85, 0.85) 0s;
+.app {
+  &__main {
+    display: block;
+    position: relative;
+    left: 0;
+    width: 100%;
+    transition: left 0.3s ease-out, width 0.3s ease-out;
+    overflow: auto;
+  }
+  &__mainOpen {
+    width: calc(100% - 336px);
+    left: 336px;
+  }
+  @media only screen and (max-width: 1024px) {
+    &__main {
+      padding: 0;
+    }
+  }
+}
+
+.animated {
+  animation-duration: 0.3s;
+  animation-delay: 0s;
+}
+
+@keyframes fadeInUp2 {
+  0% {
+    opacity: 0.3;
+    transform: translate3d(0, 3%, 0);
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}

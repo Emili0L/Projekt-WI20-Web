@@ -1,0 +1,40 @@
+.leaflet-top .leaflet-control {
+    margin-top: 80px !important;
+}
+.leaflet-div-icon {
+    border: none !important;
+    background: none !important;
+}
+
+.map-marker {
+    font-size: 2rem;
+    color: #415385;
+    position: absolute;
+    top: -1.5rem;
+    left: -10px;
+    cursor: pointer;
+
+    &-name {
+        font-size: 0.875rem;
+        // color: $color-grey-500;
+        position: inherit;
+        top: 0.5rem;
+        left: -20px;
+    }
+
+    &-1 {
+        color: #415385;
+    }
+
+    &-2 {
+        color: #D04A02;
+    }
+
+    &-3 {
+        color: #26776D;
+    }
+
+    &-4 {
+        color: #E0301E;
+    }
+}
