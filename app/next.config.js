@@ -2,19 +2,30 @@ const { withSuperjson } = require('next-superjson')
 
 /** @type {import('next').NextConfig} */
 const config = {
+  serverRuntimeConfig: {
+    PROJECT_ROOT: __dirname
+  },
   reactStrictMode: true,
   swcMinify: true,
   // images: {
   //   domains: [],
   // },
-  // async rewrites() {
-  //   return [
-  //     {
-  //       source: '/api/v1/:path*',
-  //       destination: `${process.env.BACKEND_URL}/api/v1/:path*`
-  //     }
-  //   ]
-  // },
+  async rewrites() {
+    return [
+      // {
+      //   source: '/api/v1/:path*',
+      //   destination: `${process.env.BACKEND_URL}/api/v1/:path*`
+      // }
+      {
+        source: '/',
+        destination: '/search',
+      }
+    ]
+  },
+  sassOptions: {
+    includePaths: ['./src'],
+    prependData: `@import "./src/styles/vars.scss";`,
+  },
   i18n: {
     locales: ["en", "de"],
     defaultLocale: "en",

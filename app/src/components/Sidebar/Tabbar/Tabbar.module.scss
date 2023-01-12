@@ -1,0 +1,79 @@
+.tabbar_container {
+    @media (min-width: 451px) {
+        background-color: $color-background-2;
+        border-radius: 0 0 $corner-radius $corner-radius;
+        bottom: auto;
+        height: calc($tabbar-height);
+        margin-bottom: $margin;
+        overflow: hidden;
+        position: relative;
+    }
+
+    bottom: 0;
+    color: var(--color-foreground);
+    display: flex;
+    flex-shrink: 0;
+    justify-content: space-between;
+    position: absolute;
+    touch-action: manipulation;
+    width: 100%;
+    z-index: 99;
+    pointer-events: auto;
+}
+
+.tabbar_link {
+    @media (hover: hover) and (pointer: fine) {
+        cursor: pointer;
+    }
+
+    align-items: center;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    font-size: 10px;
+    height: 100%;
+    justify-content: center;
+    opacity: .95;
+    text-decoration: none;
+    width: auto;
+    color: $color-foreground !important;
+
+    &_active {
+        opacity: 1;
+        color: $color-primary !important;
+    }
+
+    &_title {
+        text-transform: capitalize;
+        font-size: 0.75rem;
+    }
+
+}
+
+.grow_container {
+    display: flex;
+    flex-grow: 1;
+    max-height: 780px;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.tabbar {
+    &_c {
+        bottom: 0;
+        left: 0;
+        pointer-events: none;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+    &_ct {
+        background-color: $color-background-5;
+        top: 0;
+        transform-origin: top;
+        height: 1px;
+        left: 0;
+        position: absolute;
+        right: 0;
+    }
+}

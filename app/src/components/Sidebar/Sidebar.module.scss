@@ -1,0 +1,16 @@
+
+.container_desktop {
+    bottom: $margin;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    left: $margin;
+    overflow: hidden;
+    pointer-events: none;
+    position: absolute;
+    top: $margin;
+    touch-action: none;
+    width: $sidebar-width;
+    cursor: default;
+    z-index: 1000;
+}

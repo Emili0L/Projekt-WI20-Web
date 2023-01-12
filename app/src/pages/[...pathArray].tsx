@@ -1,5 +1,6 @@
 import { GetServerSideProps, NextPage } from "next";
 import { Map } from "../components";
+import Crosshair from "../components/Crosshair/Crosshair";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
@@ -120,8 +121,8 @@ type Props = {
 
 const Home: NextPage<Props> = ({ coordinates }) => {
   return (
-    <div className="h-full">
-      <Map coordinates={coordinates} />
+    <div className="h-full relative">
+      <Map coordinates={coordinates}></Map>
     </div>
   );
 };

@@ -29,7 +29,7 @@ const MyApp = ({
       {/* Uncomment to enable auth */}
       {/* <AuthWrapper> */}
       <SwrProvider>
-        <ThemeProvider attribute="class" defaultTheme="light">
+        <ThemeProvider attribute="class" defaultTheme="system">
           <MainLayout title="WI20C - Projekt">
             <Layout>
               <Component {...pageProps} />

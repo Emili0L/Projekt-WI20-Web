@@ -1,6 +1,10 @@
-.leaflet-top .leaflet-control {
-    margin-top: 80px !important;
+.leaflet-control-container {
+    .leaflet-top.leaflet-left {
+        display: none;
+    }
 }
+
+
 .leaflet-div-icon {
     border: none !important;
     background: none !important;

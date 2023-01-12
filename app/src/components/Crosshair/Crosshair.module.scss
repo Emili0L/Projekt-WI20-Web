@@ -1,0 +1,56 @@
+.container {
+    @media (min-width: 451px) {
+        height: 100%;
+        width: $desktop-globe-width;
+    }
+
+    height: $browser-height;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    top: 0px;
+    width: 100vw;
+    z-index: 1000;
+}
+
+.innerContainer {
+    @media (min-height: 454px) and (min-width: 400px) {
+        transform: translate(calc($desktop-ui-total-width * .5));
+    }
+
+    align-items: center;
+    display: flex;
+    height: calc(100vh);
+    justify-content: center;
+    left: 0;
+    pointer-events: none;
+    position: fixed;
+    top: 0px;
+    transition: transform $globe-center-transition-duration ease-in-out;
+    transition-delay: $globe-center-transition-delay;
+    width: 100vw;
+    z-index: 0;
+}
+
+
+.crosshair {
+    fill: none;
+    stroke: #fff;
+    stroke: $color-inactive;
+    stroke: $color-map-foreground!important;
+    stroke-width: $icon-stroke-width;
+    height: $crosshair-size;
+    overflow: visible;
+    pointer-events: none;
+    transition: stroke .18s;
+    width: $crosshair-size;
+    z-index: 200;
+}
+
+.circle {
+    transform-origin: 50% 50% 0;
+}
+
+.containerCenter{
+    transform: none;
+}

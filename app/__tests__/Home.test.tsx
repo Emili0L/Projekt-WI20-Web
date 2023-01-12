@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { render, screen, within } from "@testing-library/react";
-import Home from "../src/pages/index";
+import Home from "../src/pages/[...pathArray]";
 
 test("home", () => {
   render(<Home coordinates={[]} />);

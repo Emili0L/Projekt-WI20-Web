@@ -1,21 +1,66 @@
-import L, { divIcon, TooltipOptions, MarkerOptions } from "leaflet";
-import { useState } from "react";
+import L, { divIcon } from "leaflet";
+import { useCallback, useEffect, useState } from "react";
 import {
   MapContainer,
-  MapContainerProps,
-  MarkerProps,
   Marker,
   TileLayer,
-  Popup,
   ScaleControl,
-  Tooltip,
+  ZoomControl,
 } from "react-leaflet";
+import { useLayoutContext } from "../Layout/Layout";
 
 type Props = {
   coordinates: { lat: number; lng: number }[];
+  children?: React.ReactNode;
 };
 
-const Map = ({ coordinates }: Props) => {
+const Map = ({ coordinates, children }: Props) => {
+  const { sidebarOpen } = useLayoutContext();
+  const [map, setMap] = useState(null);
+
+  const onMove = useCallback(() => {
+    // console.group("map moved");
+    // console.log(map.getCenter());
+    // console.log(map.getZoom());
+    // console.groupEnd();
+  }, [map, sidebarOpen]);
+
+  const onClick = useCallback(
+    (e: any) => {
+      map.setView(e.latlng, map.getZoom(), {
+        animate: true,
+      });
+    },
+    [map]
+  );
+
+  useEffect(() => {
+    if (!map) return;
+    if (sidebarOpen) map.panBy([-90, 0], { animate: true, duration: 0.5 });
+    else map.panBy([90, 0], { animate: true, duration: 0.5 });
+    map.on("move", onMove);
+    map.on("click", onClick);
+    return () => {
+      map.off("move", onMove);
+      map.off("click", onClick);
+    };
+  }, [map, onMove]);
+
+  // useEffect(() => {
+  //   if (!map) return;
+  //   console.log("sidebarOpen changed");
+  //   console.log(map.getCenter().lng);
+  //   console.log(crosshair.getLatLng().lng);
+  //   // if sidebarOpen & crosshairs is right in the middle of the map
+  //   if (sidebarOpen && map.getCenter().lng === crosshair.getLatLng().lng) {
+  //     console.log("sidebarOpen & crosshairs is right in the middle of the map");
+  //     // set the position of the crosshair to the right
+  //     const crosshairPosition = map.getCenter();
+  //     crosshairPosition.lng += 3;
+  //     crosshair.setLatLng(crosshairPosition);
+  //   }
+  // }, [map, sidebarOpen]);
+
   let mapClassName = "map";
 
   const markerIcon = (index: number) => {
@@ -28,30 +73,35 @@ const Map = ({ coordinates }: Props) => {
     });
   };
 
+  const key = "LZOQu9WlJCxUdwYAm9W9";
+
   return (
     <MapContainer
       className={mapClassName}
       center={[53.559196, 9.994773]}
       zoom={6}
       scrollWheelZoom={true}
+      ref={setMap}
     >
-      <TileLayer
+      {/* <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      />
+      /> */}
+      {/* <TileLayer
+        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        maxZoom={20}
+        subdomains="abcd"
+      /> */}
 
-      <div
-        style={{
-          position: "absolute",
-          top: "10px",
-          transform: "translateX(-50%)",
-          left: "50%",
-          width: "400px",
-          zIndex: 1000,
-        }}
-      >
-        {/* <Search /> */}
-      </div>
+      <TileLayer
+        url={`https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=${key}`}
+        attribution={
+          '\u003ca href="https://www.maptiler.com/copyright/" target="_blank"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href="https://www.openstreetmap.org/copyright" target="_blank"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e'
+        }
+        accessToken={"LZOQu9WlJCxUdwYAm9W9"}
+        crossOrigin
+      />
 
       {/* <TileLayer
         url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
@@ -59,6 +109,7 @@ const Map = ({ coordinates }: Props) => {
         subdomains="abcd"
         maxZoom={20}
       /> */}
+
       {coordinates.map((coordinate, index) => (
         <Marker
           position={[coordinate.lat, coordinate.lng]}
@@ -67,7 +118,9 @@ const Map = ({ coordinates }: Props) => {
           icon={markerIcon(index)}
         ></Marker>
       ))}
-      <ScaleControl position={"bottomleft"} />
+      <ScaleControl position={"bottomright"} />
+      <ZoomControl position={"bottomright"} />
+      {children}
     </MapContainer>
   );
 };

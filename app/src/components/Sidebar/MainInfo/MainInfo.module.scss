@@ -1,0 +1,262 @@
+.wrapper {
+    @media (min-width: 451px) {
+        height: auto;
+    }
+
+    height: $browser-header-height;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+}
+
+
+.headerBackgroundContainer {
+
+    @media (min-width: 451px) {
+        width: 100%;
+    }
+
+    height: $browser-header-height;
+    padding-bottom: 300px;
+    pointer-events: all;
+    position: absolute;
+    top: calc($browser-header-height - $browser-header-height-collapsed);
+    width: 100vw;
+}
+
+
+
+
+.headerBackgroundContainer>.headerBackground {
+    @media (hover: hover) and (pointer: fine) {
+        background-color: rgba(255, 255, 255, .1);
+        cursor: pointer;
+        transition: background-color .18s;
+
+    }
+
+    @media (min-width: 451px) {
+        border-radius: $corner-radius $corner-radius 0 0;
+
+    }
+
+    background-color: var(--color-white);
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+}
+
+.headerBackgroundContainer>.handle {
+    height: 0;
+    opacity: 1;
+    pointer-events: none;
+    position: relative;
+    width: 100%;
+
+    &::before {
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 99px;
+        content: "";
+        height: 5px;
+        left: calc(50% - 20px);
+        position: absolute;
+        top: 6px;
+        width: 36px;
+        z-index: 99;
+    }
+}
+
+
+.container {
+    @media (min-width: 451px) {
+        border-radius: $corner-radius $corner-radius 0 0;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+        padding-bottom: 0;
+    }
+
+    left: 0;
+    overflow: visible;
+    position: relative;
+    width: 100vw;
+
+    &::after {
+        background-color: $color-background-1;
+        bottom: -300px;
+        content: "";
+        height: 300px;
+        left: 0;
+        position: absolute;
+        width: 100%;
+    }
+}
+
+.animateContainer {
+    @media (min-width: 451px) {
+        width: 100%;
+    }
+
+    height: 100%;
+    position: absolute;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    justify-content: space-between;
+    min-height: $browser-header-height;
+    padding-top: 0;
+    position: sticky;
+    top: 0;
+    touch-action: none;
+    width: auto;
+
+    &_cta {
+        display: flex;
+        height: 44px;
+        top: 0;
+        z-index: 99;
+    }
+
+    &_container {
+        @media (min-width: 451px) {
+            height: 66px;
+        }
+
+        --text-bottom-space: 6px;
+        align-items: flex-end;
+        display: flex;
+        padding-bottom: calc($margin - var(--text-bottom-space));
+        width: 100%;
+    }
+
+    &_count {
+        align-items: center;
+        align-self: center;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: center;
+        padding-left: calc($margin - 3px);
+
+        &_count {
+            align-items: center;
+            background-color: $color-map-foreground;
+            border-radius: 50%;
+            box-shadow: $map-text-shadow;
+            color: $color-black;
+            display: flex;
+            font-size: $type-4-size;
+            height: 28px;
+            justify-content: center;
+            margin-top: 2px;
+            text-align: center;
+            width: 28px;
+
+            &_number {
+                -webkit-font-smoothing: subpixel-antialiased;
+                line-height: 0;
+                position: relative;
+                top: -0.5px;
+            }
+        }
+    }
+
+    &_titleContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        overflow: hidden;
+        padding: 0 $margin 0 $margin;
+        width: 100%;
+        line-height: 1; // remove if we enable a different font
+
+        &.isPlace {
+            padding-left: calc($margin - 4px);
+        }
+
+        &__subtitleContainer {
+            align-items: flex-start;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        &_title {
+            font-size: $type-0-size;
+            text-overflow: ellipsis;
+
+        }
+
+        &_subtitle {
+            flex-shrink: 1;
+            font-size: $type-3-size;
+            margin-left: 1px;
+            overflow: hidden;
+            padding-right: 6px;
+            text-overflow: ellipsis;
+        }
+
+        &_subtitle,
+        &_title {
+            color: $color-map-foreground;
+            overflow: hidden;
+            position: relative;
+            text-overflow: ellipsis;
+            text-shadow: $map-text-shadow;
+            white-space: nowrap;
+            width: 100%;
+        }
+
+        @media (min-width: 451px) and (pointer: fine) {
+
+            &_title,
+            &_subtitle {
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                user-select: none;
+            }
+
+        }
+    }
+
+    &_extrasContainer {
+        margin-right: $margin;
+    }
+}
+
+.singleDigit {
+    @media (min-width: 451px) {
+        font-size: 1.6em;
+    }
+
+    font-size: 1.45em;
+    top: -1px;
+}
+
+
+.content {
+    @media (min-width: 451px) {
+        background-color: $color-background-1;
+        height: calc(100% - $browser-header-height);
+        overflow: auto;
+        padding-bottom: 0;
+    }
+
+    background-color: $color-background-1;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    pointer-events: all;
+    position: relative;
+    touch-action: pan-y;
+    width: auto;
+    z-index: 1;
+}
