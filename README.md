@@ -2,7 +2,6 @@
 
 ## 🚀 App
 
-https://img.shields.io/github/contributors/Emili0L/Projekt-WI20-Web?color=dark-green
 ![Contributors](https://img.shields.io/github/contributors/Emili0L/Projekt-WI20-Web?color=dark-green) ![License](https://img.shields.io/github/license/Emili0L/Projekt-WI20-Web)
 
 ### Demo
