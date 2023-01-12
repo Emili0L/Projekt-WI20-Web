@@ -2,12 +2,18 @@
 
 ## 🚀 App
 
+https://img.shields.io/github/contributors/Emili0L/Projekt-WI20-Web?color=dark-green
+![Contributors](https://img.shields.io/github/contributors/Emili0L/Projekt-WI20-Web?color=dark-green) ![License](https://img.shields.io/github/license/Blazity/next-saas-starter)
+
 ### Demo
 #### Live production demo:
 
 > View the live demo at
 - **[]()**
 
+## Pre-requisites
+
+1. [Node.js](https://nodejs.org/en/) or nvm installed.
 
 ### Setup
 
