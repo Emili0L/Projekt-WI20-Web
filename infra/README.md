@@ -4,9 +4,7 @@
 
 This is the Infra repository that controls the infrastructure for the Projekt. It is a collection of Terraform scripts that will create the following resources:
 
--   A VPC with 3 subnets
--  A NAT Gateway
--   An ECS cluster
+- 
 
 ---
 

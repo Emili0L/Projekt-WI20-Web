@@ -42,6 +42,16 @@ def get_station_id(ftp: FTP):
         with open(local_full_path, 'wb+') as f:
             ftp.retrbinary('RETR ' + ftp_full_path, f.write)
 
+def get_countries(ftp: FTP):
+    '''
+    Get countries file
+    '''
+    ftp_full_path = os.path.join(ftp_path_dly_all, 'ghcnd-countries.txt')
+    local_full_path = os.path.join(output_dir, 'ghcnd-countries.txt')
+    if not os.path.isfile(local_full_path):
+        with open(local_full_path, 'wb+') as f:
+            ftp.retrbinary('RETR ' + ftp_full_path, f.write)
+
 
 if __name__ == '__main__':
     output_dir = os.path.relpath('data')
@@ -50,6 +60,10 @@ if __name__ == '__main__':
     if not os.path.isfile(os.path.join(output_dir, ftp_filename)):
         ftp = connect_to_ftp()
         get_station_id(ftp)
+        ftp.quit()
+    if not os.path.isfile(os.path.join(output_dir, 'ghcnd-countries.txt')):
+        ftp = connect_to_ftp()
+        get_countries(ftp)
         ftp.quit()
 
     # create a loop to get the users year range or skip this step and just get all the data
