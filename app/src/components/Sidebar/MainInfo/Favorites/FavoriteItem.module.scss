@@ -1,0 +1,84 @@
+.rowContainer {
+    position: relative;
+    width: 100%;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.rowBtnContainer {
+    align-items: center;
+    display: flex;
+    height: $rowbutton-height-tall;
+    padding-left: $margin;
+    width: 100%;
+
+    &.hasLeftAccessory {
+        padding-left: 0;
+    }
+}
+
+.remove {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    padding: 1px $margin-50 0 $margin-50;
+    pointer-events: all;
+    position: relative;
+    z-index: 1;
+
+    &:hover {
+        cursor: pointer;
+        background-color: $color-background-hover;
+    }
+}
+
+.titleContainer {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+    padding: 1px $margin-50 0 0;
+    pointer-events: none;
+    z-index: 1;
+    padding-top: 2px;
+
+    .title {
+        color: $color-foreground;
+        font-size: $type-3-size;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .subtitle {
+        color: $color-foreground-alpha-40;
+        margin-top: 1px;
+        font-size: $type-4-size;
+        margin-left: 1px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.borderContainer {
+    bottom: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: $margin;
+    right: $margin;
+
+    .border {
+        background-color: $color-foreground-4;
+        top: 0;
+        transform-origin: top;
+        height: 1px;
+        left: 0;
+        position: absolute;
+        right: 0;
+    }
+}

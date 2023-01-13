@@ -20,6 +20,11 @@
     }
 }
 
+:root {
+    --color-map-foreground: #fff;
+    --color-primary: rgb(0, 200, 100);
+}
+
 body {
     font-feature-settings: "tnum" 1,"kern" 1;
     -webkit-touch-callout: none;
@@ -46,4 +51,8 @@ body {
     display: flex;
     height: 1.8rem !important;
     width: min-content !important;
+}
+
+.favorite-list .b:first-of-type {
+    display: none;
 }

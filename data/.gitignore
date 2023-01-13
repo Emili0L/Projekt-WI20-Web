@@ -1,0 +1,16 @@
+# Staged csv files
+data
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Spyder settings
+.spyproject
+.spyderproject
+
+# Residuals
+__pycache__
+.pyc
+
+# Mac trash
+.DS_Store

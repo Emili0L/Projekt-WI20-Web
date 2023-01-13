@@ -48,6 +48,10 @@
         font-size: 0.75rem;
     }
 
+    &:focus, &:hover:not(.tabbar_link_active) {
+        background-color: $color-background-hover;
+    }
+
 }
 
 .grow_container {

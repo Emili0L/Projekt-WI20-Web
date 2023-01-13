@@ -6,6 +6,7 @@ import {
   TileLayer,
   ScaleControl,
   ZoomControl,
+  CircleMarker,
 } from "react-leaflet";
 import { useLayoutContext } from "../Layout/Layout";
 
@@ -36,8 +37,8 @@ const Map = ({ coordinates, children }: Props) => {
 
   useEffect(() => {
     if (!map) return;
-    if (sidebarOpen) map.panBy([-90, 0], { animate: true, duration: 0.5 });
-    else map.panBy([90, 0], { animate: true, duration: 0.5 });
+    if (sidebarOpen) map.panBy([-175, 0], { animate: true, duration: 2 });
+    else map.panBy([175, 0], { animate: true, duration: 2 });
     map.on("move", onMove);
     map.on("click", onClick);
     return () => {
@@ -82,6 +83,7 @@ const Map = ({ coordinates, children }: Props) => {
       zoom={6}
       scrollWheelZoom={true}
       ref={setMap}
+      preferCanvas
     >
       {/* <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -111,12 +113,12 @@ const Map = ({ coordinates, children }: Props) => {
       /> */}
 
       {coordinates.map((coordinate, index) => (
-        <Marker
-          position={[coordinate.lat, coordinate.lng]}
+        <CircleMarker
           key={index}
-          draggable={false}
-          icon={markerIcon(index)}
-        ></Marker>
+          center={coordinate}
+          radius={1.5}
+          color={"#00ff82"}
+        />
       ))}
       <ScaleControl position={"bottomright"} />
       <ZoomControl position={"bottomright"} />

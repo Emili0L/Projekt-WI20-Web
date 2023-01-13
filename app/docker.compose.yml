@@ -1,0 +1,29 @@
+version: '3.7'
+services:
+  next:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - 3000:3000
+    depends_on:
+      postgis:
+        condition: service_started
+
+  postgis:
+    image: postgis/postgis:15-3.3
+    container_name: postgis
+    networks:
+      api:
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 6d30bf1546fa
+      POSTGRES_DB: mydb
+networks:
+  api:
+volumes:
+  pgdata:

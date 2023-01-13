@@ -1,0 +1,28 @@
+version: '3'
+services:
+
+  postgres-service-ghcnd:
+    image: postgres:latest
+    container_name: postgresql-ghcnd
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: ghcnd
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+    # Only needed when connecting directly from the host. Other containers with access to ghcnd network still connect
+    ports:
+      - "5432:5432"
+    networks:
+      - default
+      - ghcnd
+
+
+
+networks:
+  ghcnd:
+    name: ghcnd
+
+volumes:
+  pgdata:
