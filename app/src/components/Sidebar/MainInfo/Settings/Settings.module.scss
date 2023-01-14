@@ -1,0 +1,123 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+
+    .header {
+        align-items: flex-end;
+        display: flex;
+        justify-content: space-between;
+        margin-top: $margin-150;
+        position: relative;
+        top: 0;
+
+
+        .headerLeft {
+            max-width: 100%;
+            padding: 0 $margin calc($margin - 2px) $margin;
+            position: relative;
+
+            .title {
+                font-size: $type-1-size;
+                margin: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                color: $color-foreground;
+
+                &:hover {
+                    user-select: text;
+                }
+            }
+        }
+    }
+}
+
+.footer {
+    align-items: flex-end;
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 0;
+    justify-content: center;
+
+    .copyright {
+        color: rgba(255, 255, 255, .3);
+        font-size: $type-4-size;
+        padding: $margin-150 0 $margin;
+        text-align: center;
+        width: 100%;
+    }
+}
+
+.item {
+    position: relative;
+    width: 100%;
+
+    &:hover {
+        cursor: pointer;
+        background-color: $color-background-hover;
+    }
+
+    .itemContainer {
+        align-items: center;
+        display: flex;
+        height: $rowbutton-height;
+        padding-left: $margin;
+        width: 100%;
+
+        .itemTitleContainer {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            overflow: hidden;
+            padding: 1px $margin-50 0 0;
+            pointer-events: none;
+            z-index: 1;
+
+            .title {
+                color: $color-foreground;
+                font-size: $type-3-size;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+
+            }
+        }
+
+        .itemIconContainer {
+            align-items: center;
+            display: flex;
+            height: 100%;
+            justify-content: center;
+            padding: 1px $margin-50 0 $margin-50;
+            pointer-events: none;
+            position: relative;
+            z-index: 1;
+
+            .icon {
+                color: $color-foreground;
+                display: flex;
+                font-size: $type-2-size;
+                position: relative;
+            }
+        }
+    }
+}
+
+.borderContainer {
+    bottom: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: $margin;
+    right: $margin;
+
+    .border {
+        background-color: $color-foreground-4;
+        top: 0;
+        transform-origin: top;
+        height: 1px;
+        left: 0;
+        position: absolute;
+        right: 0;
+    }
+}

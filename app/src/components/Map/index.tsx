@@ -6,25 +6,51 @@ import {
   TileLayer,
   ScaleControl,
   ZoomControl,
-  CircleMarker,
+  Popup,
 } from "react-leaflet";
-import { useLayoutContext } from "../Layout/Layout";
+import { useMainContext } from "../Layout/Layout";
+import useSWR from "swr";
 
 type Props = {
-  coordinates: { lat: number; lng: number }[];
   children?: React.ReactNode;
 };
 
-const Map = ({ coordinates, children }: Props) => {
-  const { sidebarOpen } = useLayoutContext();
+const Map = ({ children }: Props) => {
+  const { setSelectedMarkerId } = useMainContext();
   const [map, setMap] = useState(null);
+  const [bounds, setBounds] = useState(null);
+  const [zoom, setZoom] = useState(6);
 
-  const onMove = useCallback(() => {
-    // console.group("map moved");
-    // console.log(map.getCenter());
-    // console.log(map.getZoom());
-    // console.groupEnd();
-  }, [map, sidebarOpen]);
+  const { data } = useSWR("/api/markers?bounds=" + bounds + "&zoom=" + zoom, {
+    onSuccess: (data) => {
+      // console.log(data);
+    },
+    // revalidateOnFocus: false,
+    // revalidateOnReconnect: false,
+  });
+
+  function createClusterIcon(feature, latlng) {
+    if (!feature.properties.cluster) return L.marker(latlng);
+
+    const count = feature.properties.point_count;
+    const size = count < 100 ? "small" : count < 1000 ? "medium" : "large";
+    const icon = L.divIcon({
+      html: `<div><span>${feature.properties.point_count_abbreviated}</span></div>`,
+      className: `marker-cluster marker-cluster-${size}`,
+      iconSize: L.point(40, 40),
+    });
+
+    return (
+      <Marker
+        key={`marker-${feature.properties.cluster_id}-
+        ${feature.properties.point_count_abbreviated}-${new Date()
+          .getTime()
+          .toString(36)}`}
+        position={latlng}
+        icon={icon}
+      />
+    );
+  }
 
   const onClick = useCallback(
     (e: any) => {
@@ -35,40 +61,37 @@ const Map = ({ coordinates, children }: Props) => {
     [map]
   );
 
+  const onMapChange = useCallback(() => {
+    if (!map) return;
+    // set the bounds in the format "minLng, minLat, maxLng, maxLat"
+    setBounds(
+      [
+        map.getBounds().getSouthWest().lng,
+        map.getBounds().getSouthWest().lat,
+        map.getBounds().getNorthEast().lng,
+        map.getBounds().getNorthEast().lat,
+      ].join(",")
+    );
+    setZoom(map.getZoom());
+  }, [map]);
+
   useEffect(() => {
     if (!map) return;
-    if (sidebarOpen) map.panBy([-175, 0], { animate: true, duration: 2 });
-    else map.panBy([175, 0], { animate: true, duration: 2 });
-    map.on("move", onMove);
     map.on("click", onClick);
+    map.on("zoomend", onMapChange);
+    map.on("moveend", onMapChange);
+    onMapChange();
     return () => {
-      map.off("move", onMove);
       map.off("click", onClick);
+      map.off("zoomend", onMapChange);
+      map.off("moveend", onMapChange);
     };
-  }, [map, onMove]);
-
-  // useEffect(() => {
-  //   if (!map) return;
-  //   console.log("sidebarOpen changed");
-  //   console.log(map.getCenter().lng);
-  //   console.log(crosshair.getLatLng().lng);
-  //   // if sidebarOpen & crosshairs is right in the middle of the map
-  //   if (sidebarOpen && map.getCenter().lng === crosshair.getLatLng().lng) {
-  //     console.log("sidebarOpen & crosshairs is right in the middle of the map");
-  //     // set the position of the crosshair to the right
-  //     const crosshairPosition = map.getCenter();
-  //     crosshairPosition.lng += 3;
-  //     crosshair.setLatLng(crosshairPosition);
-  //   }
-  // }, [map, sidebarOpen]);
+  }, [map]);
 
   let mapClassName = "map";
 
-  const markerIcon = (index: number) => {
-    const svg = `<svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 395.71 395.71" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M197.849,0C122.131,0,60.531,61.609,60.531,137.329c0,72.887,124.591,243.177,129.896,250.388l4.951,6.738 c0.579,0.792,1.501,1.255,2.471,1.255c0.985,0,1.901-0.463,2.486-1.255l4.948-6.738c5.308-7.211,129.896-177.501,129.896-250.388 C335.179,61.609,273.569,0,197.849,0z M197.849,88.138c27.13,0,49.191,22.062,49.191,49.191c0,27.115-22.062,49.191-49.191,49.191 c-27.114,0-49.191-22.076-49.191-49.191C148.658,110.2,170.734,88.138,197.849,88.138z"></path> </g> </g></svg>`;
-
-    const color = (index % 4) + 1;
-
+  const markerIcon = () => {
+    const svg = `<svg class="map-marker" fill="#000000" version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 395.71 395.71" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M197.849,0C122.131,0,60.531,61.609,60.531,137.329c0,72.887,124.591,243.177,129.896,250.388l4.951,6.738 c0.579,0.792,1.501,1.255,2.471,1.255c0.985,0,1.901-0.463,2.486-1.255l4.948-6.738c5.308-7.211,129.896-177.501,129.896-250.388 C335.179,61.609,273.569,0,197.849,0z M197.849,88.138c27.13,0,49.191,22.062,49.191,49.191c0,27.115-22.062,49.191-49.191,49.191 c-27.114,0-49.191-22.076-49.191-49.191C148.658,110.2,170.734,88.138,197.849,88.138z"></path> </g> </g></svg>`;
     return divIcon({
       html: svg,
     });
@@ -97,7 +120,7 @@ const Map = ({ coordinates, children }: Props) => {
       /> */}
 
       <TileLayer
-        url={`https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=${key}`}
+        url={`https://api.maptiler.com/maps/basic-v2-dark/{z}/{x}/{y}.png?key=${key}`}
         attribution={
           '\u003ca href="https://www.maptiler.com/copyright/" target="_blank"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href="https://www.openstreetmap.org/copyright" target="_blank"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e'
         }
@@ -105,21 +128,40 @@ const Map = ({ coordinates, children }: Props) => {
         crossOrigin
       />
 
-      {/* <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        subdomains="abcd"
-        maxZoom={20}
-      /> */}
+      {data?.map((cluster) => {
+        const [lng, lat] = cluster.geometry.coordinates;
+        const { cluster: isCluster } = cluster.properties;
 
-      {coordinates.map((coordinate, index) => (
+        if (isCluster) {
+          return createClusterIcon(cluster, [lat, lng]);
+        }
+
+        return (
+          <Marker
+            icon={markerIcon()}
+            key={`marker-${cluster.properties.id}`}
+            position={[lat, lng]}
+            eventHandlers={{
+              click: () => {
+                setSelectedMarkerId(cluster.properties.name);
+              },
+            }}
+          >
+            <Popup>
+              <span>{cluster.properties.name}</span>
+            </Popup>
+          </Marker>
+        );
+      })}
+
+      {/* {coordinates.map((coordinate, index) => (
         <CircleMarker
           key={index}
           center={coordinate}
           radius={1.5}
           color={"#00ff82"}
         />
-      ))}
+      ))} */}
       <ScaleControl position={"bottomright"} />
       <ZoomControl position={"bottomright"} />
       {children}

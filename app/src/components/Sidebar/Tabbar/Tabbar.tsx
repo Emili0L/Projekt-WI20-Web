@@ -11,11 +11,11 @@ import {
   mdiHistory,
 } from "@mdi/js";
 import MainInfo from "../MainInfo/Maininfo";
-import { useLayoutContext } from "../../Layout/Layout";
+import { useMainContext } from "../../Layout/Layout";
 
 const Tabbar = () => {
   const router = useRouter();
-  const { setSidebarOpen } = useLayoutContext();
+  const { setSidebarOpen } = useMainContext();
 
   const handleOpen = () => {
     setSidebarOpen(true);

@@ -16,9 +16,14 @@ const config = {
       //   source: '/api/v1/:path*',
       //   destination: `${process.env.BACKEND_URL}/api/v1/:path*`
       // }
+    ]
+  },
+  async redirects() {
+    return [
       {
         source: '/',
-        destination: '/search',
+        destination: '/explore',
+        permanent: true
       }
     ]
   },

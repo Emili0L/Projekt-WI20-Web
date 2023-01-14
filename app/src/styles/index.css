@@ -56,3 +56,7 @@ body {
 .favorite-list .b:first-of-type {
     display: none;
 }
+
+.settings-items .b:first-of-type {
+    display: none;
+}

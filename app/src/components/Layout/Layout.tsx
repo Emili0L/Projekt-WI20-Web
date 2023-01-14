@@ -12,24 +12,27 @@ import cn from "classnames";
 import styles from "./Layout.module.scss";
 import Sidebar from "../Sidebar";
 import { useRouter } from "next/router";
-import Crosshair from "../Crosshair/Crosshair";
 
 type Props = {
   title?: string;
   children?: ReactNode;
 };
 
-type LayoutContext = {
+type MainContext = {
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
+  selectedMarkerId?: string;
+  setSelectedMarkerId?: (id: string) => void;
 };
 
-const LayoutContext = createContext<LayoutContext>({
+const MainContext = createContext<MainContext>({
   sidebarOpen: false,
   setSidebarOpen: () => {},
+  selectedMarkerId: null,
+  setSelectedMarkerId: () => {},
 });
 
-export const useLayoutContext = () => useContext(LayoutContext);
+export const useMainContext = () => useContext(MainContext);
 
 const environment = () => {
   if (typeof window == "undefined") return null;
@@ -47,13 +50,15 @@ const Layout: FC<Props> = ({ children, title }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
 
+  const [selectedMarkerId, setSelectedMarkerId] = useState(null);
+
   useEffect(() => {
     if (
       initialLoad &&
+      router.asPath &&
       (router.asPath.includes("/search") ||
         router.asPath.includes("/browse") ||
         router.asPath.includes("/history") ||
-        router.asPath.includes("/explore") ||
         router.asPath.includes("/favorites") ||
         router.asPath.includes("/settings"))
     ) {
@@ -77,17 +82,17 @@ const Layout: FC<Props> = ({ children, title }) => {
 
         <div className="flex h-full relative overflow-hidden z-0">
           <main className={cn("dark:bg-grey app__main", styles.app__main)}>
-            <LayoutContext.Provider
+            <MainContext.Provider
               value={{
                 sidebarOpen,
                 setSidebarOpen,
+                selectedMarkerId,
+                setSelectedMarkerId,
               }}
             >
               <Sidebar />
-              <Crosshair />
-
               {children}
-            </LayoutContext.Provider>
+            </MainContext.Provider>
           </main>
         </div>
       </div>

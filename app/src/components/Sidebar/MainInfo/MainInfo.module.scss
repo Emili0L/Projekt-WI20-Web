@@ -122,6 +122,50 @@
         height: 44px;
         top: 0;
         z-index: 99;
+
+        &_container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            opacity: 1;
+        }
+
+        .btn {
+            align-items: center;
+            display: flex;
+            height: 44px;
+            max-width: calc(50% - 25px);
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            pointer-events: all;
+
+            &:hover {
+                background-color: rgba(255,255,255,$dim-hover);
+                cursor: pointer;
+            }
+
+            &_text {
+                color: $color-map-foreground;
+                font-size: $type-3-size;
+                margin-left: -4px;
+                min-width: 0;
+                overflow: hidden;
+                padding: 0 $margin 0 0;
+                text-overflow: ellipsis;
+                text-shadow: $map-text-shadow;
+                text-transform: capitalize;
+                white-space: nowrap;
+            }
+
+            &_icon {
+                fill: none;
+                stroke: $color-map-foreground;
+                stroke-width: $icon-stroke-width;
+                filter: drop-shadow($map-text-shadow);
+                flex-shrink: 0;
+            }
+        }
     }
 
     &_container {
@@ -175,7 +219,6 @@
         overflow: hidden;
         padding: 0 $margin 0 $margin;
         width: 100%;
-        line-height: 1; // remove if we enable a different font
 
         &.isPlace {
             padding-left: calc($margin - 4px);
@@ -314,16 +357,4 @@
         line-height: 0;
         text-shadow: $map-text-shadow;
     }
-}
-
-.favoritesContainer {
-
-    .b:first-of-type {
-        display: none;
-    }
-
-    .b {
-        background-color: red; 
-    }
-    
 }

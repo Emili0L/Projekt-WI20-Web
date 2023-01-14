@@ -1,14 +1,15 @@
-import { Button } from "@mui/material";
 import { useState } from "react";
 import { BasicDialog } from "../../";
 import { BasicLineChart } from "../../Chart";
 import styles from "./BasicInfo.module.scss";
 import cn from "classnames";
 import Icon from "@mdi/react";
-import { mdiDotsHorizontal, mdiHeartOutline, mdiOpenInNew } from "@mdi/js";
+import { mdiHeartOutline, mdiOpenInNew } from "@mdi/js";
+import { useMainContext } from "../../Layout/Layout";
 
 const BasicInfo = () => {
-  // const [nearestStation, setNearestStation] = useState<Station | null>(null);
+  const { selectedMarkerId } = useMainContext();
+
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
@@ -16,7 +17,11 @@ const BasicInfo = () => {
         <div className={styles.leftSide}>
           <div className={styles.station}>
             <div className={styles.titleContainer}>
-              <div className={styles.title}>Nearest Station Name</div>
+              <div className={styles.title}>
+                {selectedMarkerId === null
+                  ? "Nearest Station Name"
+                  : selectedMarkerId}
+              </div>
               <div className={styles.subtitle}>Region, Country</div>
             </div>
           </div>

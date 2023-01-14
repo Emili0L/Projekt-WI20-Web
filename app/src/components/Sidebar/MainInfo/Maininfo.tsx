@@ -2,16 +2,19 @@ import cn from "classnames";
 import { useRouter } from "next/router";
 import styles from "./Maininfo.module.scss";
 import { motion as m } from "framer-motion";
-import { useLayoutContext } from "../../Layout/Layout";
+import { useMainContext } from "../../Layout/Layout";
 import { useState } from "react";
 import FavoriteItem from "./Favorites/FavoriteItem";
+import Settings from "./Settings/Settings";
+import Icon from "@mdi/react";
+import { mdiChevronLeft } from "@mdi/js";
 
 const MainInfo = () => {
   const router = useRouter();
   const { pathArray: queryPaths } = router.query;
   var pathArray = queryPaths as string[];
 
-  const { setSidebarOpen, sidebarOpen } = useLayoutContext();
+  const { setSidebarOpen, sidebarOpen } = useMainContext();
 
   const [isFavoriteEditMode, setIsFavoriteEditMode] = useState(false);
 
@@ -132,9 +135,29 @@ const MainInfo = () => {
               animate={sidebarOpen ? "open" : "closed"}
               initial="closed"
               className={styles.header_cta}
-            ></m.div>
+            >
+              {pathArray &&
+                pathArray.includes("settings") &&
+                pathArray.length > 1 && (
+                  <div
+                    className={styles.header_cta_container}
+                    onClick={() => {
+                      router.back();
+                    }}
+                  >
+                    <div className={styles.btn}>
+                      <Icon
+                        path={mdiChevronLeft}
+                        size={1}
+                        className={styles.btn_icon}
+                      />
+                      <div className={styles.btn_text}>Settings</div>
+                    </div>
+                  </div>
+                )}
+            </m.div>
             <div className={styles.header_container}>
-              {pathArray.includes("explore") && (
+              {pathArray && pathArray.includes("explore") && (
                 <div className={styles.header_count}>
                   <div className={styles.header_count_count}>
                     <div
@@ -150,20 +173,35 @@ const MainInfo = () => {
               )}
               <div className={styles.header_titleContainer}>
                 <div className={styles.header_titleContainer_title}>
-                  {pathArray.includes("explore") && "Current Region"}
-                  {pathArray.includes("favorites") && "Favorites"}
-                  {pathArray.includes("history") && "History"}
-                  {pathArray.includes("search") && "Search"}
-                  {pathArray.includes("settings") && "Settings"}
+                  {pathArray &&
+                    pathArray.includes("explore") &&
+                    "Current Region"}
+                  {pathArray && pathArray.includes("favorites") && "Favorites"}
+                  {pathArray && pathArray.includes("history") && "History"}
+                  {pathArray && pathArray.includes("search") && "Search"}
+                  {pathArray &&
+                    pathArray.includes("settings") &&
+                    pathArray.length === 1 &&
+                    "Settings"}
+                  {pathArray &&
+                    pathArray.includes("settings") &&
+                    pathArray.length > 1 &&
+                    pathArray[pathArray.length - 1].charAt(0).toUpperCase() +
+                      pathArray[pathArray.length - 1]
+                        .slice(1)
+                        .replace(/-/g, " ")}
                 </div>
                 <div className={styles.header_titleContainer_subtitleContainer}>
                   <div className={styles.header_titleContainer_subtitle}>
-                    {router.asPath.includes("/explore") && "Country"}
+                    {router.asPath &&
+                      router.asPath.includes("/explore") &&
+                      "Country"}
                   </div>
                 </div>
               </div>
               <div className={styles.header_extrasContainer}>
-                {pathArray.includes("favorites") &&
+                {pathArray &&
+                  pathArray.includes("favorites") &&
                   dummyFavorites.length > 0 && (
                     <>
                       <m.div
@@ -185,12 +223,12 @@ const MainInfo = () => {
             </div>
           </div>
           <div className={cn(styles.content, "content")}>
-            {pathArray.includes("explore") && (
+            {pathArray && pathArray.includes("explore") && (
               <>
                 <div>Explore</div>
               </>
             )}
-            {pathArray.includes("favorites") && (
+            {pathArray && pathArray.includes("favorites") && (
               <>
                 {/* No favorites yet */}
                 {dummyFavorites.length === 0 && (
@@ -225,21 +263,17 @@ const MainInfo = () => {
                 )}
               </>
             )}
-            {pathArray.includes("history") && (
+            {pathArray && pathArray.includes("history") && (
               <>
                 <div>History</div>
               </>
             )}
-            {pathArray.includes("search") && (
+            {pathArray && pathArray.includes("search") && (
               <>
                 <div>Search</div>
               </>
             )}
-            {pathArray.includes("settings") && (
-              <>
-                <div>Settings</div>
-              </>
-            )}
+            {pathArray && pathArray.includes("settings") && <Settings />}
           </div>
         </div>
       </m.div>

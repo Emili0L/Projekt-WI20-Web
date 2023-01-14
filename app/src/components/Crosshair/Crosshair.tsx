@@ -1,9 +1,9 @@
-import { useLayoutContext } from "../Layout/Layout";
+import { useMainContext } from "../Layout/Layout";
 import styles from "./Crosshair.module.scss";
 import cn from "classnames";
 
 const Crosshair = () => {
-  const { sidebarOpen } = useLayoutContext();
+  const { sidebarOpen } = useMainContext();
   return (
     <>
       <div className={styles.container}>
