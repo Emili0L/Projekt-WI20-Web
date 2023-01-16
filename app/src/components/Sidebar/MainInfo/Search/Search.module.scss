@@ -1,0 +1,187 @@
+.searchContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+    height: 4rem;
+    gap: 10px;
+    margin-top: $margin;
+
+    input {
+        width: 100%;
+        height: 100%;
+        border: none;
+        outline: none;
+        font-size: 1.2rem;
+        padding: 0 10px;
+        box-sizing: border-box;
+        border-radius: 5px;
+        background-color: #f5f5f5;
+    }
+}
+
+.filterContainer {
+    display: flex;
+    margin-top: $margin;
+    flex-direction: column;
+
+    .filter {
+        padding: 0 10px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+.actionBar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 0 10px;
+    z-index: 1;
+}
+
+.resultsContainer {
+    margin-top: $margin;
+}
+
+.noResults {
+    align-self: center;
+    color: $color-foreground-alpha-30;
+    font-size: $type-2-size;
+    line-height: 1.5;
+    margin-left: 0;
+    margin-top: 17vh;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    height: 100%;
+    margin-top: 0;
+}
+
+.suggestions {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    width: 100%;
+}
+
+.suggestionContainer {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    padding-bottom: 20px;
+
+    &Header {
+        align-items: flex-end;
+        display: flex;
+        justify-content: space-between;
+        margin-top: $margin-150;
+        position: relative;
+        top: 0;
+        transition: top 0.2s ease-in-out;
+
+        &Left {
+            max-width: 100%;
+            padding: 0 $margin calc($margin - 2px) $margin;
+            position: relative;
+        }
+
+        &Title {
+            font-size: $type-2-size;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            user-select: text;
+            color: $color-foreground;
+        }
+
+        &Subtitle {
+            color: $color-foreground-alpha-70;
+            font-size: $type-4-size;
+            margin: 0;
+            padding-top: 0;
+        }
+    }
+}
+
+.suggestionContainerBodyMore {
+    position: relative;
+    width: 100%;
+
+    &:hover {
+        cursor: pointer;
+        background-color: $color-background-hover;
+    }
+
+    .itemContainer {
+        align-items: center;
+        display: flex;
+        height: $rowbutton-height;
+        padding-left: $margin;
+        width: 100%;
+
+        .itemTitleContainer {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            overflow: hidden;
+            padding: 1px $margin-50 0 0;
+            pointer-events: none;
+            z-index: 1;
+
+            .title {
+                color: $color-primary;
+                font-size: $type-3-size;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+
+            }
+        }
+    }
+
+    .itemIconContainer {
+        align-items: center;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        padding: 1px $margin-50 0 $margin-50;
+        pointer-events: none;
+        position: relative;
+        z-index: 1;
+
+        .icon {
+            color: $color-foreground;
+            display: flex;
+            font-size: $type-2-size;
+            position: relative;
+        }
+    }
+}
+
+.borderContainer {
+    bottom: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: $margin;
+    right: $margin;
+
+    .border {
+        background-color: $color-foreground-4;
+        top: 0;
+        transform-origin: top;
+        height: 1px;
+        left: 0;
+        position: absolute;
+        right: 0;
+    }
+}

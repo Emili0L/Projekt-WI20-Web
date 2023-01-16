@@ -8,17 +8,30 @@ import FavoriteItem from "./Favorites/FavoriteItem";
 import Settings from "./Settings/Settings";
 import Icon from "@mdi/react";
 import { mdiChevronLeft } from "@mdi/js";
+import Search from "./Search/Search";
 
 const MainInfo = () => {
   const router = useRouter();
   const { pathArray: queryPaths } = router.query;
   var pathArray = queryPaths as string[];
 
-  const { setSidebarOpen, sidebarOpen } = useMainContext();
+  const {
+    setSidebarOpen,
+    sidebarOpen,
+    favorites,
+    setFavorites,
+    searchResults,
+    setSearchResults,
+    setLat,
+    setLon,
+    lat,
+    lon,
+  } = useMainContext();
 
   const [isFavoriteEditMode, setIsFavoriteEditMode] = useState(false);
 
   const handleOpen = () => {
+    if (pathArray && pathArray.includes("explore")) return;
     setSidebarOpen(!sidebarOpen);
   };
 
@@ -85,17 +98,6 @@ const MainInfo = () => {
     },
   };
 
-  const dummyFavorites = [
-    {
-      id: "1",
-      name: "Station 1",
-      region: "Region 1",
-      country: "Country 1",
-      lat: 1,
-      lon: 1,
-    },
-  ] as Favorite[];
-
   return (
     <>
       <m.div
@@ -137,7 +139,8 @@ const MainInfo = () => {
               className={styles.header_cta}
             >
               {pathArray &&
-                pathArray.includes("settings") &&
+                (pathArray.includes("settings") ||
+                  pathArray.includes("search")) &&
                 pathArray.length > 1 && (
                   <div
                     className={styles.header_cta_container}
@@ -151,7 +154,10 @@ const MainInfo = () => {
                         size={1}
                         className={styles.btn_icon}
                       />
-                      <div className={styles.btn_text}>Settings</div>
+                      <div className={styles.btn_text}>
+                        {pathArray.includes("settings") && "Settings"}
+                        {pathArray.includes("search") && "Search"}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -178,13 +184,23 @@ const MainInfo = () => {
                     "Current Region"}
                   {pathArray && pathArray.includes("favorites") && "Favorites"}
                   {pathArray && pathArray.includes("history") && "History"}
-                  {pathArray && pathArray.includes("search") && "Search"}
+                  {pathArray &&
+                    pathArray.includes("search") &&
+                    pathArray.length === 1 &&
+                    "Search"}
                   {pathArray &&
                     pathArray.includes("settings") &&
                     pathArray.length === 1 &&
                     "Settings"}
                   {pathArray &&
                     pathArray.includes("settings") &&
+                    pathArray.length > 1 &&
+                    pathArray[pathArray.length - 1].charAt(0).toUpperCase() +
+                      pathArray[pathArray.length - 1]
+                        .slice(1)
+                        .replace(/-/g, " ")}
+                  {pathArray &&
+                    pathArray.includes("search") &&
                     pathArray.length > 1 &&
                     pathArray[pathArray.length - 1].charAt(0).toUpperCase() +
                       pathArray[pathArray.length - 1]
@@ -202,7 +218,7 @@ const MainInfo = () => {
               <div className={styles.header_extrasContainer}>
                 {pathArray &&
                   pathArray.includes("favorites") &&
-                  dummyFavorites.length > 0 && (
+                  favorites.length > 0 && (
                     <>
                       <m.div
                         variants={actionVariants}
@@ -219,19 +235,39 @@ const MainInfo = () => {
                       </m.div>
                     </>
                   )}
+                {pathArray &&
+                  pathArray.includes("search") &&
+                  pathArray.length === 1 &&
+                  (searchResults !== null || lat !== "" || lon !== "") && (
+                    <>
+                      <m.div
+                        variants={actionVariants}
+                        animate={sidebarOpen ? "open" : "closed"}
+                        initial="closed"
+                        className={styles.action}
+                        onClick={() => {
+                          setLat("");
+                          setLon("");
+                          setSearchResults(null);
+                          router.push(
+                            router.asPath.split("?")[0],
+                            router.asPath.split("?")[0],
+                            { shallow: true }
+                          );
+                        }}
+                      >
+                        <div className={styles.action_text}>Clear</div>
+                      </m.div>
+                    </>
+                  )}
               </div>
             </div>
           </div>
           <div className={cn(styles.content, "content")}>
-            {pathArray && pathArray.includes("explore") && (
-              <>
-                <div>Explore</div>
-              </>
-            )}
             {pathArray && pathArray.includes("favorites") && (
               <>
                 {/* No favorites yet */}
-                {dummyFavorites.length === 0 && (
+                {favorites.length === 0 && (
                   <div className={styles.noFavoritesContainer}>
                     <span>
                       Your{" "}
@@ -247,15 +283,17 @@ const MainInfo = () => {
                   </div>
                 )}
                 {/* Favorites */}
-                {dummyFavorites.length > 0 && (
+                {favorites.length > 0 && (
                   <div className="favorite-list">
-                    {dummyFavorites.map((favorite) => (
+                    {favorites.map((favorite) => (
                       <FavoriteItem
                         key={favorite.id}
                         favorite={favorite}
                         isEditMode={isFavoriteEditMode}
                         onRemove={() => {
-                          console.log("remove");
+                          setFavorites(
+                            favorites.filter((f) => f.id !== favorite.id)
+                          );
                         }}
                       />
                     ))}
@@ -268,11 +306,7 @@ const MainInfo = () => {
                 <div>History</div>
               </>
             )}
-            {pathArray && pathArray.includes("search") && (
-              <>
-                <div>Search</div>
-              </>
-            )}
+            {pathArray && pathArray.includes("search") && <Search />}
             {pathArray && pathArray.includes("settings") && <Settings />}
           </div>
         </div>

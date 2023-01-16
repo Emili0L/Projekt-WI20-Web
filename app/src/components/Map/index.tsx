@@ -1,5 +1,5 @@
 import L, { divIcon } from "leaflet";
-import { useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import {
   MapContainer,
   Marker,
@@ -10,13 +10,15 @@ import {
 } from "react-leaflet";
 import { useMainContext } from "../Layout/Layout";
 import useSWR from "swr";
+import { useRouter } from "next/router";
 
 type Props = {
   children?: React.ReactNode;
 };
 
-const Map = ({ children }: Props) => {
-  const { setSelectedMarkerId } = useMainContext();
+const Map = memo(({ children }: Props) => {
+  const router = useRouter();
+  const { setSelectedMarker, searchResults } = useMainContext();
   const [map, setMap] = useState(null);
   const [bounds, setBounds] = useState(null);
   const [zoom, setZoom] = useState(6);
@@ -88,6 +90,34 @@ const Map = ({ children }: Props) => {
     };
   }, [map]);
 
+  useEffect(() => {
+    if (!map) return;
+    // @TODO
+    // check the current path and center the map on the marker if provided
+    const path = router.asPath.split("/");
+    if (path[1] === "explore" && path[2]) {
+      // check if we have search results and if so, if the marker is in the results
+      // if (searchResults && searchResults.length > 0) {
+      //   const marker = searchResults.find((m) => m._source.id === path[2]);
+      //   if (marker) {
+      //     // animate the map to the marker
+      //     map.setView(
+      //       marker._source.coordinates,
+      //       5,
+      //       {
+      //         animate: true,
+      //         duration: 1,
+      //       },
+      //       () => {
+      //         // set the selected marker id
+      //         setSelectedMarkerId(marker._source.id);
+      //       }
+      //     );
+      //   }
+      // }
+    }
+  }, [map, data, searchResults, router.asPath]);
+
   let mapClassName = "map";
 
   const markerIcon = () => {
@@ -96,6 +126,20 @@ const Map = ({ children }: Props) => {
       html: svg,
     });
   };
+
+  const handleMarkerClick = useCallback(
+    (cluster: GeoPoint) => {
+      setSelectedMarker({
+        lat: cluster.geometry.coordinates[1],
+        lon: cluster.geometry.coordinates[0],
+        ...cluster.properties,
+      });
+
+      const id = cluster.properties.name;
+      router.push(`/explore/${id}`, undefined, { shallow: true });
+    },
+    [setSelectedMarker]
+  );
 
   const key = "LZOQu9WlJCxUdwYAm9W9";
 
@@ -142,9 +186,7 @@ const Map = ({ children }: Props) => {
             key={`marker-${cluster.properties.id}`}
             position={[lat, lng]}
             eventHandlers={{
-              click: () => {
-                setSelectedMarkerId(cluster.properties.name);
-              },
+              click: () => handleMarkerClick(cluster),
             }}
           >
             <Popup>
@@ -154,19 +196,13 @@ const Map = ({ children }: Props) => {
         );
       })}
 
-      {/* {coordinates.map((coordinate, index) => (
-        <CircleMarker
-          key={index}
-          center={coordinate}
-          radius={1.5}
-          color={"#00ff82"}
-        />
-      ))} */}
-      <ScaleControl position={"bottomright"} />
+      {/* <ScaleControl position={"bottomright"} /> */}
       <ZoomControl position={"bottomright"} />
       {children}
     </MapContainer>
   );
-};
+});
+
+Map.displayName = "Map";
 
 export default Map;

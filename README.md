@@ -82,7 +82,7 @@ Format of ghcnd-countries.txt
 
 ### Technologies
 - Infrastructure as code (IaC): Terraform
-- - Workflow orchestration: Airflow (ingestion pipeline and transformation pipeline)
+- Nextjs (Reactjs) for the frontend
 
 ### Repository organization
 - \airflow: airflow files (docker-compose.yaml, Dockerfile, requirements, dags folder, etc.).  

@@ -7,6 +7,7 @@ import { ThemeProvider } from "next-themes";
 import "../styles/index.css";
 import "../styles/map.scss";
 import "leaflet/dist/leaflet.css";
+import MuiThemeProvider from "../providers/MuiThemeProvider";
 
 type AppLayoutProps = AppProps & {
   Component: ExtendedNextPage;
@@ -30,11 +31,13 @@ const MyApp = ({
       {/* <AuthWrapper> */}
       <SwrProvider>
         <ThemeProvider attribute="class" defaultTheme="system">
-          <MainLayout title="WI20C - Projekt">
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </MainLayout>
+          <MuiThemeProvider>
+            <MainLayout title="WI20C - Projekt">
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </MainLayout>
+          </MuiThemeProvider>
         </ThemeProvider>
       </SwrProvider>
       {/* </AuthWrapper> */}

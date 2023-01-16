@@ -12,6 +12,9 @@ import cn from "classnames";
 import styles from "./Layout.module.scss";
 import Sidebar from "../Sidebar";
 import { useRouter } from "next/router";
+import { Map } from "..";
+import { SearchResult } from "../../interfaces";
+import { useLocalStorage } from "../../hooks";
 
 type Props = {
   title?: string;
@@ -21,15 +24,43 @@ type Props = {
 type MainContext = {
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
-  selectedMarkerId?: string;
-  setSelectedMarkerId?: (id: string) => void;
+  selectedMarker?: MarkerMetaData;
+  setSelectedMarker?: (marker: MarkerMetaData) => void;
+  searchResults?: SearchResult[];
+  setSearchResults?: (results: SearchResult[]) => void;
+  lat?: string;
+  setLat?: (lat: string) => void;
+  lon?: string;
+  setLon?: (lon: string) => void;
+  distance?: number;
+  setDistance?: (distance: number) => void;
+  maxResults?: number;
+  setMaxResults?: (maxResults: number) => void;
+  favorites?: Favorite[];
+  setFavorites?: (favorites: Favorite[]) => void;
+  suggestionStations?: CountrySuggestion[];
+  setSuggestionStations?: (stations: CountrySuggestion[]) => void;
 };
 
 const MainContext = createContext<MainContext>({
   sidebarOpen: false,
   setSidebarOpen: () => {},
-  selectedMarkerId: null,
-  setSelectedMarkerId: () => {},
+  selectedMarker: null,
+  setSelectedMarker: () => {},
+  lat: null,
+  setLat: () => {},
+  lon: null,
+  setLon: () => {},
+  distance: 200,
+  setDistance: () => {},
+  maxResults: 20,
+  setMaxResults: () => {},
+  searchResults: [],
+  setSearchResults: () => {},
+  favorites: [],
+  setFavorites: () => {},
+  suggestionStations: [],
+  setSuggestionStations: () => {},
 });
 
 export const useMainContext = () => useContext(MainContext);
@@ -50,7 +81,18 @@ const Layout: FC<Props> = ({ children, title }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
 
-  const [selectedMarkerId, setSelectedMarkerId] = useState(null);
+  const [selectedMarker, setSelectedMarker] = useState<MarkerMetaData>(null);
+
+  const [favorites, setFavorites] = useLocalStorage("favorites", []);
+
+  const [lat, setLat] = useState<string>("");
+  const [lon, setLon] = useState<string>("");
+  const [distance, setDistance] = useState<number>(200);
+  const [maxResults, setMaxResults] = useState<number>(20);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>();
+  const [suggestionStations, setSuggestionStations] = useState<
+    CountrySuggestion[]
+  >([]);
 
   useEffect(() => {
     if (
@@ -66,6 +108,20 @@ const Layout: FC<Props> = ({ children, title }) => {
       setInitialLoad(false);
     }
   }, [sidebarOpen]);
+
+  useEffect(() => {
+    if (router.asPath.includes("/explore")) {
+      setSidebarOpen(false);
+    }
+  }, [router.asPath]);
+
+  useEffect(() => {
+    fetch("/api/suggestion/country")
+      .then((res) => res.json())
+      .then((data) => {
+        setSuggestionStations(data);
+      });
+  }, []);
 
   return (
     <>
@@ -86,10 +142,27 @@ const Layout: FC<Props> = ({ children, title }) => {
               value={{
                 sidebarOpen,
                 setSidebarOpen,
-                selectedMarkerId,
-                setSelectedMarkerId,
+                selectedMarker,
+                setSelectedMarker,
+                lat,
+                setLat,
+                lon,
+                setLon,
+                distance,
+                setDistance,
+                maxResults,
+                setMaxResults,
+                searchResults,
+                setSearchResults,
+                favorites,
+                setFavorites,
+                suggestionStations,
+                setSuggestionStations,
               }}
             >
+              <div className="h-full relative">
+                <Map />
+              </div>
               <Sidebar />
               {children}
             </MainContext.Provider>

@@ -37,7 +37,7 @@ const Tabbar = () => {
             styles.tabbar_link,
             router.asPath.includes("/explore") && styles.tabbar_link_active
           )}
-          onClick={handleOpen}
+          key="explore"
         >
           <Icon path={mdiMap} size={1} />
           <div className={styles.tabbar_link_title}>{"Explore"}</div>
