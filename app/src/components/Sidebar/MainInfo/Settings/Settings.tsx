@@ -1,7 +1,6 @@
 import { mdiChevronRight } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Switch } from "@mui/material";
-import cn from "classnames";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { memo } from "react";
@@ -44,6 +43,8 @@ const Settings = ({}: Props) => {
   const changeLanguage = (e: any) => {
     const locale = e.target.value;
     router.push(router.pathname, router.asPath, { locale });
+    if (typeof window !== "undefined")
+      document.cookie = `NEXT_LOCALE=${locale};path=/;max-age=31536000`;
   };
 
   if (pathArray && pathArray.length > 1) {

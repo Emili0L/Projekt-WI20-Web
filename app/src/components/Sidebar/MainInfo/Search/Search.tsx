@@ -44,7 +44,26 @@ const Search = () => {
     1970, 2021,
   ]);
 
+  // all years: array from 1750 to 2023
+  const allYears = Array.from({ length: 2023 - 1750 + 1 }, (_, i) => 1750 + i);
+  // exclude years: We have no data for the years from 1751 to 1762
+  const excludeYears = Array.from(
+    { length: 1762 - 1751 + 1 },
+    (_, i) => 1751 + i
+  );
+  const years = allYears.filter((year) => !excludeYears.includes(year));
+
   const handleChange = (event: Event, newValue: number | number[]) => {
+    if (!Array.isArray(newValue)) return;
+    // if the value is in the excluded range, set it to the closest value in the range
+    if (excludeYears.includes(newValue[0])) {
+      if (newValue[0] <= 1751) {
+        newValue[0] = 1750;
+      } else {
+        newValue[0] = 1763;
+      }
+    }
+
     setSelectedYearRange(newValue as number[]);
   };
 
@@ -131,7 +150,7 @@ const Search = () => {
 
   return (
     <>
-      {pathArray && !pathArray.includes("stations-across-the-globe") ? (
+      {pathArray && pathArray.length === 1 ? (
         <>
           <div className={styles.searchContainer}>
             <input
@@ -191,13 +210,14 @@ const Search = () => {
                   getAriaLabel={() => "Filter Year Range"}
                   onChange={handleChange}
                   step={1}
-                  min={1763}
-                  max={2023}
+                  min={Math.min(...years)}
+                  max={Math.max(...years)}
                   valueLabelDisplay="auto"
+                  disableSwap
                   marks={[
                     {
-                      value: 1763,
-                      label: "1763",
+                      value: 1750,
+                      label: "1750",
                     },
                     {
                       value: 1825,

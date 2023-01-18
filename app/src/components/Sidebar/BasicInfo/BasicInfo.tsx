@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { BasicDialog } from "../../";
-import { BasicLineChart } from "../../Chart";
+import { LineChart } from "../../Chart";
 import styles from "./BasicInfo.module.scss";
 import cn from "classnames";
 import Icon from "@mdi/react";
-import { mdiHeart, mdiHeartOutline, mdiOpenInNew } from "@mdi/js";
+import { mdiHeart, mdiHeartOutline, mdiOpenInApp } from "@mdi/js";
 import { useMainContext } from "../../Layout/Layout";
 
 const BasicInfo = () => {
@@ -61,20 +61,19 @@ const BasicInfo = () => {
           <div
             className={cn(styles.btnBlock, styles.hoverbg)}
             onClick={() => {
-              // check if station is already in favorites
-              // station and favorites are both objects
-              // so we need to check if the id is already in the favorites array
+              if (selectedMarker === null || selectedMarker === undefined)
+                return;
               if (
                 selectedMarker !== null &&
                 favorites.some((fav) => fav.id === selectedMarker.id)
               ) {
-                // remove station from favorites
                 setFavorites(
                   favorites.filter((fav) => fav.id !== selectedMarker.id)
                 );
               } else {
-                // add station to favorites
-                setFavorites([...favorites, selectedMarker]);
+                setFavorites(
+                  [...favorites, selectedMarker].filter((f) => f !== null)
+                );
               }
             }}
           >
@@ -104,7 +103,7 @@ const BasicInfo = () => {
             }}
           >
             <Icon
-              path={mdiOpenInNew}
+              path={mdiOpenInApp}
               size={1}
               color="var(--color-map-foreground)"
             />
@@ -119,13 +118,8 @@ const BasicInfo = () => {
         onClose={() => {
           setIsOpen(false);
         }}
-        title="Graphen"
         maxWidth="md"
-      >
-        <div className="h-full w-full">
-          <BasicLineChart />
-        </div>
-      </BasicDialog>
+      />
     </>
   );
 };

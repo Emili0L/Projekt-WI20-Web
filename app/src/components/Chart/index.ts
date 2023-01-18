@@ -1,2 +1,2 @@
 export { ReactECharts } from "./React-ECharts";
-export { default as BasicLineChart } from "./BasicLineChart";
+export { default as LineChart } from "./LineChart";

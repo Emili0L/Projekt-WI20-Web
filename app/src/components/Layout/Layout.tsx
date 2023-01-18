@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import { Map } from "..";
 import { SearchResult } from "../../interfaces";
 import { useLocalStorage } from "../../hooks";
+import useSWRImmutable from "swr/immutable";
 
 type Props = {
   title?: string;
@@ -115,13 +116,34 @@ const Layout: FC<Props> = ({ children, title }) => {
     }
   }, [router.asPath]);
 
+  useSWRImmutable("/api/suggestion/country", {
+    onSuccess: (data) => setSuggestionStations(data),
+  });
+
   useEffect(() => {
-    fetch("/api/suggestion/country")
-      .then((res) => res.json())
-      .then((data) => {
-        setSuggestionStations(data);
-      });
-  }, []);
+    // if the path matches /expore/:id and no marker is selected, fecth and set the marker
+    if (
+      router.asPath.includes("/explore") &&
+      router.asPath.includes("/explore/")
+    ) {
+      const id = router.asPath.split("/explore/")[1];
+      if (!selectedMarker || (selectedMarker && selectedMarker.id !== id)) {
+        fetch(`/api/station/${id}/info`)
+          .then((res) => res.json())
+          .then((data) =>
+            setSelectedMarker({
+              id: data.id,
+              name: data.id,
+              country: data.country_name,
+              lat: data.coordinates[0],
+              lon: data.coordinates[1],
+            })
+          )
+          // .then(() => console.log("setting marker" + id))
+          .catch();
+      }
+    }
+  }, [router.asPath]);
 
   return (
     <>

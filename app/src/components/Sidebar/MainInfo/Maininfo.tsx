@@ -98,6 +98,8 @@ const MainInfo = () => {
     },
   };
 
+  console.log(favorites);
+
   return (
     <>
       <m.div
@@ -256,7 +258,7 @@ const MainInfo = () => {
                           );
                         }}
                       >
-                        <div className={styles.action_text}>Clear</div>
+                        <div className={styles.action_text}>Reset</div>
                       </m.div>
                     </>
                   )}
@@ -285,18 +287,23 @@ const MainInfo = () => {
                 {/* Favorites */}
                 {favorites.length > 0 && (
                   <div className="favorite-list">
-                    {favorites.map((favorite) => (
-                      <FavoriteItem
-                        key={favorite.id}
-                        favorite={favorite}
-                        isEditMode={isFavoriteEditMode}
-                        onRemove={() => {
-                          setFavorites(
-                            favorites.filter((f) => f.id !== favorite.id)
-                          );
-                        }}
-                      />
-                    ))}
+                    {favorites.map(
+                      (favorite) =>
+                        favorite !== null && (
+                          <FavoriteItem
+                            key={favorite.id}
+                            favorite={favorite}
+                            isEditMode={isFavoriteEditMode}
+                            onRemove={() => {
+                              setFavorites(
+                                favorites
+                                  .filter((f) => f.id !== favorite.id)
+                                  .filter((f) => f !== null)
+                              );
+                            }}
+                          />
+                        )
+                    )}
                   </div>
                 )}
               </>
