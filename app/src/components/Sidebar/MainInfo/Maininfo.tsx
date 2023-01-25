@@ -1,6 +1,6 @@
 import cn from "classnames";
 import { useRouter } from "next/router";
-import styles from "./Maininfo.module.scss";
+import styles from "./MainInfo.module.scss";
 import { motion as m } from "framer-motion";
 import { useMainContext } from "../../Layout/Layout";
 import { useState } from "react";
