@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { BasicDialog } from "../../";
-import { LineChart } from "../../Chart";
 import styles from "./BasicInfo.module.scss";
 import cn from "classnames";
 import Icon from "@mdi/react";
-import { mdiHeart, mdiHeartOutline, mdiOpenInApp } from "@mdi/js";
+import { mdiChartBoxOutline, mdiHeart, mdiHeartOutline } from "@mdi/js";
 import { useMainContext } from "../../Layout/Layout";
 
 const BasicInfo = () => {
@@ -48,11 +47,11 @@ const BasicInfo = () => {
               </div>
               <div className={styles.subtitle}>
                 {selectedMarker === null
-                  ? "Region, Country"
+                  ? "Country"
                   : `${displayGPS({
                       lat: selectedMarker.lat,
                       lon: selectedMarker.lon,
-                    })} - Region, Country`}
+                    })} - ${selectedMarker.country || "Country"}`}
               </div>
             </div>
           </div>
@@ -103,7 +102,7 @@ const BasicInfo = () => {
             }}
           >
             <Icon
-              path={mdiOpenInApp}
+              path={mdiChartBoxOutline}
               size={1}
               color="var(--color-map-foreground)"
             />

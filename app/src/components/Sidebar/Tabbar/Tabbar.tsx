@@ -12,9 +12,12 @@ import {
 } from "@mdi/js";
 import MainInfo from "../MainInfo/Maininfo";
 import { useMainContext } from "../../Layout/Layout";
+import en from "../../../locales/en";
+import de from "../../../locales/de";
 
 const Tabbar = () => {
   const router = useRouter();
+  const t = router.locale === "en" ? en : de;
   const { setSidebarOpen } = useMainContext();
 
   const handleOpen = () => {
@@ -40,7 +43,7 @@ const Tabbar = () => {
           key="explore"
         >
           <Icon path={mdiMap} size={1} />
-          <div className={styles.tabbar_link_title}>{"Explore"}</div>
+          <div className={styles.tabbar_link_title}>{t.tabbar.explore}</div>
         </Link>
         <Link
           shallow
@@ -52,7 +55,7 @@ const Tabbar = () => {
           onClick={handleOpen}
         >
           <Icon path={mdiHeartOutline} size={1} />
-          <div className={styles.tabbar_link_title}>{"Favorites"}</div>
+          <div className={styles.tabbar_link_title}>{t.tabbar.favorites}</div>
         </Link>
         <Link
           shallow
@@ -64,7 +67,7 @@ const Tabbar = () => {
           onClick={handleOpen}
         >
           <Icon path={mdiHistory} size={1} />
-          <div className={styles.tabbar_link_title}>{"history"}</div>
+          <div className={styles.tabbar_link_title}>{t.tabbar.history}</div>
         </Link>
         <Link
           shallow
@@ -76,7 +79,7 @@ const Tabbar = () => {
           onClick={handleOpen}
         >
           <Icon path={mdiMagnify} size={1} />
-          <div className={styles.tabbar_link_title}>{"Search"}</div>
+          <div className={styles.tabbar_link_title}>{t.tabbar.search}</div>
         </Link>
         <Link
           shallow
@@ -88,7 +91,7 @@ const Tabbar = () => {
           onClick={handleOpen}
         >
           <Icon path={mdiTune} size={1} />
-          <div className={styles.tabbar_link_title}>{"Settings"}</div>
+          <div className={styles.tabbar_link_title}>{t.tabbar.settings}</div>
         </Link>
       </div>
     </>

@@ -18,8 +18,7 @@ type Props = {
 
 const Map = memo(({ children }: Props) => {
   const router = useRouter();
-  const { setSelectedMarker, searchResults } = useMainContext();
-  const [map, setMap] = useState(null);
+  const { setSelectedMarker, searchResults, map, setMap } = useMainContext();
   const [bounds, setBounds] = useState(null);
   const [zoom, setZoom] = useState(6);
 
@@ -90,33 +89,33 @@ const Map = memo(({ children }: Props) => {
     };
   }, [map]);
 
-  useEffect(() => {
-    if (!map) return;
-    // @TODO
-    // check the current path and center the map on the marker if provided
-    const path = router.asPath.split("/");
-    if (path[1] === "explore" && path[2]) {
-      // check if we have search results and if so, if the marker is in the results
-      // if (searchResults && searchResults.length > 0) {
-      //   const marker = searchResults.find((m) => m._source.id === path[2]);
-      //   if (marker) {
-      //     // animate the map to the marker
-      //     map.setView(
-      //       marker._source.coordinates,
-      //       5,
-      //       {
-      //         animate: true,
-      //         duration: 1,
-      //       },
-      //       () => {
-      //         // set the selected marker id
-      //         setSelectedMarkerId(marker._source.id);
-      //       }
-      //     );
-      //   }
-      // }
-    }
-  }, [map, data, searchResults, router.asPath]);
+  // useEffect(() => {
+  //   if (!map) return;
+  //   // @TODO
+  //   // check the current path and center the map on the marker if provided
+  //   const path = router.asPath.split("/");
+  //   if (path[1] === "explore" && path[2]) {
+  //     // check if we have search results and if so, if the marker is in the results
+  //     // if (searchResults && searchResults.length > 0) {
+  //     //   const marker = searchResults.find((m) => m._source.id === path[2]);
+  //     //   if (marker) {
+  //     //     // animate the map to the marker
+  //     //     map.setView(
+  //     //       marker._source.coordinates,
+  //     //       5,
+  //     //       {
+  //     //         animate: true,
+  //     //         duration: 1,
+  //     //       },
+  //     //       () => {
+  //     //         // set the selected marker id
+  //     //         setSelectedMarkerId(marker._source.id);
+  //     //       }
+  //     //     );
+  //     //   }
+  //     // }
+  //   }
+  // }, [map, data, searchResults, router.asPath]);
 
   let mapClassName = "map";
 
@@ -129,11 +128,11 @@ const Map = memo(({ children }: Props) => {
 
   const handleMarkerClick = useCallback(
     (cluster: GeoPoint) => {
-      setSelectedMarker({
-        lat: cluster.geometry.coordinates[1],
-        lon: cluster.geometry.coordinates[0],
-        ...cluster.properties,
-      });
+      // setSelectedMarker({
+      //   lat: cluster.geometry.coordinates[1],
+      //   lon: cluster.geometry.coordinates[0],
+      //   ...cluster.properties,
+      // });
 
       const id = cluster.properties.name;
       router.push(`/explore/${id}`, undefined, { shallow: true });

@@ -25,6 +25,8 @@ type Props = {
 type MainContext = {
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
+  map: any;
+  setMap: (map: any) => void;
   selectedMarker?: MarkerMetaData;
   setSelectedMarker?: (marker: MarkerMetaData) => void;
   searchResults?: SearchResult[];
@@ -46,6 +48,8 @@ type MainContext = {
 const MainContext = createContext<MainContext>({
   sidebarOpen: false,
   setSidebarOpen: () => {},
+  map: null,
+  setMap: () => {},
   selectedMarker: null,
   setSelectedMarker: () => {},
   lat: null,
@@ -82,6 +86,7 @@ const Layout: FC<Props> = ({ children, title }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
 
+  const [map, setMap] = useState<any>(null);
   const [selectedMarker, setSelectedMarker] = useState<MarkerMetaData>(null);
 
   const [favorites, setFavorites] = useLocalStorage("favorites", []);
@@ -121,7 +126,7 @@ const Layout: FC<Props> = ({ children, title }) => {
   });
 
   useEffect(() => {
-    // if the path matches /expore/:id and no marker is selected, fecth and set the marker
+    // if the path matches /expore/:id and no marker is selected or a change has been detected, fecth and set the marker
     if (
       router.asPath.includes("/explore") &&
       router.asPath.includes("/explore/")
@@ -130,17 +135,19 @@ const Layout: FC<Props> = ({ children, title }) => {
       if (!selectedMarker || (selectedMarker && selectedMarker.id !== id)) {
         fetch(`/api/station/${id}/info`)
           .then((res) => res.json())
-          .then((data) =>
+          .then((data) => {
             setSelectedMarker({
               id: data.id,
               name: data.id,
               country: data.country_name,
               lat: data.coordinates[0],
               lon: data.coordinates[1],
-            })
-          )
-          // .then(() => console.log("setting marker" + id))
-          .catch();
+            });
+            if (map) {
+              map.flyTo([data.coordinates[1], data.coordinates[0]], 9);
+            }
+          })
+          .catch((err) => console.log(err));
       }
     }
   }, [router.asPath]);
@@ -164,6 +171,8 @@ const Layout: FC<Props> = ({ children, title }) => {
               value={{
                 sidebarOpen,
                 setSidebarOpen,
+                map,
+                setMap,
                 selectedMarker,
                 setSelectedMarker,
                 lat,

@@ -69,14 +69,14 @@ const LineChart = () => {
         saveAsImage: { show: true },
       },
     },
-    // dataZoom: [
-    //   {
-    //     type: "slider",
-    //     xAxisIndex: 0,
-    //     start: 0,
-    //     end: 100,
-    //   },
-    // ],
+    dataZoom: [
+      {
+        type: "slider",
+        xAxisIndex: 0,
+        start: 0,
+        end: 100,
+      },
+    ],
     xAxis: {
       type: "category",
       boundaryGap: false,
@@ -103,7 +103,7 @@ const LineChart = () => {
   });
   const chartRef = useRef<HTMLDivElement>(null);
 
-  const settings = {};
+  const settings = {} as SetOptionOpts;
 
   const style = {
     height: "20rem",
@@ -111,10 +111,7 @@ const LineChart = () => {
 
   const handleChartClick = (params: any) => {
     const chart = getInstanceByDom(chartRef.current);
-    // get the current chart options
     const chartOptions = chart.getOption();
-    console.log(params);
-    console.log(chartOptions);
 
     if (chartOptions.currentView === "all") {
       chart.showLoading();
@@ -155,6 +152,7 @@ const LineChart = () => {
                 data: data.data.map((d: any) => d.tmax),
               },
             ],
+            dataZoom: [],
           });
           chart.hideLoading();
           chart.setOption(option);
@@ -165,7 +163,7 @@ const LineChart = () => {
           console.error("Error:", error);
           chart.hideLoading();
         });
-      // @ts-ignore
+      // @ts-expect-error
     } else if (chartOptions.currentView?.includes("year")) {
       chart.showLoading();
       var selectedMonth = params.name;
@@ -201,6 +199,7 @@ const LineChart = () => {
                 data: data.data.map((d: any) => d.tmax),
               },
             ],
+            dataZoom: [],
           });
           chart.hideLoading();
           chart.setOption(option);

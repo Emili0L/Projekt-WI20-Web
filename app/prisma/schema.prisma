@@ -20,15 +20,16 @@ datasource db {
 //   url      = "file:./dev.db"
 // }
 
-enum MeasurementType {
-  TMIN
-  TMAX
-}
+// enum MeasurementType {
+//   TMIN
+//   TMAX
+// }
 
 model WeatherData {
   id String @id @default(cuid())
   stationId String
   timestamp DateTime
-  type MeasurementType
+  // type MeasurementType
+  type String
   value Float
 }

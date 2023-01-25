@@ -9,9 +9,13 @@ import Settings from "./Settings/Settings";
 import Icon from "@mdi/react";
 import { mdiChevronLeft } from "@mdi/js";
 import Search from "./Search/Search";
+import en from "../../../locales/en";
+import de from "../../../locales/de";
+import History from "./History";
 
 const MainInfo = () => {
   const router = useRouter();
+  const t = router.locale === "en" ? en : de;
   const { pathArray: queryPaths } = router.query;
   var pathArray = queryPaths as string[];
 
@@ -98,8 +102,6 @@ const MainInfo = () => {
     },
   };
 
-  console.log(favorites);
-
   return (
     <>
       <m.div
@@ -157,8 +159,8 @@ const MainInfo = () => {
                         className={styles.btn_icon}
                       />
                       <div className={styles.btn_text}>
-                        {pathArray.includes("settings") && "Settings"}
-                        {pathArray.includes("search") && "Search"}
+                        {pathArray.includes("settings") && t.tabbar.settings}
+                        {pathArray.includes("search") && t.tabbar.search}
                       </div>
                     </div>
                   </div>
@@ -184,16 +186,20 @@ const MainInfo = () => {
                   {pathArray &&
                     pathArray.includes("explore") &&
                     "Current Region"}
-                  {pathArray && pathArray.includes("favorites") && "Favorites"}
-                  {pathArray && pathArray.includes("history") && "History"}
+                  {pathArray &&
+                    pathArray.includes("favorites") &&
+                    t.tabbar.favorites}
+                  {pathArray &&
+                    pathArray.includes("history") &&
+                    t.tabbar.history}
                   {pathArray &&
                     pathArray.includes("search") &&
                     pathArray.length === 1 &&
-                    "Search"}
+                    t.tabbar.search}
                   {pathArray &&
                     pathArray.includes("settings") &&
                     pathArray.length === 1 &&
-                    "Settings"}
+                    t.tabbar.settings}
                   {pathArray &&
                     pathArray.includes("settings") &&
                     pathArray.length > 1 &&
@@ -232,7 +238,7 @@ const MainInfo = () => {
                         }
                       >
                         <div className={styles.action_text}>
-                          {isFavoriteEditMode ? "Done" : "Edit"}
+                          {isFavoriteEditMode ? t.done : t.edit}
                         </div>
                       </m.div>
                     </>
@@ -258,7 +264,7 @@ const MainInfo = () => {
                           );
                         }}
                       >
-                        <div className={styles.action_text}>Reset</div>
+                        <div className={styles.action_text}>{t.reset}</div>
                       </m.div>
                     </>
                   )}
@@ -301,6 +307,13 @@ const MainInfo = () => {
                                   .filter((f) => f !== null)
                               );
                             }}
+                            onClick={() => {
+                              router.push(
+                                `/explore/${favorite.name}`,
+                                undefined,
+                                { shallow: true }
+                              );
+                            }}
                           />
                         )
                     )}
@@ -308,11 +321,7 @@ const MainInfo = () => {
                 )}
               </>
             )}
-            {pathArray && pathArray.includes("history") && (
-              <>
-                <div>History</div>
-              </>
-            )}
+            {pathArray && pathArray.includes("history") && <History />}
             {pathArray && pathArray.includes("search") && <Search />}
             {pathArray && pathArray.includes("settings") && <Settings />}
           </div>

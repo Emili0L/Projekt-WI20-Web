@@ -22,7 +22,8 @@ from tqdm import tqdm
 
 ### Variables
 # Set up the database connection
-DATABASE_URL = "postgresql://root:root@localhost:5432/ghcnd"
+# DATABASE_URL = "postgresql://root:root@localhost:5432/ghcnd"
+DATABASE_URL= "postgresql://postgres:uxNZL5g77mQ85tK06Sm2E@ghcnd.postgres.database.azure.com:5432/ghcnd"
 engine = create_engine(DATABASE_URL)
 Base = declarative_base()
 Base.metadata.create_all(engine)
@@ -36,7 +37,7 @@ class WeatherData(Base):
     id = Column(String, primary_key=True)
     stationId = Column(String, nullable=False)
     timestamp = Column(DateTime(timezone=False), nullable=False)
-    type = Column(Enum("MeasurementType"), nullable=False)
+    type = Column(String, nullable=False)
     value = Column(Float, nullable=False)
 
     def __init__(self, station_id, timestamp, measurement_type, value):
@@ -56,8 +57,8 @@ logger = logging.getLogger(__name__)
 # Set up the parser
 parser = argparse.ArgumentParser(description="Script to seed the database with the station data.")
 parser.add_argument("--data_dir", type=str, default="data", help="Path to the data directory.")
-parser.add_argument("--start_year", type=int, default=1793, help="Start year of the data to seed.")
-parser.add_argument("--end_year", type=int, default=1800, help="End year of the data to seed.")
+parser.add_argument("--start_year", type=int, default=1913, help="Start year of the data to seed.")
+parser.add_argument("--end_year", type=int, default=1913, help="End year of the data to seed.")
 
 
 ### Functions

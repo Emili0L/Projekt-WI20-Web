@@ -10,12 +10,13 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { mdiClose, mdiRestart } from "@mdi/js";
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import Icon from "@mdi/react";
 import { useTheme } from "next-themes";
 import useSWRImmutable from "swr/immutable";
 import { useMainContext } from "../Layout/Layout";
 import { LineChart } from "../Chart";
+import useSWR from "swr";
 
 interface ChartData {
   tmin: number;
@@ -119,16 +120,13 @@ const BasicDialog = memo(
     const [data, setData] = React.useState<ChartData[]>([]);
     const [shouldReset, setShouldReset] = React.useState<boolean>(false);
 
-    useSWRImmutable(
-      selectedMarker !== null && `/api/station/${selectedMarker.name}`,
-      {
-        onSuccess: (data) => {
-          console.log(data);
-          setData(data.data);
-          setLoading(false);
-        },
-      }
-    );
+    useSWR(selectedMarker !== null && `/api/station/${selectedMarker.name}`, {
+      onSuccess: (data) => {
+        // console.log(data);
+        setData(data.data);
+        setLoading(false);
+      },
+    });
 
     const title = React.useMemo(() => {
       if (selectedMarker === null) return "Loading...";
@@ -138,10 +136,11 @@ const BasicDialog = memo(
       } else if (currentView === "year") {
         rightSide = `${selectedYear}`;
       } else if (currentView === "month") {
-        const month = new Date(selectedYear, selectedMonth, 1).toLocaleString(
-          "default",
-          { month: "long" }
-        );
+        const month = new Date(
+          selectedYear,
+          selectedMonth - 1,
+          1
+        ).toLocaleString("default", { month: "long" });
         rightSide = `${month} ${selectedYear}`;
       }
       return `${selectedMarker.name} - ${rightSide}`;
@@ -191,7 +190,7 @@ const BasicDialog = memo(
                 {data.length > 0 && <LineChart />}
                 {data.length === 0 && (
                   <div className="flex justify-center items-center h-full w-full">
-                    <p>No data available</p>
+                    <p>For this station are no temperature records</p>
                   </div>
                 )}
               </div>

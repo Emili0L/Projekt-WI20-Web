@@ -41,7 +41,7 @@ const Search = () => {
     useState<boolean>(false);
 
   const [selectedYearRange, setSelectedYearRange] = useState<number[]>([
-    1970, 2021,
+    1750, 2023,
   ]);
 
   // all years: array from 1750 to 2023
@@ -228,8 +228,8 @@ const Search = () => {
                       label: "1900",
                     },
                     {
-                      value: 1950,
-                      label: "1950",
+                      value: 1975,
+                      label: "1975",
                     },
                     {
                       value: 2023,

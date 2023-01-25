@@ -35,6 +35,7 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
     const result = await client.search({
       index: process.env.ELASTICSEARCH_INDEX,
       query: {
+        // @ts-expect-error
         bool: {
           must: {
             match_all: {},
