@@ -1,6 +1,6 @@
 # Projekt-WI20-Web
 
-![Contributors](https://img.shields.io/github/contributors/Emili0L/Projekt-WI20-Web?color=dark-green) ![License](https://img.shields.io/github/license/Emili0L/Projekt-WI20-Web)
+![Contributors](https://img.shields.io/github/contributors/Emili0L/Projekt-WI20-Web?color=dark-green) ![License](https://img.shields.io/github/license/Emili0L/Projekt-WI20-Web) ![Deployment](https://vercelbadge.vercel.app/api/Emili0L/Projekt-WI20-Web)
 
 
 - [Projekt-WI20-Web](#projekt-wi20-web)
