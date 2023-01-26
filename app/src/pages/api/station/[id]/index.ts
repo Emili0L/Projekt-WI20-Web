@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { withMethods } from "../../../../lib/middlewares";
-import prisma from "../../../../prisma";
 
 async function handle(req: NextApiRequest, res: NextApiResponse) {
   var { id: stationId, year, month } = req.query;
@@ -41,54 +40,53 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
 
   try {
     if (year && month) {
-      const data = await prisma.$queryRaw`SELECT
-        EXTRACT(day FROM timestamp) as day,
-        AVG(CASE WHEN type='TMIN' THEN value/10 ELSE NULL END) as TMIN,
-        AVG(CASE WHEN type='TMAX' THEN value/10 ELSE NULL END) as TMAX
-      FROM "WeatherData"
-      WHERE "stationId" = ${stationId}
-      AND EXTRACT(year FROM timestamp) = ${parseInt(year as string)}
-      AND EXTRACT(month FROM timestamp) = ${parseInt(month as string)}
-      GROUP BY day
-      ORDER BY day ASC
-    `;
-      return res.status(200).json({
-        stationId: stationId,
-        data: data,
-      });
+      const response = await fetch(
+        `${process.env.AWS_LAMBDA_URL}?stationID=${stationId}&year=${year}&month=${month}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": process.env.AWS_LAMBDA_API_KEY,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      return res.status(200).json(data);
     }
 
     if (year) {
-      const data = await prisma.$queryRaw`SELECT 
-        date_trunc('month', timestamp) as month, 
-        AVG(CASE WHEN type='TMIN' THEN value/10 ELSE NULL END) as TMIN,
-        AVG(CASE WHEN type='TMAX' THEN value/10 ELSE NULL END) as TMAX
-      FROM "WeatherData"
-      WHERE "stationId" = ${stationId} 
-      AND EXTRACT(year FROM timestamp) = ${parseInt(year as string)}
-      GROUP BY month
-      ORDER BY month ASC
-    `;
-      return res.status(200).json({
-        stationId: stationId,
-        data: data,
-      });
+      const response = await fetch(
+        `${process.env.AWS_LAMBDA_URL}?stationID=${stationId}&year=${year}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": process.env.AWS_LAMBDA_API_KEY,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      return res.status(200).json(data);
     }
 
-    const data = await prisma.$queryRaw`SELECT 
-        EXTRACT(year FROM timestamp) as year, 
-        AVG(CASE WHEN type='TMIN' THEN value/10 ELSE NULL END) as TMIN,
-        AVG(CASE WHEN type='TMAX' THEN value/10 ELSE NULL END) as TMAX
-      FROM "WeatherData"
-      WHERE "stationId" = ${stationId}
-      GROUP BY year
-      ORDER BY year ASC
-    `;
+    const response = await fetch(
+      `${process.env.AWS_LAMBDA_URL}?stationID=${stationId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": process.env.AWS_LAMBDA_API_KEY,
+        },
+      }
+    );
 
-    res.status(200).json({
-      stationId: stationId,
-      data: data,
-    });
+    const data = await response.json();
+
+    return res.status(200).json(data);
   } catch (e) {
     res.status(500).json({ message: e.message });
   }

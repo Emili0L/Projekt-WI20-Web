@@ -15,7 +15,6 @@
     "@mdi/js": "^7.1.96",
     "@mdi/react": "^1.6.1",
     "@mui/material": "^5.11.4",
-    "@prisma/client": "^4.9.0",
     "@tailwindcss/line-clamp": "^0.4.2",
     "@types/leaflet": "^1.7.11",
     "axios": "^1.1.3",
