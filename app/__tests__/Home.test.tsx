@@ -1,9 +1,9 @@
 import { expect, test } from "vitest";
 import { render, screen, within } from "@testing-library/react";
-import Home from "../src/pages/[...pathArray]";
+import Layout from "../src/components/Layout";
 
-test("home", () => {
-  render(<Home />);
+test("map", () => {
+  render(<Layout />);
   const main = within(screen.getByRole("main"));
 
   // check if the map got rendered

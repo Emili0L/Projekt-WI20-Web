@@ -1,6 +1,9 @@
 # Staged csv files
 data
 
+!data/station_metadata2.csv
+!data/station_metadata3.csv
+
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints
 
