@@ -21,15 +21,26 @@
 }
 
 :root {
+    --boxbackground: #2A2A2A;
+    --selectbutton: #262626;
+    --dividerlinedark: #1E1E1E;
+    --primarygreen: #1DB954;
+    --intensity5: #199E48;
+    --intensity4: #168A3F;
+    --intensity3: #127535;
+    --intensity2: #0F612C;
+    --intensity1: #0C4D23;
+    --texticons: #FFFFFF;
+    --subtitle: #7C7C7C;
     --color-map-foreground: #fff;
     --color-primary: rgb(0, 200, 100);
 }
 
 body {
-    font-feature-settings: "tnum" 1,"kern" 1;
+    font-feature-settings: "tnum" 1, "kern" 1;
     -webkit-touch-callout: none;
     color: #000;
-    font-family: Atlas Grotesk Web,Helvetica,Arial,sans-serif;
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 1.1rem;
     font-stretch: normal;
     font-style: normal;

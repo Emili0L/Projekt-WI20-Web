@@ -10,13 +10,16 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { mdiClose, mdiRestart } from "@mdi/js";
-import React, { memo, useEffect } from "react";
+import React, { memo } from "react";
 import Icon from "@mdi/react";
 import { useTheme } from "next-themes";
-import useSWRImmutable from "swr/immutable";
 import { useMainContext } from "../Layout/Layout";
 import { LineChart } from "../Chart";
 import useSWR from "swr";
+import Spinner from "../Spinner";
+import { useRouter } from "next/router";
+import en from "../../locales/en";
+import de from "../../locales/de";
 
 interface ChartData {
   tmin: number;
@@ -77,6 +80,8 @@ const BasicDialog = memo(
     maxWidth = "xs",
     titleProps,
   }: BasicDialogProps) => {
+    const router = useRouter();
+    const t = router.locale === "de" ? de : en;
     const { selectedMarker } = useMainContext();
     const { resolvedTheme: theme } = useTheme();
 
@@ -120,13 +125,16 @@ const BasicDialog = memo(
     const [data, setData] = React.useState<ChartData[]>([]);
     const [shouldReset, setShouldReset] = React.useState<boolean>(false);
 
-    useSWR(selectedMarker !== null && `/api/station/${selectedMarker.name}`, {
-      onSuccess: (data) => {
-        // console.log(data);
-        setData(data.data);
-        setLoading(false);
-      },
-    });
+    const { isValidating } = useSWR(
+      selectedMarker !== null && `/api/station/${selectedMarker.name}`,
+      {
+        onSuccess: (data) => {
+          setData(data.data);
+          setLoading(false);
+        },
+        revalidateOnFocus: false,
+      }
+    );
 
     const title = React.useMemo(() => {
       if (selectedMarker === null) return "Loading...";
@@ -187,9 +195,14 @@ const BasicDialog = memo(
               }}
             >
               <div className="h-full w-full">
-                {data.length > 0 && <LineChart />}
-                {data.length === 0 && (
-                  <div className="flex justify-center items-center h-full w-full">
+                {isValidating && (
+                  <div className="flex justify-center items-center h-[20rem] w-full">
+                    <Spinner />
+                  </div>
+                )}
+                {!isValidating && data.length > 0 && <LineChart />}
+                {!isValidating && data.length === 0 && (
+                  <div className="flex justify-center items-center h-[20rem] w-full">
                     <p>For this station are no temperature records</p>
                   </div>
                 )}
@@ -205,12 +218,12 @@ const BasicDialog = memo(
                   variant="outlined"
                 >
                   <Icon path={mdiRestart} size={1.0} />
-                  Reset
+                  {t.reset}
                 </Button>
               )}
 
               <Button onClick={handleClose} color="primary">
-                Close
+                {t.close}
               </Button>
             </DialogActions>
           </Dialog>

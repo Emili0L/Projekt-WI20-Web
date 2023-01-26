@@ -9,6 +9,7 @@ const t = {
   done: "Fertig",
   edit: "Bearbeiten",
   reset: "Zurücksetzen",
+  close: "Schließen",
 };
 
 export default t;

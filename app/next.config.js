@@ -76,7 +76,7 @@ const config = {
           },
           {
             key: 'X-Powered-By',
-            value: 'Sven Hüpers',
+            value: 'Sven Huepers',
           }
         ]
       }

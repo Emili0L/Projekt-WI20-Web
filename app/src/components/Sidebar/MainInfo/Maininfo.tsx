@@ -167,25 +167,8 @@ const MainInfo = () => {
                 )}
             </m.div>
             <div className={styles.header_container}>
-              {pathArray && pathArray.includes("explore") && (
-                <div className={styles.header_count}>
-                  <div className={styles.header_count_count}>
-                    <div
-                      className={cn(
-                        styles.header_count_count_number,
-                        styles.singleDigit
-                      )}
-                    >
-                      {"1"}
-                    </div>
-                  </div>
-                </div>
-              )}
               <div className={styles.header_titleContainer}>
                 <div className={styles.header_titleContainer_title}>
-                  {pathArray &&
-                    pathArray.includes("explore") &&
-                    "Current Region"}
                   {pathArray &&
                     pathArray.includes("favorites") &&
                     t.tabbar.favorites}
@@ -214,13 +197,6 @@ const MainInfo = () => {
                       pathArray[pathArray.length - 1]
                         .slice(1)
                         .replace(/-/g, " ")}
-                </div>
-                <div className={styles.header_titleContainer_subtitleContainer}>
-                  <div className={styles.header_titleContainer_subtitle}>
-                    {router.asPath &&
-                      router.asPath.includes("/explore") &&
-                      "Country"}
-                  </div>
                 </div>
               </div>
               <div className={styles.header_extrasContainer}>

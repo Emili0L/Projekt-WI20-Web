@@ -4,7 +4,6 @@ import {
   MapContainer,
   Marker,
   TileLayer,
-  ScaleControl,
   ZoomControl,
   Popup,
 } from "react-leaflet";
@@ -34,7 +33,17 @@ const Map = memo(({ children }: Props) => {
     if (!feature.properties.cluster) return L.marker(latlng);
 
     const count = feature.properties.point_count;
-    const size = count < 100 ? "small" : count < 1000 ? "medium" : "large";
+    const size =
+      count < 50
+        ? "small"
+        : count < 100
+        ? "medium"
+        : count < 200
+        ? "large"
+        : count < 500
+        ? "xlarge"
+        : "xxlarge";
+
     const icon = L.divIcon({
       html: `<div><span>${feature.properties.point_count_abbreviated}</span></div>`,
       className: `marker-cluster marker-cluster-${size}`,
@@ -134,7 +143,7 @@ const Map = memo(({ children }: Props) => {
       //   ...cluster.properties,
       // });
 
-      const id = cluster.properties.name;
+      const id = cluster.properties.id;
       router.push(`/explore/${id}`, undefined, { shallow: true });
     },
     [setSelectedMarker]

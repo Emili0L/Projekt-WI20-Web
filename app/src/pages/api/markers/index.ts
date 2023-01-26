@@ -1,31 +1,16 @@
 import { withMethods } from "../../../lib/middlewares";
 import type { NextApiRequest, NextApiResponse } from "next";
 import supercluster from "supercluster";
-const station_metadata = require("./../../../resources/station_metadata.json");
+const geodata = require("./../../../resources/data.json");
 
 // initialize supercluster
 const index = new supercluster({
   radius: 100,
   maxZoom: 16,
 });
-// convert coordinates to supercluster format
-const points = station_metadata.stations.map((station) => ({
-  type: "Feature",
-  properties: {
-    // generate unique id
-    id:
-      Math.random().toString(36).substring(2) +
-      new Date().getTime().toString(36),
-    name: station.station_id,
-  },
-  geometry: {
-    type: "Point",
-    coordinates: [station.longitude, station.latitude],
-  },
-}));
 
 // add points to supercluster
-index.load(points);
+index.load(geodata.features);
 
 function handle(req: NextApiRequest, res: NextApiResponse) {
   var { bounds, zoom } = req.query;

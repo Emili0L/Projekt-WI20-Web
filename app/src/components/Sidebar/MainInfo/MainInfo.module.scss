@@ -217,7 +217,7 @@
         flex-direction: column;
         justify-content: flex-end;
         overflow: hidden;
-        padding: 0 $margin 0 $margin;
+        padding: 0 $margin 10px $margin;
         width: 100%;
 
         &.isPlace {

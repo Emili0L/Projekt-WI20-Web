@@ -9,6 +9,7 @@ const t = {
   done: "Done",
   edit: "Edit",
   reset: "Reset",
+  close: "Close",
 };
 
 export default t;

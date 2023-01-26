@@ -8,6 +8,7 @@ import {
   InputAdornment,
   OutlinedInput,
   Slider,
+  TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import styles from "./Search.module.scss";
@@ -153,19 +154,25 @@ const Search = () => {
       {pathArray && pathArray.length === 1 ? (
         <>
           <div className={styles.searchContainer}>
-            <input
-              type="text"
-              placeholder="Latitude"
-              onChange={(e) => setLat(e.target.value)}
+            <TextField
+              label="Latitude"
+              variant="outlined"
               value={lat}
+              onChange={(e) => setLat(e.target.value)}
+              required
               name="lat"
+              size="small"
+              type={"number"}
             />
-            <input
-              type="text"
-              placeholder="Longitude"
-              onChange={(e) => setLon(e.target.value)}
+            <TextField
+              label="Longitude"
+              variant="outlined"
               value={lon}
+              onChange={(e) => setLon(e.target.value)}
+              required
               name="lon"
+              size="small"
+              type={"number"}
             />
           </div>
           <div className={styles.filterContainer}>
@@ -305,7 +312,7 @@ const Search = () => {
               >
                 {filterContainerOpen ? "Hide Filters" : "Show Filters"}
               </Button>
-              <Button onClick={handleSearch} variant="text" color="primary">
+              <Button variant="outlined" onClick={handleSearch} color="primary">
                 Search
               </Button>
             </div>
