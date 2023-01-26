@@ -1,11 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { withMethods } from "../../../../lib/middlewares";
+import NodeCache from "node-cache";
+
+const cache = new NodeCache({ stdTTL: 3600, checkperiod: 120 }); // cache for 1 hour
 
 async function handle(req: NextApiRequest, res: NextApiResponse) {
   var { id: stationId, year, month } = req.query;
   stationId = stationId as string;
   if (!stationId) {
     return res.status(400).end();
+  }
+  // check if the data is in the cache
+  const url = `${process.env.AWS_LAMBDA_URL}?stationID=${stationId}&year=${year}&month=${month}`;
+  const cachedData = cache.get(url);
+  if (cachedData) {
+    return res.status(200).json(cachedData);
   }
 
   // Model: WeatherData
@@ -53,6 +62,8 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
 
       const data = await response.json();
 
+      cache.set(url, data);
+
       return res.status(200).json(data);
     }
 
@@ -70,6 +81,8 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
 
       const data = await response.json();
 
+      cache.set(url, data);
+
       return res.status(200).json(data);
     }
 
@@ -85,6 +98,8 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
     );
 
     const data = await response.json();
+
+    cache.set(url, data);
 
     return res.status(200).json(data);
   } catch (e) {
