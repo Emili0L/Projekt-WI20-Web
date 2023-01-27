@@ -1,10 +1,19 @@
-import { mdiChevronRight, mdiChevronUp, mdiFilterVariant } from "@mdi/js";
+import {
+  mdiChevronRight,
+  mdiChevronUp,
+  mdiFilterVariant,
+  mdiMagnify,
+  mdiSwapVertical,
+} from "@mdi/js";
 import Icon from "@mdi/react";
 import {
+  Autocomplete,
   Box,
   Button,
+  CircularProgress,
   FormControl,
   FormHelperText,
+  IconButton,
   InputAdornment,
   OutlinedInput,
   Slider,
@@ -17,7 +26,6 @@ import { useMainContext } from "../../../Layout/Layout";
 import { useRouter } from "next/router";
 import Spinner from "../../../Spinner";
 import Link from "next/link";
-import { CustomSelect } from "../../../CustomSelect/CustomSelect";
 import { motion as m } from "framer-motion";
 
 const Search = () => {
@@ -40,6 +48,10 @@ const Search = () => {
 
   const [filterContainerOpen, setFilterContainerOpen] =
     useState<boolean>(false);
+
+  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
+  const [isSearchLoading, setIsSearchLoading] = useState<boolean>(false);
+  const [textSearchResults, setTextSearchResults] = useState<any[]>([]);
 
   const [selectedYearRange, setSelectedYearRange] = useState<number[]>([
     1750, 2023,
@@ -91,6 +103,36 @@ const Search = () => {
       console.error(err);
     }
   };
+
+  const handleTextSearch = async (e: any, value: string) => {
+    if (value === "") {
+      setTextSearchResults([]);
+      return;
+    }
+    try {
+      setIsSearchLoading(true);
+
+      const res = await fetch(`/api/station/search?q=${value}&size=5`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const results = await res.json();
+      const data = results.map((result: any) => {
+        return {
+          name: result._source.id,
+          id: result._source.id,
+        };
+      });
+      setTextSearchResults(data);
+      setIsSearchLoading(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  console.log(textSearchResults);
 
   useEffect(() => {
     // add event listener to listen for keypresses
@@ -149,31 +191,106 @@ const Search = () => {
     },
   };
 
+  const handleSearchOpen = () => {
+    setIsSearchOpen(!isSearchOpen);
+  };
+
+  const searchContainerVariants = {
+    open: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        ease: "easeInOut",
+      },
+    },
+    closed: {
+      y: -100,
+      opacity: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeInOut",
+      },
+      display: "none",
+    },
+  };
+
   return (
     <>
       {pathArray && pathArray.length === 1 ? (
         <>
           <div className={styles.searchContainer}>
-            <TextField
-              label="Latitude"
-              variant="outlined"
-              value={lat}
-              onChange={(e) => setLat(e.target.value)}
-              required
-              name="lat"
-              size="small"
-              type={"number"}
-            />
-            <TextField
-              label="Longitude"
-              variant="outlined"
-              value={lon}
-              onChange={(e) => setLon(e.target.value)}
-              required
-              name="lon"
-              size="small"
-              type={"number"}
-            />
+            <m.div
+              className={styles.innerSearchContainer}
+              style={{ flex: 1 }}
+              variants={searchContainerVariants}
+              animate={isSearchOpen ? "closed" : "open"}
+            >
+              <TextField
+                label="Latitude"
+                variant="outlined"
+                value={lat}
+                onChange={(e) => setLat(e.target.value)}
+                required
+                name="lat"
+                size="small"
+                type={"number"}
+              />
+              <TextField
+                label="Longitude"
+                variant="outlined"
+                value={lon}
+                onChange={(e) => setLon(e.target.value)}
+                required
+                name="lon"
+                size="small"
+                type={"number"}
+              />
+            </m.div>
+            <m.div
+              className={styles.innerSearchContainer}
+              style={{ flex: 1 }}
+              variants={searchContainerVariants}
+              animate={isSearchOpen ? "open" : "closed"}
+            >
+              <Autocomplete
+                id="station-search"
+                options={textSearchResults}
+                getOptionLabel={(option) => option.name}
+                freeSolo
+                loading={isSearchLoading}
+                onInputChange={(e, value) => handleTextSearch(e, value)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    autoComplete="on"
+                    placeholder={"Name, ID, Country, etc."}
+                    label={"Search"}
+                    variant="outlined"
+                    InputProps={{
+                      ...params.InputProps,
+                      startAdornment: (
+                        <Icon path={mdiMagnify} size={0.9} color="#FFF" />
+                      ),
+                      endAdornment: (
+                        <>
+                          {isSearchLoading ? (
+                            <CircularProgress color="inherit" size={20} />
+                          ) : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
+                    size="small"
+                  />
+                )}
+                sx={{ width: "100%" }}
+              />
+            </m.div>
+
+            <IconButton onClick={() => handleSearchOpen()}>
+              <Icon path={mdiSwapVertical} size={1} />
+            </IconButton>
           </div>
           <div className={styles.filterContainer}>
             <m.div
@@ -184,14 +301,15 @@ const Search = () => {
             >
               <Box
                 sx={{
-                  width: "80%",
+                  width: "100%",
                   position: "relative",
                   marginTop: "1rem",
                   zIndex: 1,
                 }}
               >
-                <CustomSelect
-                  placeholder="Country"
+                <Autocomplete
+                  multiple={false}
+                  id="country-select"
                   options={suggestionStations?.map((station) => ({
                     value:
                       station.top_country_hits.hits.hits[0]._source
@@ -200,7 +318,16 @@ const Search = () => {
                       station.top_country_hits.hits.hits[0]._source
                         .country_name,
                   }))}
-                  maxMenuHeight={150}
+                  filterSelectedOptions
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Country"
+                      placeholder="Country"
+                      size="small"
+                    />
+                  )}
                 />
               </Box>
               <Box

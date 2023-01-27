@@ -1,5 +1,5 @@
 import { Client } from "@elastic/elasticsearch";
-import { withMethods } from "../../../lib/middlewares";
+import { withMethods } from "../../../../lib/middlewares";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const client = new Client({
@@ -10,16 +10,32 @@ const client = new Client({
 });
 
 async function handle(req: NextApiRequest, res: NextApiResponse) {
-  const { q, size } = req.query;
-
   try {
     const result = await client.search({
       index: process.env.ELASTICSEARCH_INDEX,
-      size: Number(size) || 10,
-      q: q as string,
+      body: {
+        size: 0,
+        aggs: {
+          coordinates: {
+            geohash_grid: {
+              field: "coordinates",
+              precision: 3,
+            },
+            aggs: {
+              countries: {
+                terms: {
+                  script: {
+                    source: "GeoHash.decode(doc['coordinates'].value)[3]",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
-
-    res.status(200).json(result.hits.hits);
+    // @ts-expect-error
+    res.status(200).json(result.aggregations.heatmap_data.buckets);
   } catch (err) {
     // if the error returns an error code, return that
     if (err.statusCode) {

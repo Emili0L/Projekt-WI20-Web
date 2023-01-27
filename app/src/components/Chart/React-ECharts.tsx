@@ -11,7 +11,6 @@ export interface ReactEChartsProps {
   settings?: SetOptionOpts;
   loading?: boolean;
   onClick?: (params: any) => void;
-  ref: React.RefObject<HTMLDivElement>;
 }
 
 export function ReactECharts({
@@ -20,12 +19,11 @@ export function ReactECharts({
   settings,
   loading,
   onClick,
-  ref,
 }: ReactEChartsProps): JSX.Element {
   const router = useRouter();
   const { resolvedTheme: theme } = useTheme();
 
-  const chartRef = ref || useRef<HTMLDivElement>(null);
+  const chartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Initialize chart

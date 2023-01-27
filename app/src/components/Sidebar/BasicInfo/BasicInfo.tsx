@@ -5,10 +5,12 @@ import cn from "classnames";
 import Icon from "@mdi/react";
 import { mdiChartBoxOutline, mdiHeart, mdiHeartOutline } from "@mdi/js";
 import { useMainContext } from "../../Layout/Layout";
+import { DatasetModal } from "../../Modal/Dataset";
 
 const BasicInfo = () => {
   const { selectedMarker, favorites, setFavorites } = useMainContext();
   const [isOpen, setIsOpen] = useState(false);
+  const [showDatasetModal, setShowDatasetModal] = useState(false);
 
   function displayGPS(gps) {
     const latitude = convertToDMS(gps.lat, "lat");
@@ -42,63 +44,70 @@ const BasicInfo = () => {
             <div className={styles.titleContainer}>
               <div className={styles.title}>
                 {selectedMarker === null
-                  ? "Nearest Station Name"
+                  ? "Select a station"
                   : selectedMarker.name}
               </div>
               <div className={styles.subtitle}>
                 {selectedMarker === null
-                  ? "Country"
+                  ? "Click on the button to see dataset insights"
                   : `${displayGPS({
                       lat: selectedMarker.lat,
                       lon: selectedMarker.lon,
-                    })} - ${selectedMarker.country || "Country"}`}
+                    })} - ${selectedMarker.country || ""}`}
               </div>
             </div>
           </div>
         </div>
         <div className={styles.rightSide}>
-          <div
-            className={cn(styles.btnBlock, styles.hoverbg)}
-            onClick={() => {
-              if (selectedMarker === null || selectedMarker === undefined)
-                return;
-              if (
-                selectedMarker !== null &&
-                favorites.some((fav) => fav.id === selectedMarker.id)
-              ) {
-                setFavorites(
-                  favorites.filter((fav) => fav.id !== selectedMarker.id)
-                );
-              } else {
-                setFavorites(
-                  [...favorites, selectedMarker].filter((f) => f !== null)
-                );
-              }
-            }}
-          >
-            <Icon
-              path={
-                selectedMarker !== null &&
-                favorites.some((fav) => fav.id === selectedMarker.id)
-                  ? mdiHeart
-                  : mdiHeartOutline
-              }
-              size={1}
-              color={
-                selectedMarker !== null &&
-                favorites.some((fav) => fav.id === selectedMarker.id)
-                  ? "var(--color-primary)"
-                  : "var(--color-map-foreground)"
-              }
-            />
-            <div className={styles.cH}>
-              <div className={styles.b} />
+          {selectedMarker !== null && (
+            <div
+              className={cn(styles.btnBlock, styles.hoverbg)}
+              onClick={() => {
+                if (selectedMarker === null || selectedMarker === undefined)
+                  return;
+                if (
+                  selectedMarker !== null &&
+                  favorites.some((fav) => fav.id === selectedMarker.id)
+                ) {
+                  setFavorites(
+                    favorites.filter((fav) => fav.id !== selectedMarker.id)
+                  );
+                } else {
+                  setFavorites(
+                    [...favorites, selectedMarker].filter((f) => f !== null)
+                  );
+                }
+              }}
+            >
+              <Icon
+                path={
+                  selectedMarker !== null &&
+                  favorites.some((fav) => fav.id === selectedMarker.id)
+                    ? mdiHeart
+                    : mdiHeartOutline
+                }
+                size={1}
+                color={
+                  selectedMarker !== null &&
+                  favorites.some((fav) => fav.id === selectedMarker.id)
+                    ? "var(--color-primary)"
+                    : "var(--color-map-foreground)"
+                }
+              />
+              <div className={styles.cH}>
+                <div className={styles.b} />
+              </div>
             </div>
-          </div>
+          )}
           <div
-            className={cn(styles.btnBlock, styles.hoverbg)}
+            className={cn(
+              styles.btnBlock,
+              styles.hoverbg,
+              selectedMarker === null && styles.fullHeight
+            )}
             onClick={() => {
               if (selectedMarker !== null) setIsOpen(true);
+              else setShowDatasetModal(true);
             }}
           >
             <Icon
@@ -119,6 +128,14 @@ const BasicInfo = () => {
         }}
         maxWidth="md"
       />
+      {showDatasetModal && (
+        <DatasetModal
+          onClose={() => {
+            setShowDatasetModal(false);
+          }}
+          maxWidth="md"
+        />
+      )}
     </>
   );
 };

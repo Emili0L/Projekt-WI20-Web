@@ -9,7 +9,7 @@ export function useLocalStorage<T>(
       const item = window.localStorage.getItem(key);
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
-      console.log(error);
+      // console.log(error); // window is not defined in SSR
       return initialValue;
     }
   });

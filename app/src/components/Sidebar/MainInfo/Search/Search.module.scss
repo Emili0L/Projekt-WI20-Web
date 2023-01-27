@@ -5,6 +5,12 @@
     gap: $margin;
 }
 
+.innerSearchContainer {
+    display: flex;
+    flex-direction: row;
+    gap: $margin;
+}
+
 .filterContainer {
     display: flex;
     flex-direction: column;
