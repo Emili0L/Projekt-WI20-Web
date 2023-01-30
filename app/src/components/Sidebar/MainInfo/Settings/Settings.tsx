@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { memo } from "react";
 import styles from "./Settings.module.scss";
+import en from "../../../../locales/en";
+import de from "../../../../locales/de";
 
 type Props = {};
 type SettingsItemProps = {
@@ -37,6 +39,7 @@ const SettingsItem = memo(({ title, link }: SettingsItemProps) => {
 const Settings = ({}: Props) => {
   const router = useRouter();
   const { locale } = router;
+  const t = router.locale === "en" ? en : de;
   const { pathArray: queryPaths } = router.query;
   var pathArray = queryPaths as string[];
 
@@ -56,7 +59,7 @@ const Settings = ({}: Props) => {
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.headerLeft}>
-            <div className={styles.title}>General</div>
+            <div className={styles.title}>{t.setting.general}</div>
           </div>
         </div>
         <div className={"settings-items"}>
@@ -66,7 +69,7 @@ const Settings = ({}: Props) => {
             </div>
             <div className={styles.itemContainer}>
               <div className={styles.itemTitleContainer}>
-                <div className={styles.title}>{"Language"}</div>
+                <div className={styles.title}>{t.setting.language}</div>
               </div>
               <div className={styles.itemSwitchContainer}>
                 <select
@@ -89,7 +92,7 @@ const Settings = ({}: Props) => {
             </div>
             <div className={styles.itemContainer}>
               <div className={styles.itemTitleContainer}>
-                <div className={styles.title}>{"Dark Mode"}</div>
+                <div className={styles.title}>{t.setting.dark_mode}</div>
               </div>
               <div className={styles.itemSwitchContainer}>
                 <Switch defaultChecked disabled />
@@ -105,9 +108,9 @@ const Settings = ({}: Props) => {
           </div>
         </div>
         <div className={"settings-items"}>
-          <SettingsItem title={"Privacy"} link={"/settings/privacy"} />
+          <SettingsItem title={t.setting.privacy} link={"/settings/privacy"} />
           <SettingsItem
-            title={"Terms of Service"}
+            title={t.setting.service}
             link={"/settings/terms-of-service"}
           />
         </div>

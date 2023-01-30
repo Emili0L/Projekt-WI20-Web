@@ -66,7 +66,7 @@ const DatasetModal = memo(
       <ThemeProvider theme={muiTheme}>
         <Dialog {...createDialogProps}>
           <DialogTitle id={titleProps?.id}>
-            {"GHCN-Daily Dataset Insights"}
+            {t.dataset}
             <IconButton
               type="reset"
               aria-label="close"

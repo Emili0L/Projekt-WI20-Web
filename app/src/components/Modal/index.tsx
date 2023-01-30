@@ -203,7 +203,7 @@ const BasicDialog = memo(
                 {!isValidating && data.length > 0 && <LineChart />}
                 {!isValidating && data.length === 0 && (
                   <div className="flex justify-center items-center h-[20rem] w-full">
-                    <p>For this station are no temperature records</p>
+                    <p>{t.no_data}</p>
                   </div>
                 )}
               </div>

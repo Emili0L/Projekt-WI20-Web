@@ -254,7 +254,7 @@ const MainInfo = () => {
                 {favorites.length === 0 && (
                   <div className={styles.noFavoritesContainer}>
                     <span>
-                      Your{" "}
+                      {t.favorite.your}{" "}
                       <svg
                         className={styles.noFavoritesContainer_icon}
                         width="32"
@@ -262,7 +262,7 @@ const MainInfo = () => {
                       >
                         <path d="M11.198 9C8.85 9 7 10.89 7 13.29c0 3.128 1.92 5.82 9 11.71 7.08-5.89 9-8.582 9-11.71C25 10.89 23.15 9 20.802 9c-2.098 0-3.237 1.273-4.126 2.327l-.676.8-.676-.8C14.434 10.31 13.296 9 11.197 9h0z"></path>
                       </svg>{" "}
-                      stations will appear&nbsp;here.
+                      {t.favorite.appear}
                     </span>
                   </div>
                 )}

@@ -27,9 +27,12 @@ import { useRouter } from "next/router";
 import Spinner from "../../../Spinner";
 import Link from "next/link";
 import { motion as m } from "framer-motion";
+import en from "../../../../locales/en";
+import de from "../../../../locales/de";
 
 const Search = () => {
   const router = useRouter();
+  const t = router.locale === "en" ? en : de;
   const { pathArray: queryPaths } = router.query;
   var pathArray = queryPaths as string[];
   const {
@@ -227,7 +230,7 @@ const Search = () => {
               animate={isSearchOpen ? "closed" : "open"}
             >
               <TextField
-                label="Latitude"
+                label={t.searching.latitude}
                 variant="outlined"
                 value={lat}
                 onChange={(e) => setLat(e.target.value)}
@@ -237,7 +240,7 @@ const Search = () => {
                 type={"number"}
               />
               <TextField
-                label="Longitude"
+                label={t.searching.longitude}
                 variant="outlined"
                 value={lon}
                 onChange={(e) => setLon(e.target.value)}
@@ -264,8 +267,8 @@ const Search = () => {
                   <TextField
                     {...params}
                     autoComplete="on"
-                    placeholder={"Name, ID, Country, etc."}
-                    label={"Search"}
+                    placeholder={t.searching.name}
+                    label={t.searching.search}
                     variant="outlined"
                     InputProps={{
                       ...params.InputProps,
@@ -323,8 +326,8 @@ const Search = () => {
                     <TextField
                       {...params}
                       variant="outlined"
-                      label="Country"
-                      placeholder="Country"
+                      label={t.searching.country}
+                      placeholder={t.searching.country}
                       size="small"
                     />
                   )}
@@ -341,7 +344,7 @@ const Search = () => {
               >
                 <Slider
                   value={selectedYearRange}
-                  getAriaLabel={() => "Filter Year Range"}
+                  getAriaLabel={() => t.searching.year_rang}
                   onChange={handleChange}
                   step={1}
                   min={Math.min(...years)}
@@ -420,7 +423,7 @@ const Search = () => {
                     }}
                   />
                   <FormHelperText id="max-results-helper-text">
-                    Max Results
+                    {t.searching.results}
                   </FormHelperText>
                 </FormControl>
               </Box>
@@ -437,10 +440,10 @@ const Search = () => {
                 }
                 onClick={handleFilterContainerOpen}
               >
-                {filterContainerOpen ? "Hide Filters" : "Show Filters"}
+                {filterContainerOpen ? t.searching.hide : t.searching.show}
               </Button>
               <Button variant="outlined" onClick={handleSearch} color="primary">
-                Search
+                {t.searching.search}
               </Button>
             </div>
           </div>
@@ -461,10 +464,10 @@ const Search = () => {
                   <div className={styles.suggestionContainerHeader}>
                     <div className={styles.suggestionContainerHeaderLeft}>
                       <h2 className={styles.suggestionContainerHeaderTitle}>
-                        Stations Across the World
+                        {t.searching.world}
                       </h2>
                       <h3 className={styles.suggestionContainerHeaderSubtitle}>
-                        Check out a station in every country
+                        {t.searching.check}
                       </h3>
                     </div>
                   </div>

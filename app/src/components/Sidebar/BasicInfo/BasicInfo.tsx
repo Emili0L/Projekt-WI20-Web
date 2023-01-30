@@ -6,11 +6,16 @@ import Icon from "@mdi/react";
 import { mdiChartBoxOutline, mdiHeart, mdiHeartOutline } from "@mdi/js";
 import { useMainContext } from "../../Layout/Layout";
 import { DatasetModal } from "../../Modal/Dataset";
+import en from "../../../locales/en";
+import de from "../../../locales/de";
+import { useRouter } from "next/router";
 
 const BasicInfo = () => {
   const { selectedMarker, favorites, setFavorites } = useMainContext();
   const [isOpen, setIsOpen] = useState(false);
   const [showDatasetModal, setShowDatasetModal] = useState(false);
+  const router = useRouter();
+  const t = router.locale === "en" ? en : de;
 
   function displayGPS(gps) {
     const latitude = convertToDMS(gps.lat, "lat");
@@ -44,12 +49,12 @@ const BasicInfo = () => {
             <div className={styles.titleContainer}>
               <div className={styles.title}>
                 {selectedMarker === null
-                  ? "Select a station"
+                  ? t.basicnfo.sellect
                   : selectedMarker.name}
               </div>
               <div className={styles.subtitle}>
                 {selectedMarker === null
-                  ? "Click on the button to see dataset insights"
+                  ? t.basicnfo.insights
                   : `${displayGPS({
                       lat: selectedMarker.lat,
                       lon: selectedMarker.lon,
