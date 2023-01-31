@@ -41,7 +41,7 @@ def read_file(file_name):
     return file_name[:-3]
 
 # read in the station metadata
-df = pd.read_csv('station_metadata3.csv', sep=',', header=0)
+df = pd.read_csv('station_metadata.csv', sep=',', header=0)
 
 # for every stationId request the csv file from 
 # https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_station/<stationId>.csv.gz
