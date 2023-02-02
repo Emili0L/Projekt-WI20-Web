@@ -41,7 +41,7 @@ def read_file(file_name):
     return file_name[:-3]
 
 # read in the station metadata
-df = pd.read_csv('station_metadata.csv', sep=',', header=0)
+df = pd.read_csv('station_data.csv', sep=',', header=0)
 
 # for every stationId request the csv file from 
 # https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_station/<stationId>.csv.gz
@@ -63,7 +63,7 @@ for i, row in tqdm(interator):
     df.at[i, 'years'] = years
     os.remove(file_name)
     # save the current state of the dataframe
-    df.to_csv('station_metadata.csv', index=False)
+    df.to_csv('station_data.csv', index=False)
 
 
 # # read in the station metadata3.csv

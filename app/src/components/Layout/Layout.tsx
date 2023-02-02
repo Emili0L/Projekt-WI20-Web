@@ -43,6 +43,8 @@ type MainContext = {
   setFavorites?: (favorites: Favorite[]) => void;
   suggestionStations?: CountrySuggestion[];
   setSuggestionStations?: (stations: CountrySuggestion[]) => void;
+  history?: HistoryItem[];
+  setHistory?: (history: HistoryItem[]) => void;
 };
 
 const MainContext = createContext<MainContext>({
@@ -66,6 +68,8 @@ const MainContext = createContext<MainContext>({
   setFavorites: () => {},
   suggestionStations: [],
   setSuggestionStations: () => {},
+  history: [],
+  setHistory: () => {},
 });
 
 export const useMainContext = () => useContext(MainContext);
@@ -90,6 +94,10 @@ const Layout: FC<Props> = ({ children, title }) => {
   const [selectedMarker, setSelectedMarker] = useState<MarkerMetaData>(null);
 
   const [favorites, setFavorites] = useLocalStorage("favorites", []);
+  const [searchHistory, setSearchHistory] = useLocalStorage(
+    "searchHistory",
+    []
+  );
 
   const [lat, setLat] = useState<string>("");
   const [lon, setLon] = useState<string>("");
@@ -189,6 +197,8 @@ const Layout: FC<Props> = ({ children, title }) => {
                 setFavorites,
                 suggestionStations,
                 setSuggestionStations,
+                history: searchHistory,
+                setHistory: setSearchHistory,
               }}
             >
               <div className="h-full relative">

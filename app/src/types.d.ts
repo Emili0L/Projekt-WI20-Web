@@ -63,6 +63,17 @@ declare global {
       };
     };
   };
+
+  type HistoryItem = {
+    type: "text" | "coordinates";
+    lat?: number;
+    lon?: number;
+    text?: string;
+    country: string | null;
+    distance: number;
+    maxResults: number;
+    nrReturnedResults?: number;
+  };
 }
 
 declare module "next-auth" {

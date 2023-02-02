@@ -42,29 +42,56 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 # save_data(data)
 
 
-# load csv file data into pandas dataframe
-df = pd.read_csv('data.csv')
-# fill missing elevation values with -9999
-df['elevation'] = df['elevation'].fillna(-9999)
-# create a geojson file as regular json file
-geojson = {'type': 'FeatureCollection', 'features': []}
-# loop through each row in the dataframe and convert each row to geojson format
-for _, row in df.iterrows():
-    # create a feature template and fill in properties from df
-    feature = {'type': 'Feature',
-               'properties': {},
-               'geometry': {'type': 'Point', 'coordinates': []}}
-    feature['geometry']['coordinates'] = [row['longitude'], row['latitude']]
-    feature['properties']['name'] = row['name']
-    feature['properties']['id'] = row['id']
-    feature['properties']['elevation'] = row['elevation']
-    feature['properties']['mindate'] = row['mindate']
-    feature['properties']['maxdate'] = row['maxdate']
-    # add this feature (aka, converted dataframe row) to the list of features inside our dict
-    geojson['features'].append(feature)
+# # load csv file data into pandas dataframe
+# df = pd.read_csv('data.csv')
+# # fill missing elevation values with -9999
+# df['elevation'] = df['elevation'].fillna(-9999)
+# # create a geojson file as regular json file
+# geojson = {'type': 'FeatureCollection', 'features': []}
+# # loop through each row in the dataframe and convert each row to geojson format
+# for _, row in df.iterrows():
+#     # create a feature template and fill in properties from df
+#     feature = {'type': 'Feature',
+#                'properties': {},
+#                'geometry': {'type': 'Point', 'coordinates': []}}
+#     feature['geometry']['coordinates'] = [row['longitude'], row['latitude']]
+#     feature['properties']['name'] = row['name']
+#     feature['properties']['id'] = row['id']
+#     feature['properties']['elevation'] = row['elevation']
+#     feature['properties']['mindate'] = row['mindate']
+#     feature['properties']['maxdate'] = row['maxdate']
+#     # add this feature (aka, converted dataframe row) to the list of features inside our dict
+#     geojson['features'].append(feature)
 
-# save geojson file
-with open('data.geojson', 'w') as f:
-    json.dump(geojson, f)
+# # save geojson file
+# with open('data.geojson', 'w') as f:
+#     json.dump(geojson, f)
 
+# load the data.csv file into a pandas dataframe
+df = pd.read_csv('station_data.csv')
+print("rows", len(df))
+print("years", df['years'].count())
+# # load in the csv file station_metadata3.csv into a pandas dataframe
+# df2 = pd.read_csv('station_metadata3.csv')
+# df2 = df2[df2['years'].notna()]
 
+# # create a list of station ids that are in both df and df2
+# station_ids = df[df['station_id'].isin(df2['station_id'])]['station_id'].values
+
+# # print how many station ids are in both df and df2
+# print("stationIDs", len(station_ids))
+
+# # loop through these station ids and fill in any missing values in the years column
+# for station_id in station_ids:
+#     df.loc[df['station_id'] == station_id, 'years'] = df2.loc[df2['station_id'] == station_id, 'years'].values[0]
+
+# # print how many rows have a value in col years
+# print(df['years'].count())
+
+# df['elevation'] = df['elevation'].fillna(-9999)
+# # load station_metadata.csv file into a pandas dataframe
+# df2 = pd.read_csv('station_metadata3.csv')
+# # only keep the station ids that are in the data.csv file
+# df2 = df2[df2['station_id'].isin(df['id'])]
+# # save as csv file named station_data.csv
+# df2.to_csv('station_data.csv', index=False)
