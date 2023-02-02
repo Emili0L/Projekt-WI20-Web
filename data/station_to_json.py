@@ -46,6 +46,10 @@ df = pd.read_csv('station_data.csv', sep=',', header=0)
 # for every stationId request the csv file from 
 # https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_station/<stationId>.csv.gz
 # and get a list of all years for which data is available
+
+# run from the end of the dataframe
+df = df.iloc[::-1]
+
 interator = df.iterrows()
 
 for i, row in tqdm(interator):
