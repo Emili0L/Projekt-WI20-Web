@@ -11,6 +11,34 @@
 	background: none !important;
 }
 
+.leaflet-control-zoom {
+	background: none !important;
+	border: none !important;
+	&-in,
+	&-out {
+		background: #2A2A2A !important;
+		border: none !important;
+		color: #fff !important;
+		line-height: 26px !important;
+	}
+	&-in {
+		border-radius: 5px 5px 0px 0px !important;
+		border-bottom: 1px solid #161616 !important;
+
+		&:hover {
+			background: #1DB954 !important;
+		}
+	}
+	&-out {
+		border-radius: 0px 0px 5px 5px !important;
+		border-top: 1px solid #161616 !important;
+
+		&:hover {
+			background: #1DB954 !important;
+		}
+	}
+}
+
 
 .leaflet-div-icon {
 	border: none !important;
