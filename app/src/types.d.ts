@@ -64,14 +64,22 @@ declare global {
     };
   };
 
+  type SearchQuery =
+    | {
+        lat: number;
+        lon: number;
+      }
+    | {
+        text: string;
+      };
+
   type HistoryItem = {
     type: "text" | "coordinates";
-    lat?: number;
-    lon?: number;
-    text?: string;
+    query: SearchQuery;
     country: string | null;
     distance: number;
     maxResults: number;
+    years?: number[];
     nrReturnedResults?: number;
   };
 }

@@ -40,11 +40,15 @@ type MainContext = {
   maxResults?: number;
   setMaxResults?: (maxResults: number) => void;
   favorites?: Favorite[];
-  setFavorites?: (favorites: Favorite[]) => void;
+  setFavorites?: (
+    value: Favorite[] | ((val: Favorite[]) => Favorite[])
+  ) => void;
   suggestionStations?: CountrySuggestion[];
   setSuggestionStations?: (stations: CountrySuggestion[]) => void;
   history?: HistoryItem[];
-  setHistory?: (history: HistoryItem[]) => void;
+  setHistory?: (
+    value: HistoryItem[] | ((val: HistoryItem[]) => HistoryItem[])
+  ) => void;
 };
 
 const MainContext = createContext<MainContext>({
@@ -93,8 +97,11 @@ const Layout: FC<Props> = ({ children, title }) => {
   const [map, setMap] = useState<any>(null);
   const [selectedMarker, setSelectedMarker] = useState<MarkerMetaData>(null);
 
-  const [favorites, setFavorites] = useLocalStorage("favorites", []);
-  const [searchHistory, setSearchHistory] = useLocalStorage(
+  const [favorites, setFavorites] = useLocalStorage<Favorite[]>(
+    "favorites",
+    []
+  );
+  const [searchHistory, setSearchHistory] = useLocalStorage<HistoryItem[]>(
     "searchHistory",
     []
   );

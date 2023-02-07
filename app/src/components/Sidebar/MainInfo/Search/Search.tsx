@@ -47,6 +47,7 @@ const Search = () => {
     setDistance,
     maxResults,
     setMaxResults,
+    setHistory,
   } = useMainContext();
 
   const [filterContainerOpen, setFilterContainerOpen] =
@@ -101,7 +102,22 @@ const Search = () => {
       );
       const data = await res.json();
       setSearchResults(data);
-      console.log(data);
+      setHistory((prev) => {
+        return [
+          ...prev,
+          {
+            type: "coordinates",
+            query: {
+              lat: Number(lat),
+              lon: Number(lon),
+            },
+            country: "",
+            distance: Number(distance.toFixed(2)),
+            maxResults: Number(maxResults.toFixed(0)),
+            nrReturnedResults: data.length || 0,
+          },
+        ] as HistoryItem[];
+      });
     } catch (err) {
       console.error(err);
     }
@@ -130,12 +146,25 @@ const Search = () => {
       });
       setTextSearchResults(data);
       setIsSearchLoading(false);
+      // setHistory((prev) => {
+      //   return [
+      //     ...prev,
+      //     {
+      //       type: "text",
+      //       query: {
+      //         text: value,
+      //       },
+      //       country: "",
+      //       distance: Number(distance.toFixed(2)),
+      //       maxResults: Number(maxResults.toFixed(0)),
+      //       nrReturnedResults: data.length || 0,
+      //     },
+      //   ] as HistoryItem[];
+      // });
     } catch (err) {
       console.error(err);
     }
   };
-
-  console.log(textSearchResults);
 
   useEffect(() => {
     // add event listener to listen for keypresses
@@ -143,7 +172,9 @@ const Search = () => {
 
     window.addEventListener("keypress", (e) => {
       if (e.key === "Enter") {
-        handleSearch();
+        if (!isSearchOpen) {
+          handleSearch();
+        }
       }
     });
 
@@ -151,7 +182,9 @@ const Search = () => {
       // remove event listener
       window.removeEventListener("keypress", (e) => {
         if (e.key === "Enter") {
-          handleSearch();
+          if (!isSearchOpen) {
+            handleSearch();
+          }
         }
       });
     };
