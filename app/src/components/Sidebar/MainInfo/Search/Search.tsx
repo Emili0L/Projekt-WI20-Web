@@ -35,6 +35,7 @@ const Search = () => {
   const t = router.locale === "en" ? en : de;
   const { pathArray: queryPaths } = router.query;
   var pathArray = queryPaths as string[];
+  const { asPath, query } = router;
   const {
     searchResults,
     setSearchResults,
@@ -47,6 +48,12 @@ const Search = () => {
     setDistance,
     maxResults,
     setMaxResults,
+    startYear,
+    setStartYear,
+    endYear,
+    countryCode,
+    setCountryCode,
+    setEndYear,
     setHistory,
   } = useMainContext();
 
@@ -58,7 +65,8 @@ const Search = () => {
   const [textSearchResults, setTextSearchResults] = useState<any[]>([]);
 
   const [selectedYearRange, setSelectedYearRange] = useState<number[]>([
-    1750, 2023,
+    startYear,
+    endYear,
   ]);
 
   // all years: array from 1750 to 2023
@@ -70,7 +78,97 @@ const Search = () => {
   );
   const years = allYears.filter((year) => !excludeYears.includes(year));
 
-  const handleChange = (event: Event, newValue: number | number[]) => {
+  useEffect(() => {
+    window.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        if (!isSearchOpen) {
+          handleSearch();
+        }
+      }
+    });
+
+    return () => {
+      // remove event listener
+      window.removeEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          if (!isSearchOpen) {
+            handleSearch();
+          }
+        }
+      });
+    };
+  }, []);
+
+  // check the url for query params and set the state accordingly
+  useEffect(() => {
+    if (query.lat && query.lon) {
+      // if these are numbers, set the state
+      if (!isNaN(Number(query.lat)) && !isNaN(Number(query.lon))) {
+        setLat(query.lat as string);
+        setLon(query.lon as string);
+      }
+    }
+    if (query.distance) {
+      if (!isNaN(Number(query.distance))) {
+        setDistance(Number(query.distance));
+      }
+    }
+    if (query.size) {
+      if (!isNaN(Number(query.size))) {
+        setMaxResults(Number(query.size));
+      }
+    }
+    if (query.startYear) {
+      if (
+        !isNaN(Number(query.startYear)) &&
+        Number(query.startYear) >= 1750 &&
+        Number(query.startYear) <= 2023 &&
+        !excludeYears.includes(Number(query.startYear))
+      ) {
+        setStartYear(Number(query.startYear));
+      }
+    }
+    if (query.endYear) {
+      if (
+        !isNaN(Number(query.endYear)) &&
+        Number(query.endYear) >= 1750 &&
+        Number(query.endYear) <= 2023 &&
+        !excludeYears.includes(Number(query.endYear))
+      ) {
+        setEndYear(Number(query.endYear));
+      }
+    }
+    if (query.countryCode) {
+      // check if the country code is a valid country code
+      setCountryCode(query.countryCode as string);
+    }
+  }, [query]);
+
+  const calcNewQuery = (query: any) => {
+    //
+  };
+  function delQuery(asPath: string) {
+    return asPath.split("?")[0];
+  }
+
+  // useEffect to update the url
+  useEffect(() => {
+    if (!isSearchOpen) {
+    } else {
+      router.push(delQuery(asPath), undefined, { shallow: true });
+    }
+  }, [
+    isSearchOpen,
+    lat,
+    lon,
+    distance,
+    maxResults,
+    startYear,
+    endYear,
+    countryCode,
+  ]);
+
+  const handleYearRangeChange = (event: Event, newValue: number | number[]) => {
     if (!Array.isArray(newValue)) return;
     // if the value is in the excluded range, set it to the closest value in the range
     if (excludeYears.includes(newValue[0])) {
@@ -82,6 +180,26 @@ const Search = () => {
     }
 
     setSelectedYearRange(newValue as number[]);
+    setStartYear(newValue[0]);
+    setEndYear(newValue[1]);
+  };
+
+  const handleCountryChange = (
+    e: any,
+    value: NonNullable<
+      | string
+      | {
+          value: string;
+          label: string;
+        }
+    >
+  ) => {
+    if (typeof value === "object") {
+      if (value === null) return setCountryCode("");
+      setCountryCode(value.value);
+    } else {
+      setCountryCode("");
+    }
   };
 
   const handleSearch = async () => {
@@ -92,7 +210,13 @@ const Search = () => {
       const res = await fetch(
         `/api/station?lat=${parseFloat(lat)}&lon=${parseFloat(
           lon
-        )}&distance=${distance.toFixed(2)}&size=${maxResults.toFixed(0)}`,
+        )}&distance=${distance.toFixed(2)}&size=${maxResults.toFixed(
+          0
+        )}&start_year=${startYear}&end_year=${endYear}${
+          countryCode !== "" && countryCode !== null
+            ? `&country_code=${countryCode}`
+            : ""
+        }`,
         {
           method: "GET",
           headers: {
@@ -140,7 +264,7 @@ const Search = () => {
       const results = await res.json();
       const data = results.map((result: any) => {
         return {
-          name: result._source.id,
+          name: result._source.name,
           id: result._source.id,
         };
       });
@@ -166,43 +290,18 @@ const Search = () => {
     }
   };
 
-  useEffect(() => {
-    // add event listener to listen for keypresses
-    // if keypress is enter, call handleSearch
-
-    window.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") {
-        if (!isSearchOpen) {
-          handleSearch();
-        }
+  const handleTextSearchSelect = (e: any, value: any) => {
+    if (typeof value === "object") {
+      if (value === null) return;
+      const station = textSearchResults.find(
+        (result) => result.id === value.id
+      );
+      if (station) {
+        // push to explore/id
+        router.push(`/explore/${station.id}`);
       }
-    });
-
-    return () => {
-      // remove event listener
-      window.removeEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-          if (!isSearchOpen) {
-            handleSearch();
-          }
-        }
-      });
-    };
-  }, []);
-
-  // use Effect to add lat and lon to url
-  useEffect(() => {
-    if (!lat || !lon) return;
-    if (isNaN(Number(lat)) || isNaN(Number(lon))) return;
-    router.push(
-      {
-        pathname: "/search",
-        query: { lat, lon },
-      },
-      undefined,
-      { shallow: true }
-    );
-  }, [lat, lon]);
+    }
+  };
 
   const handleFilterContainerOpen = () => {
     setFilterContainerOpen(!filterContainerOpen);
@@ -296,6 +395,7 @@ const Search = () => {
                 freeSolo
                 loading={isSearchLoading}
                 onInputChange={(e, value) => handleTextSearch(e, value)}
+                onChange={(e, value) => handleTextSearchSelect(e, value)}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -355,6 +455,10 @@ const Search = () => {
                         .country_name,
                   }))}
                   filterSelectedOptions
+                  isOptionEqualToValue={(option, value) =>
+                    option.value === value.value
+                  }
+                  onChange={(e, value) => handleCountryChange(e, value)}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -378,7 +482,7 @@ const Search = () => {
                 <Slider
                   value={selectedYearRange}
                   getAriaLabel={() => t.searching.year_rang}
-                  onChange={handleChange}
+                  onChange={handleYearRangeChange}
                   step={1}
                   min={Math.min(...years)}
                   max={Math.max(...years)}

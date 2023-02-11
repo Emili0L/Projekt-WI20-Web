@@ -126,7 +126,7 @@ const BasicDialog = memo(
     const [shouldReset, setShouldReset] = React.useState<boolean>(false);
 
     const { isValidating } = useSWR(
-      selectedMarker !== null && `/api/station/${selectedMarker.name}`,
+      selectedMarker !== null && `/api/station/${selectedMarker.id}`,
       {
         onSuccess: (data) => {
           setData(data.data);
@@ -139,7 +139,7 @@ const BasicDialog = memo(
     const title = React.useMemo(() => {
       if (selectedMarker === null) return "Loading...";
       var rightSide = "";
-      if (currentView === "all" && data.length > 0) {
+      if (currentView === "all" && data?.length > 0) {
         rightSide = `(${data[0].year} - ${data[data.length - 1].year})`;
       } else if (currentView === "year") {
         rightSide = `${selectedYear}`;
@@ -200,8 +200,8 @@ const BasicDialog = memo(
                     <Spinner />
                   </div>
                 )}
-                {!isValidating && data.length > 0 && <LineChart />}
-                {!isValidating && data.length === 0 && (
+                {!isValidating && data?.length > 0 && <LineChart />}
+                {!isValidating && data?.length === 0 && (
                   <div className="flex justify-center items-center h-[20rem] w-full">
                     <p>{t.no_data}</p>
                   </div>

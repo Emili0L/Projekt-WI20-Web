@@ -7,13 +7,15 @@
             "type": "keyword"
         },
         "country_name": {
-            "type": "keyword"
+            "type": "text",
+            "analyzer": "standard"
         },
         "elevation": {
             "type": "double"
         },
         "name": {
-            "type": "keyword"
+            "type": "text",
+            "analyzer": "standard"
         },
         "station_id": {
             "type": "keyword"

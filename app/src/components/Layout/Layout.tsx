@@ -39,6 +39,12 @@ type MainContext = {
   setDistance?: (distance: number) => void;
   maxResults?: number;
   setMaxResults?: (maxResults: number) => void;
+  startYear?: number;
+  setStartYear?: (startYear: number) => void;
+  endYear?: number;
+  setEndYear?: (endYear: number) => void;
+  countryCode?: string;
+  setCountryCode?: (countryCode: string) => void;
   favorites?: Favorite[];
   setFavorites?: (
     value: Favorite[] | ((val: Favorite[]) => Favorite[])
@@ -66,6 +72,12 @@ const MainContext = createContext<MainContext>({
   setDistance: () => {},
   maxResults: 20,
   setMaxResults: () => {},
+  startYear: 1750,
+  setStartYear: () => {},
+  endYear: 2023,
+  setEndYear: () => {},
+  countryCode: "",
+  setCountryCode: () => {},
   searchResults: [],
   setSearchResults: () => {},
   favorites: [],
@@ -110,6 +122,9 @@ const Layout: FC<Props> = ({ children, title }) => {
   const [lon, setLon] = useState<string>("");
   const [distance, setDistance] = useState<number>(200);
   const [maxResults, setMaxResults] = useState<number>(20);
+  const [startYear, setStartYear] = useState<number>(1750);
+  const [endYear, setEndYear] = useState<number>(2023);
+  const [countryCode, setCountryCode] = useState<string>("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>();
   const [suggestionStations, setSuggestionStations] = useState<
     CountrySuggestion[]
@@ -153,7 +168,7 @@ const Layout: FC<Props> = ({ children, title }) => {
           .then((data) => {
             setSelectedMarker({
               id: data.id,
-              name: data.id,
+              name: data.name,
               country: data.country_name,
               lat: data.coordinates[0],
               lon: data.coordinates[1],
@@ -198,6 +213,12 @@ const Layout: FC<Props> = ({ children, title }) => {
                 setDistance,
                 maxResults,
                 setMaxResults,
+                startYear,
+                setStartYear,
+                endYear,
+                setEndYear,
+                countryCode,
+                setCountryCode,
                 searchResults,
                 setSearchResults,
                 favorites,
