@@ -1,0 +1,25 @@
+{
+    "properties": {
+        "coordinates": {
+            "type": "geo_point"
+        },
+        "country_code": {
+            "type": "keyword"
+        },
+        "country_name": {
+            "type": "keyword"
+        },
+        "elevation": {
+            "type": "double"
+        },
+        "name": {
+            "type": "keyword"
+        },
+        "station_id": {
+            "type": "keyword"
+        },
+        "years": {
+            "type": "integer"
+        }
+    }
+}
