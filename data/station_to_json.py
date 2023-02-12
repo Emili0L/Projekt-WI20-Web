@@ -41,7 +41,7 @@ def read_file(file_name):
     return file_name[:-3]
 
 # read in the station metadata
-df = pd.read_csv('station_data.csv', sep=',', header=0)
+df = pd.read_csv('station_data2.csv', sep=',', header=0)
 # create an jsonnd file to store the data, where each row looks like this:
 # {"id": "ACW00011604", "elevation": 10.1, "country_code": "AC", "country_name": "Antigua and Barbuda", "coordinates": [-61.7833, 17.1167], "name": "St. John's", "years": []}
 # with open('station.ndjson', 'w') as f:
@@ -61,15 +61,18 @@ df = pd.read_csv('station_data.csv', sep=',', header=0)
 # For every station, request the city name from the nominatim API
 # and add it to the station data
 
-# create a new column for the city name
-df['city'] = ''
-# create a new column for the state name
-df['state'] = ''
-# create a new column for the location name
-df['location_name'] = ''
+# # create a new column for the city name
+# df['city'] = ''
+# # create a new column for the state name
+# df['state'] = ''
+# # create a new column for the location name
+# df['location_name'] = ''
 
 # iterate over all rows
 for i, row in tqdm(df.iterrows()):
+    # if the city name is already known, skip this row (check if its not nan)
+    if not pd.isna(row['city']):
+        continue
     # get the latitude and longitude
     lat = row['latitude']
     lon = row['longitude']
@@ -78,14 +81,31 @@ for i, row in tqdm(df.iterrows()):
     response = urllib.request.urlopen(url)
     data = json.loads(response.read())
     # if the city name is found, add it to the station data
-    if 'adress' in data:
+    try:
         if 'town' in data['address']:
             df.at[i, 'city'] = data['address']['town']
+    except:
+        pass
+    try:        
         # if the state name is found, add it to the station data
         if 'state' in data['address']:
             df.at[i, 'state'] = data['address']['state']
+    except:
+        pass
     # if a display name is found, add it to the station data
     if 'display_name' in data:
         df.at[i, 'location_name'] = data['display_name']
     # save the station data to a csv file
     df.to_csv('station_data2.csv', index=False)
+
+
+# # read data2
+# df2 = pd.read_csv('station_data2.csv', sep=',', header=0)
+# # create for all missing stationids a new row in the station data2
+# for i, row in tqdm(df.iterrows()):
+#     stationId = row['station_id']
+#     if stationId not in df2['station_id'].values:
+#         df2 = df2.append(row)
+
+# # save the station data to a csv file
+# df2.to_csv('station_metadata.csv', index=False)
