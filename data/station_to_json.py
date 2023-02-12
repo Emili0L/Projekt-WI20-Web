@@ -78,11 +78,12 @@ for i, row in tqdm(df.iterrows()):
     response = urllib.request.urlopen(url)
     data = json.loads(response.read())
     # if the city name is found, add it to the station data
-    if 'town' in data['address']:
-        df.at[i, 'city'] = data['address']['town']
-    # if the state name is found, add it to the station data
-    if 'state' in data['address']:
-        df.at[i, 'state'] = data['address']['state']
+    if 'adress' in data:
+        if 'town' in data['address']:
+            df.at[i, 'city'] = data['address']['town']
+        # if the state name is found, add it to the station data
+        if 'state' in data['address']:
+            df.at[i, 'state'] = data['address']['state']
     # if a display name is found, add it to the station data
     if 'display_name' in data:
         df.at[i, 'location_name'] = data['display_name']
