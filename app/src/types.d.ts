@@ -36,10 +36,12 @@ declare global {
 
   type Doc = {
     id: string;
+    name: string;
     elevation: number;
+    coordinates: [number, number];
     country_code: string;
     country_name: string;
-    coordinates: [number, number];
+    years: number[];
   };
 
   type CountrySuggestion = {

@@ -10,7 +10,8 @@ const client = new Client({
 });
 
 async function handle(req: NextApiRequest, res: NextApiResponse) {
-  const { lat, lon, distance, size } = req.query;
+  const { lat, lon, distance, size, country_code, start_year, end_year } =
+    req.query;
 
   // if lat, lon, or distance are not provided or are not numbers, return an error
   Object.entries({ lat, lon, distance }).forEach(([key, value]) => {
@@ -30,6 +31,21 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
       error: "Parameter size must be a number",
     });
   }
+  // check that start_year and end_year are numbers and valid years
+  Object.entries({ start_year, end_year }).forEach(([key, value]) => {
+    if (value !== undefined && isNaN(Number(value))) {
+      res.status(400).json({
+        error: `Parameter ${key} must be a number`,
+      });
+    } else if (
+      value !== undefined &&
+      (Number(value) < 1750 || Number(value) > 2023)
+    ) {
+      res.status(400).json({
+        error: `Parameter ${key} must be between 1750 and 2023`,
+      });
+    }
+  });
 
   try {
     const result = await client.search({
@@ -48,6 +64,19 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
                   lat: Number(lat),
                   lon: Number(lon),
                 },
+              },
+            },
+            {
+              range: {
+                years: {
+                  gte: Number(start_year),
+                  lte: Number(end_year),
+                },
+              },
+            },
+            {
+              match: {
+                country_code: country_code as string,
               },
             },
           ],

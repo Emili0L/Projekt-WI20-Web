@@ -116,7 +116,7 @@ const LineChart = () => {
     if (chartOptions.currentView === "all") {
       chart.showLoading();
       var year = params.name;
-      fetch(`/api/station/${selectedMarker.name}?year=${year}`)
+      fetch(`/api/station/${selectedMarker.id}?year=${year}`)
         .then((response) => response.json())
         .then((data) => {
           setOption({
@@ -175,7 +175,7 @@ const LineChart = () => {
       }
       selectedMonth = new Date(selectedMonth + " 1, 2021").getMonth() + 1;
       fetch(
-        `/api/station/${selectedMarker.name}?year=${year}&month=${selectedMonth}`
+        `/api/station/${selectedMarker.id}?year=${year}&month=${selectedMonth}`
       )
         .then((response) => response.json())
         .then((data) => {

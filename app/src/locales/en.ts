@@ -32,7 +32,7 @@ const t = {
     check: "Check out a station in every country",
     world: "Stations Across the World",
     results: "Max Results",
-    name: "Name, ID, Country, etc.",
+    name: "Name, ID",
   },
   done: "Done",
   edit: "Edit",
