@@ -144,9 +144,23 @@ const Search = () => {
     }
   }, [query]);
 
-  const calcNewQuery = (query: any) => {
-    //
+  const calcNewQuery = () => {
+    const newQuery = {
+      distance: distance,
+      size: maxResults,
+      start_year: startYear,
+      end_year: endYear,
+    };
+    if (lat && lon) {
+      newQuery["lat"] = lat;
+      newQuery["lon"] = lon;
+    }
+    if (countryCode) {
+      newQuery["country_code"] = countryCode;
+    }
+    return newQuery;
   };
+
   function delQuery(asPath: string) {
     return asPath.split("?")[0];
   }
@@ -154,6 +168,14 @@ const Search = () => {
   // useEffect to update the url
   useEffect(() => {
     if (!isSearchOpen) {
+      router.push(
+        {
+          pathname: pathArray[0],
+          query: calcNewQuery(),
+        },
+        undefined,
+        { shallow: true }
+      );
     } else {
       router.push(delQuery(asPath), undefined, { shallow: true });
     }
@@ -261,30 +283,17 @@ const Search = () => {
           "Content-Type": "application/json",
         },
       });
-      const results = await res.json();
-      const data = results.map((result: any) => {
-        return {
-          name: result._source.name,
-          id: result._source.id,
-        };
-      });
-      setTextSearchResults(data);
+      if (res.ok) {
+        const results = await res.json();
+        const data = results.map((result: any) => {
+          return {
+            name: result._source.name,
+            id: result._source.id,
+          };
+        });
+        setTextSearchResults(data);
+      }
       setIsSearchLoading(false);
-      // setHistory((prev) => {
-      //   return [
-      //     ...prev,
-      //     {
-      //       type: "text",
-      //       query: {
-      //         text: value,
-      //       },
-      //       country: "",
-      //       distance: Number(distance.toFixed(2)),
-      //       maxResults: Number(maxResults.toFixed(0)),
-      //       nrReturnedResults: data.length || 0,
-      //     },
-      //   ] as HistoryItem[];
-      // });
     } catch (err) {
       console.error(err);
     }
@@ -299,6 +308,21 @@ const Search = () => {
       if (station) {
         // push to explore/id
         router.push(`/explore/${station.id}`);
+        // setHistory((prev) => {
+        //   return [
+        //     ...prev,
+        //     {
+        //       type: "text",
+        //       query: {
+        //         text: value,
+        //       },
+        //       country: "",
+        //       distance: Number(distance.toFixed(2)),
+        //       maxResults: Number(maxResults.toFixed(0)),
+        //       nrReturnedResults: data.length || 0,
+        //     },
+        //   ] as HistoryItem[];
+        // });
       }
     }
   };

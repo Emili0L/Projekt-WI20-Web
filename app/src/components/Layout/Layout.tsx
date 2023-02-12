@@ -193,6 +193,15 @@ const Layout: FC<Props> = ({ children, title }) => {
             name="viewport"
             content="initial-scale=1.0, width=device-width"
           />
+          <meta name="description" content="GHCND Station Explorer" />
+          <meta name="author" content="Sven Huepers" />
+          <meta
+            name="keywords"
+            content="GHCND, Station, Explorer, Weather, Temperature, Climate"
+          />
+          <meta name="robots" content="index, follow" />
+          <meta name="googlebot" content="index, follow" />
+          <meta name="google" content="notranslate" />
         </Head>
 
         <div className="flex h-full relative overflow-hidden z-0">

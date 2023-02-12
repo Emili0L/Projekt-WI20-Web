@@ -23,7 +23,7 @@ const SearchItem = ({
       <Link href={`/explore/${result._source.id}`}>
         <div className={styles.itemContainer}>
           <div className={styles.itemTitleContainer}>
-            <div className={styles.title}>{result._source.id}</div>
+            <div className={styles.title}>{result._source.name}</div>
             <div className={styles.subtitle}>{result._source.country_name}</div>
           </div>
           {result.sort && (

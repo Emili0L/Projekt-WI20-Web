@@ -30,6 +30,16 @@ const MainInfo = () => {
     setLon,
     lat,
     lon,
+    distance,
+    setDistance,
+    maxResults,
+    setMaxResults,
+    startYear,
+    setStartYear,
+    endYear,
+    setEndYear,
+    countryCode,
+    setCountryCode,
   } = useMainContext();
 
   const [isFavoriteEditMode, setIsFavoriteEditMode] = useState(false);
@@ -222,7 +232,14 @@ const MainInfo = () => {
                 {pathArray &&
                   pathArray.includes("search") &&
                   pathArray.length === 1 &&
-                  (searchResults !== null || lat !== "" || lon !== "") && (
+                  (searchResults !== null ||
+                    distance !== 200 ||
+                    maxResults !== 20 ||
+                    startYear !== 1750 ||
+                    endYear !== 2023 ||
+                    lat !== "" ||
+                    lon !== "" ||
+                    countryCode !== "") && (
                     <>
                       <m.div
                         variants={actionVariants}
@@ -233,11 +250,11 @@ const MainInfo = () => {
                           setLat("");
                           setLon("");
                           setSearchResults(null);
-                          router.push(
-                            router.asPath.split("?")[0],
-                            router.asPath.split("?")[0],
-                            { shallow: true }
-                          );
+                          setDistance(200);
+                          setMaxResults(20);
+                          setStartYear(1750);
+                          setEndYear(2023);
+                          setCountryCode("");
                         }}
                       >
                         <div className={styles.action_text}>{t.reset}</div>
@@ -285,7 +302,7 @@ const MainInfo = () => {
                             }}
                             onClick={() => {
                               router.push(
-                                `/explore/${favorite.name}`,
+                                `/explore/${favorite.id}`,
                                 undefined,
                                 { shallow: true }
                               );
