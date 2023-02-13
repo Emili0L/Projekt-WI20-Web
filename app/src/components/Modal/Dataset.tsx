@@ -9,13 +9,14 @@ import {
   createTheme,
   ThemeProvider,
 } from "@mui/material";
-import { mdiClose } from "@mdi/js";
+import { mdiClose, mdiInformationOutline } from "@mdi/js";
 import React, { memo } from "react";
 import Icon from "@mdi/react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
 import en from "../../locales/en";
 import de from "../../locales/de";
+import TempRiseLineChart from "../Chart/TempRiseLineChart";
 
 type BasicDialogProps = {
   onClose: (() => void) | ((e: any) => void);
@@ -87,13 +88,23 @@ const DatasetModal = memo(
             }}
           >
             <div className="h-full w-full">
-              <div className="flex flex-col items-center justify-center h-[15rem] w-full">
-                Not implemented yet. Please check back later.
-              </div>
+              <TempRiseLineChart />
             </div>
           </DialogContent>
 
           <DialogActions>
+            <Button
+              onClick={() => {
+                window.open(
+                  "https://www.ncei.noaa.gov/products/land-based-station/noaa-global-temp",
+                  "_blank"
+                );
+              }}
+              variant="outlined"
+              startIcon={<Icon path={mdiInformationOutline} size={1.0} />}
+            >
+              {"Learn more"}
+            </Button>
             <Button onClick={handleClose} color="primary">
               {t.close}
             </Button>

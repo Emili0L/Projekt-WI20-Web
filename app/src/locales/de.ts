@@ -39,7 +39,7 @@ const t = {
   edit: "Bearbeiten",
   reset: "Zurücksetzen",
   close: "Schließen",
-  dataset: "GHCN-Täglicher Datensatz Einblick",
+  dataset: "Global Surface Temperature Analysis 1800 - 2022",
   no_data: "Für diese Station liegen keine Temperaturaufzeichnungen vor",
 };
 
