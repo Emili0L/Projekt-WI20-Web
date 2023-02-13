@@ -13,18 +13,7 @@ const config = {
   },
   reactStrictMode: true,
   swcMinify: true,
-  productionBrowserSourceMaps: true,
-  // images: {
-  //   domains: [],
-  // },
-  async rewrites() {
-    return [
-      // {
-      //   source: '/api/v1/:path*',
-      //   destination: `${process.env.BACKEND_URL}/api/v1/:path*`
-      // }
-    ]
-  },
+  productionBrowserSourceMaps: false,
   async redirects() {
     return [
       {

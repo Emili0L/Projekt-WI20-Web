@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useTheme } from "next-themes";
 // import UserDropdown from './UserDropdown';
@@ -25,8 +24,6 @@ const Header: React.FC<Props> = ({ title, isOpen, menuToggle, layout }) => {
     const locale = e.target.value;
     router.push(router.pathname, router.asPath, { locale });
   };
-  const { data: session } = useSession();
-  const userName = session?.user?.name as string;
 
   return (
     <nav className="flex z-10 justify-between items-center h-12 bg-white shadow-sm dark:bg-grey">
