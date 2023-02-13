@@ -33,7 +33,7 @@ import de from "../../../../locales/de";
 const Search = () => {
   const router = useRouter();
   const t = router.locale === "en" ? en : de;
-  const { pathArray: queryPaths } = router.query;
+  const { pathArray: queryPaths, q: search } = router.query;
   var pathArray = queryPaths as string[];
   const { asPath, query } = router;
   const {
@@ -63,6 +63,7 @@ const Search = () => {
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [isSearchLoading, setIsSearchLoading] = useState<boolean>(false);
   const [textSearchResults, setTextSearchResults] = useState<any[]>([]);
+  const [textSearch, setTextSearch] = useState<string>("");
 
   const [selectedYearRange, setSelectedYearRange] = useState<number[]>([
     startYear,
@@ -161,6 +162,22 @@ const Search = () => {
     return newQuery;
   };
 
+  const newTextSearchQuery = () => {
+    const newQuery = {
+      distance: distance,
+      size: maxResults,
+      start_year: startYear,
+      end_year: endYear,
+    };
+    if (textSearch) {
+      newQuery["q"] = textSearch;
+    }
+    if (countryCode) {
+      newQuery["country_code"] = countryCode;
+    }
+    return newQuery;
+  };
+
   function delQuery(asPath: string) {
     return asPath.split("?")[0];
   }
@@ -188,7 +205,14 @@ const Search = () => {
         { shallow: true }
       );
     } else {
-      router.push(delQuery(asPath), undefined, { shallow: true });
+      router.push(
+        {
+          pathname: pathArray[0],
+          query: newTextSearchQuery(),
+        },
+        undefined,
+        { shallow: true }
+      );
     }
   }, [
     isSearchOpen,
@@ -199,6 +223,7 @@ const Search = () => {
     startYear,
     endYear,
     countryCode,
+    textSearch,
   ]);
 
   const handleYearRangeChange = (event: Event, newValue: number | number[]) => {
@@ -259,6 +284,7 @@ const Search = () => {
       );
       const data = await res.json();
       setSearchResults(data);
+      setFilterContainerOpen(false);
       setHistory((prev) => {
         return [
           ...prev,
@@ -282,9 +308,10 @@ const Search = () => {
   };
 
   const handleTextSearch = async (e: any, value: string) => {
+    if (value === undefined) return;
+    setTextSearch(value);
     if (value === "") {
-      setTextSearchResults([]);
-      return;
+      return setTextSearchResults([]);
     }
     try {
       setIsSearchLoading(true);
@@ -311,6 +338,43 @@ const Search = () => {
     }
   };
 
+  const handleFullTextSearch = async (val: string) => {
+    if (val !== "") {
+      setSearchResults([]);
+      setTextSearchResults([]);
+      try {
+        const res = await fetch(`/api/station/search?q=${val}&size=20`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setSearchResults(data);
+          setFilterContainerOpen(false);
+          // setHistory((prev) => {
+          //   return [
+          //     ...prev,
+          //     {
+          //       type: "text",
+          //       query: {
+          //         text: value,
+          //       },
+          //       country: "",
+          //       distance: Number(distance.toFixed(2)),
+          //       maxResults: Number(maxResults.toFixed(0)),
+          //       nrReturnedResults: data.length || 0,
+          //     },
+          //   ] as HistoryItem[];
+          // });
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
   const handleTextSearchSelect = (e: any, value: any) => {
     if (typeof value === "object") {
       if (value === null) return;
@@ -318,24 +382,11 @@ const Search = () => {
         (result) => result.id === value.id
       );
       if (station) {
-        // push to explore/id
         router.push(`/explore/${station.id}`);
-        // setHistory((prev) => {
-        //   return [
-        //     ...prev,
-        //     {
-        //       type: "text",
-        //       query: {
-        //         text: value,
-        //       },
-        //       country: "",
-        //       distance: Number(distance.toFixed(2)),
-        //       maxResults: Number(maxResults.toFixed(0)),
-        //       nrReturnedResults: data.length || 0,
-        //     },
-        //   ] as HistoryItem[];
-        // });
       }
+    } else if (typeof value === "string") {
+      setTextSearch(value);
+      handleFullTextSearch(value);
     }
   };
 
@@ -427,8 +478,14 @@ const Search = () => {
               <Autocomplete
                 id="station-search"
                 options={textSearchResults}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) =>
+                  option.name ? option.name : textSearch
+                }
                 freeSolo
+                clearOnEscape
+                inputMode="search"
+                inputValue={textSearch}
+                value={null}
                 loading={isSearchLoading}
                 onInputChange={(e, value) => handleTextSearch(e, value)}
                 onChange={(e, value) => handleTextSearchSelect(e, value)}
@@ -615,7 +672,16 @@ const Search = () => {
               >
                 {filterContainerOpen ? t.searching.hide : t.searching.show}
               </Button>
-              <Button variant="outlined" onClick={handleSearch} color="primary">
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  console.log("search");
+                  isSearchOpen
+                    ? handleFullTextSearch(textSearch)
+                    : handleSearch();
+                }}
+                color="primary"
+              >
                 {t.searching.search}
               </Button>
             </div>
