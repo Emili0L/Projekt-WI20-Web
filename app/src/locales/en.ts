@@ -34,6 +34,7 @@ const t = {
     results: "Max Results",
     name: "Name, ID",
   },
+  chart: {},
   done: "Done",
   edit: "Edit",
   reset: "Reset",

@@ -74,11 +74,15 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
                 },
               },
             },
-            {
-              match: {
-                country_code: country_code as string,
-              },
-            },
+            ...(country_code
+              ? [
+                  {
+                    match: {
+                      country_code: country_code as string,
+                    },
+                  },
+                ]
+              : []),
           ],
         },
       },

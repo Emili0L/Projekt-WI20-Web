@@ -1,6 +1,7 @@
 import { ReactElement } from "react";
 import { NextPage } from "next";
 import { DefaultSession } from "next-auth";
+import { SearchResult } from "./interfaces";
 
 declare global {
   // declare ts types here
@@ -66,14 +67,8 @@ declare global {
     };
   };
 
-  type SearchQuery =
-    | {
-        lat: number;
-        lon: number;
-      }
-    | {
-        text: string;
-      };
+  // based on the type of history item the query is either a text or a coordinates query
+  type SearchQuery = string | [number, number];
 
   type HistoryItem = {
     type: "text" | "coordinates";
@@ -81,8 +76,11 @@ declare global {
     country: string | null;
     distance: number;
     maxResults: number;
-    years?: number[];
+    startYear: number;
+    endYear: number;
     nrReturnedResults?: number;
+    timestamp: number;
+    results: SearchResult[];
   };
 }
 

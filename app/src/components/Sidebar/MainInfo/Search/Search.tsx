@@ -168,6 +168,17 @@ const Search = () => {
   // useEffect to update the url
   useEffect(() => {
     if (!isSearchOpen) {
+      if (
+        query.lat &&
+        query.lon &&
+        lat == "" &&
+        lon == "" &&
+        !isNaN(Number(query.lat)) &&
+        !isNaN(Number(query.lon))
+      ) {
+        return;
+      }
+
       router.push(
         {
           pathname: pathArray[0],
@@ -253,14 +264,15 @@ const Search = () => {
           ...prev,
           {
             type: "coordinates",
-            query: {
-              lat: Number(lat),
-              lon: Number(lon),
-            },
-            country: "",
+            query: [Number(lat), Number(lon)],
+            country: countryCode,
             distance: Number(distance.toFixed(2)),
             maxResults: Number(maxResults.toFixed(0)),
             nrReturnedResults: data.length || 0,
+            startYear: startYear,
+            endYear: endYear,
+            timestamp: new Date().getTime(),
+            results: data,
           },
         ] as HistoryItem[];
       });

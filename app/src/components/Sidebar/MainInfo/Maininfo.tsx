@@ -40,9 +40,11 @@ const MainInfo = () => {
     setEndYear,
     countryCode,
     setCountryCode,
+    history: historyItems,
   } = useMainContext();
 
   const [isFavoriteEditMode, setIsFavoriteEditMode] = useState(false);
+  const [isHistoryEditMode, setIsHistoryEditMode] = useState(false);
 
   const handleOpen = () => {
     if (pathArray && pathArray.includes("explore")) return;
@@ -230,6 +232,23 @@ const MainInfo = () => {
                     </>
                   )}
                 {pathArray &&
+                  pathArray.includes("history") &&
+                  historyItems.length > 0 && (
+                    <>
+                      <m.div
+                        variants={actionVariants}
+                        animate={sidebarOpen ? "open" : "closed"}
+                        initial="closed"
+                        className={styles.action}
+                        onClick={() => setIsHistoryEditMode(!isHistoryEditMode)}
+                      >
+                        <div className={styles.action_text}>
+                          {isHistoryEditMode ? t.done : t.edit}
+                        </div>
+                      </m.div>
+                    </>
+                  )}
+                {pathArray &&
                   pathArray.includes("search") &&
                   pathArray.length === 1 &&
                   (searchResults !== null ||
@@ -314,7 +333,9 @@ const MainInfo = () => {
                 )}
               </>
             )}
-            {pathArray && pathArray.includes("history") && <History />}
+            {pathArray && pathArray.includes("history") && (
+              <History isEditMode={isHistoryEditMode} />
+            )}
             {pathArray && pathArray.includes("search") && <Search />}
             {pathArray && pathArray.includes("settings") && <Settings />}
           </div>
