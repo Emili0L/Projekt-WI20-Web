@@ -52,6 +52,15 @@
     --playbar-detail-height: 256px;
 }
 
+@supports (left:env(safe-area-inset-left)) {
+    :root {
+        --safe-area-inset-top: env(safe-area-inset-top);
+        --safe-area-inset-bottom: env(safe-area-inset-bottom);
+        --safe-area-inset-left: env(safe-area-inset-left);
+        --safe-area-inset-right: env(safe-area-inset-right);
+    }
+}
+
 @media screen and (max-width: 450px) {
     :root {
         --browser-header-height-collapsed: 78px;
@@ -61,10 +70,10 @@
         --rowbutton-height: 44px;
         --rowbutton-height-tall: 56px;
         --modal-button-height: 50px;
-        --browser-height: calc(var(--vh100) - var(--tabbar-height) - var(--playbar-height));
+        --browser-height: calc(var(--vh100) - var(--safe-area-inset-top) - var(--tabbar-height) - var(--playbar-height) - var(--safe-area-inset-bottom));
         --corner-radius: 10px;
         --font-size-base: 16px;
-        --map-top: 0px;
+        --map-top: var(--safe-area-inset-top);
     }
 }
 

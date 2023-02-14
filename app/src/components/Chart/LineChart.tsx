@@ -30,6 +30,14 @@ const LineChart = () => {
       formatter: function (params) {
         var color1 = params[0].color;
         var color2 = params[1].color;
+        var color3 = undefined;
+        var color4 = undefined;
+        if (params[2]) {
+          color3 = params[2].color;
+        }
+        if (params[3]) {
+          color4 = params[3].color;
+        }
         return (
           params[0].name +
           "<br />" +
@@ -51,7 +59,33 @@ const LineChart = () => {
           '<strong style="font-weight: bold">' +
           params[1].value?.toFixed(2) +
           " °C" +
-          "</strong>"
+          "</strong>" +
+          // if there is a third series
+          (color3
+            ? "<br />" +
+              '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' +
+              color3 +
+              ';"></span>' +
+              params[2].seriesName +
+              ": " +
+              '<strong style="font-weight: bold">' +
+              params[2].value?.toFixed(2) +
+              " °C" +
+              "</strong>"
+            : "") +
+          // if there is a fourth series
+          (color4
+            ? "<br />" +
+              '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' +
+              color4 +
+              ';"></span>' +
+              params[3].seriesName +
+              ": " +
+              '<strong style="font-weight: bold">' +
+              params[3].value?.toFixed(2) +
+              " °C" +
+              "</strong>"
+            : "")
         );
       },
     },

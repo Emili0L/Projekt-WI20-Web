@@ -59,6 +59,10 @@
     z-index: 2;
     height: var(--playbar-height);
     position: absolute!important;
+
+    @media (min-width: 451px) {
+        display: none;
+    }
 }
 .backgroundElement {
     background-color: $color-background-3;
