@@ -36,8 +36,6 @@ const SettingsItem = memo(({ title, link }: SettingsItemProps) => {
   );
 });
 
-const buildId = process.env.NEXT_PUBLIC_BUILD_ID || "dev";
-
 const Settings = ({}: Props) => {
   const router = useRouter();
   const { locale } = router;
@@ -119,8 +117,7 @@ const Settings = ({}: Props) => {
       </div>
       <div className={styles.footer}>
         <div className={styles.copyright}>
-          {new Date().getFullYear()} © WI20C. No rights reserved. Version:{" "}
-          {buildId}
+          {new Date().getFullYear()} © WI20C. No rights reserved.
         </div>
       </div>
     </>
