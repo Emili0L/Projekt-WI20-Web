@@ -91,19 +91,31 @@ const LineChart = () => {
     series: [
       {
         name: "TMAX",
-        type: "line",
         data: data.map((d) => d.tmax),
+        type: "line",
       },
       {
         name: "TMIN",
-        type: "line",
         data: data.map((d) => d.tmin),
+        type: "line",
+      },
+      {
+        name: "TMAX Summer",
+        data: data.map((d) => d.tmax_summer),
+        type: "line",
+      },
+      {
+        name: "TMIN Winter",
+        data: data.map((d) => d.tmin_winter),
+        type: "line",
       },
     ],
   });
   const chartRef = useRef<HTMLDivElement>(null);
 
-  const settings = {} as SetOptionOpts;
+  const settings = {
+    notMerge: true,
+  } as SetOptionOpts;
 
   const style = {
     height: "20rem",
@@ -155,7 +167,7 @@ const LineChart = () => {
             dataZoom: [],
           });
           chart.hideLoading();
-          chart.setOption(option);
+          chart.setOption(option, settings);
           setCurrentView("year");
           setSelectedYear(year);
         })
@@ -202,7 +214,7 @@ const LineChart = () => {
             dataZoom: [],
           });
           chart.hideLoading();
-          chart.setOption(option);
+          chart.setOption(option, settings);
           setCurrentView("month");
           setSelectedMonth(selectedMonth);
         })
@@ -218,6 +230,14 @@ const LineChart = () => {
       setOption({
         ...option,
         currentView: "all",
+        dataZoom: [
+          {
+            type: "slider",
+            xAxisIndex: 0,
+            start: 0,
+            end: 100,
+          },
+        ],
         xAxis: {
           type: "category",
           boundaryGap: false,
@@ -233,6 +253,16 @@ const LineChart = () => {
             name: "TMIN",
             type: "line",
             data: data.map((d) => d.tmin),
+          },
+          {
+            name: "TMAX Summer",
+            type: "line",
+            data: data.map((d) => d.tmax_summer),
+          },
+          {
+            name: "TMIN Winter",
+            type: "line",
+            data: data.map((d) => d.tmin_winter),
           },
         ],
       });

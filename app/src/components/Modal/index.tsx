@@ -24,6 +24,8 @@ import de from "../../locales/de";
 interface ChartData {
   tmin: number;
   tmax: number;
+  tmin_winter?: number;
+  tmax_summer?: number;
   year?: number;
   month?: number;
   day?: number;

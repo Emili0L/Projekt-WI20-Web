@@ -343,12 +343,15 @@ const Search = () => {
       setSearchResults([]);
       setTextSearchResults([]);
       try {
-        const res = await fetch(`/api/station/search?q=${val}&size=20`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const res = await fetch(
+          `/api/station/search?q=${val}&size=${maxResults}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         if (res.ok) {
           const data = await res.json();
           setSearchResults(data);
@@ -623,6 +626,7 @@ const Search = () => {
                     type="number"
                     value={distance}
                     onChange={(e) => setDistance(Number(e.target.value))}
+                    disabled={isSearchOpen}
                     endAdornment={
                       <InputAdornment position="end">km</InputAdornment>
                     }
