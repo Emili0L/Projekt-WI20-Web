@@ -4,7 +4,7 @@
         width: $desktop-globe-width;
     }
 
-    height: $browser-height;
+    height: var(--browser-height);
     pointer-events: none;
     position: absolute;
     right: 0;
