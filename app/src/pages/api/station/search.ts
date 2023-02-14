@@ -37,7 +37,7 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
     const result = await client.search({
       index: process.env.ELASTICSEARCH_INDEX,
       size: Number(size) || 10,
-      // q: q as string,
+      q: q as string,
       body: {
         query: {
           bool: {
