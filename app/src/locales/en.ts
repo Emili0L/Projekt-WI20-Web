@@ -8,7 +8,7 @@ const t = {
   },
   basicnfo: {
     sellect: "Select a station",
-    insights: "Click on the button to see dataset insights",
+    insights: "Click the button to see global temperature data",
   },
   favorite: {
     your: "Your",
@@ -34,11 +34,12 @@ const t = {
     results: "Max Results",
     name: "Name, ID",
   },
+  chart: {},
   done: "Done",
   edit: "Edit",
   reset: "Reset",
   close: "Close",
-  dataset: "GHCN-Daily Dataset Insights",
+  dataset: "Global Surface Temperature Analysis 1800 - 2022",
   no_data: "For this station are no temperature records",
 };
 

@@ -10,7 +10,7 @@
 .rowBtnContainer {
     align-items: center;
     display: flex;
-    height: $rowbutton-height-tall;
+    height: var(--rowbutton-height-tall);
     padding-left: $margin;
     width: 100%;
 

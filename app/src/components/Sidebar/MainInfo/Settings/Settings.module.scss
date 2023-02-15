@@ -60,7 +60,7 @@
     .itemContainer {
         align-items: center;
         display: flex;
-        height: $rowbutton-height;
+        height: var(--rowbutton-height);
         padding-left: $margin;
         width: 100%;
 

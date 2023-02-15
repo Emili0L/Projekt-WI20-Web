@@ -1,5 +1,5 @@
 .container {
-    height: calc($map-top + $browser-height + $playbar-height);
+    height: calc(var(--map-top) + var(--browser-height) + var(--playbar-height) - 15px);
     left: 0;
     overflow: visible;
     position: absolute;
@@ -12,14 +12,18 @@
     @media (min-height: 301px) and (max-height: 453px) and (min-width: 400px),
     (min-width: 451px) {
         background-color: $color-background-2;
-        border-radius: $corner-radius;
+        border-radius: var(--corner-radius);
         display: flex;
-        height: $playbar-height;
+        height: var(--playbar-height);
         overflow: hidden;
         padding-top: 0;
         position: relative;
         top: 0;
         margin-bottom: $margin;
+    }
+
+    @media (max-width: 450px) {
+        pointer-events: none;
     }
 }
 
@@ -30,6 +34,10 @@
     flex-grow: 1;
     justify-content: flex-start;
     overflow: hidden;
+
+    @media (max-width: 450px) {
+        display: none;
+    }
 }
 
 .rightSide {
@@ -38,13 +46,66 @@
     flex-direction: column;
     justify-content: flex-end;
     position: relative;
+
+    @media (max-width: 450px) {
+        display: none;
+    }
+}
+
+.mobileContainer {
+    bottom: 0;
+    pointer-events: all;
+    width: 100%;
+    z-index: 2;
+    height: var(--playbar-height);
+    position: absolute!important;
+
+    @media (min-width: 451px) {
+        display: none;
+    }
+}
+.backgroundElement {
+    background-color: $color-background-3;
+    bottom: calc(0px - var(--tabbar-height) - 0px);
+    left: 0;
+    position: absolute;
+    top: 0;
+    transform-origin: top;
+    width: 100%;
+    z-index: -1;
+    bottom: 0;
+}
+
+.mobileContent {
+    align-items: center;
+    display: flex;
+    flex-flow: row nowrap;
+    flex-shrink: 0;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: var(--playbar-height);
+    pointer-events: none;
+    opacity: 1;
+}
+
+.mobileBtnContainer {
+    align-items: center;
+    display: flex;
+    flex-grow: 0;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+    pointer-events: all;
+    top: 0;
 }
 
 .station {
 
     @media (min-height: 301px) and (max-height: 453px) and (min-width: 400px),
     (min-width: 451px) {
-        height: calc($playbar-height);
+        height: calc(var(--playbar-height));
     }
 
     align-items: center;
@@ -115,7 +176,7 @@
 .btnBlock {
     align-items: center;
     display: flex;
-    height: $playbar-height;
+    height: var(--playbar-height);
     justify-content: center;
     overflow: hidden;
     position: relative;
@@ -123,11 +184,11 @@
     width: 48px;
 
     @media (min-width: 451px) {
-        height: calc($playbar-height/2);
+        height: calc(var(--playbar-height)/2);
     }
 
     &:first-child {
-        border-radius: 0 $corner-radius 0 0;
+        border-radius: 0 var(--corner-radius) 0 0;
     }
 }
 
@@ -153,7 +214,8 @@
         transform-origin: top;
     }
 
-    .b, .t {
+    .b,
+    .t {
         height: 1px;
         left: 0;
         position: absolute;
@@ -170,7 +232,8 @@
         transform-origin: right;
     }
 
-    .l, .r {
+    .l,
+    .r {
         bottom: 0;
         position: absolute;
         top: 0;

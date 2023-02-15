@@ -1,6 +1,7 @@
 .item {
     position: relative;
     width: 100%;
+    display: flex;
 
     &:hover {
         cursor: pointer;
@@ -11,10 +12,10 @@
         align-items: center;
         display: flex;
         height: var(--rowbutton-height-tall);
-        padding-left: $margin;
+        padding-left: 0;
         width: 100%;
 
-        .itemTitleContainer {
+        .titleContainer {
             display: flex;
             flex-direction: column;
             flex-grow: 1;
@@ -73,6 +74,67 @@
     }
 }
 
+.deleteContainer {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding: 1px $margin-50 0 $margin-50;
+    pointer-events: all;
+    position: relative;
+    z-index: 1;
+    color: $color-foreground;
+
+    &:hover {
+        cursor: pointer;
+        background-color: $color-background-hover;
+    }
+}
+
+.countContainer {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    padding: 1px $margin-50 0 $margin-50;
+    pointer-events: none;
+    position: relative;
+    z-index: 1;
+    padding-left: calc($margin-50 + 1px);
+    padding-right: calc($margin-50 - 2px);
+
+    .content {
+        color: $color-foreground;
+        display: flex;
+        font-size: $type-2-size;
+        position: relative;
+        align-items: center;
+        display: flex;
+        height: 32px;
+        justify-content: center;
+        width: 32px;
+
+        .circle {
+            align-items: center;
+            display: flex;
+            height: 22px;
+            justify-content: center;
+            width: 22px;
+            background-color: $color-primary;
+            border-radius: 99px;
+
+            .count {
+                -webkit-font-smoothing: subpixel-antialiased;
+                color: $color-background-1;
+                line-height: 0;
+                margin-left: 0;
+
+                @media (min-width: 451px) {
+                    font-size: .7rem;
+                }
+            }
+        }
+    }
+}
 
 .borderContainer {
     bottom: 0;

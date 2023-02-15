@@ -20,7 +20,7 @@
     padding-bottom: 300px;
     pointer-events: all;
     position: absolute;
-    top: calc($browser-header-height - $browser-header-height-collapsed);
+    top: calc(var(--browser-header-height) - var(--browser-header-height-collapsed));
     width: 100vw;
 }
 
@@ -29,18 +29,18 @@
 
 .headerBackgroundContainer>.headerBackground {
     @media (hover: hover) and (pointer: fine) {
-        background-color: rgba(255, 255, 255, .1);
+        background-color: rgba(var(--color-white-rgb), .1);
         cursor: pointer;
         transition: background-color .18s;
 
     }
 
     @media (min-width: 451px) {
-        border-radius: $corner-radius $corner-radius 0 0;
+        border-radius: var(--corner-radius) var(--corner-radius) 0 0;
 
     }
 
-    background-color: var(--color-white);
+    background-color: rgba(var(--color-white-rgb), .1);
     bottom: 0;
     left: 0;
     position: absolute;
@@ -69,10 +69,26 @@
     }
 }
 
+.xxC {
+    position: relative;
+
+    @media (min-width: 451px) {
+        flex-grow: 1;
+        min-height: 100%;
+        position: relative;
+        width: 100%;
+    }
+
+    @media (max-width: 450px) {
+        min-height: calc(var(--browser-height));
+        pointer-events: none;
+    }
+}
+
 
 .container {
     @media (min-width: 451px) {
-        border-radius: $corner-radius $corner-radius 0 0;
+        border-radius: var(--corner-radius) var(--corner-radius) 0 0;
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -84,6 +100,7 @@
     overflow: visible;
     position: relative;
     width: 100vw;
+    // background-color: $color-background-1;
 
     &::after {
         background-color: $color-background-1;
@@ -117,6 +134,10 @@
     touch-action: none;
     width: auto;
 
+    @media (max-width: 450px) {
+        pointer-events: none;
+    }
+
     &_cta {
         display: flex;
         height: 44px;
@@ -141,7 +162,7 @@
             pointer-events: all;
 
             &:hover {
-                background-color: rgba(255,255,255,$dim-hover);
+                background-color: rgba(255, 255, 255, $dim-hover);
                 cursor: pointer;
             }
 
@@ -300,6 +321,12 @@
         padding-bottom: 0;
     }
 
+    @media (max-width: 450px) {
+        flex-grow: 1;
+        height: calc(var(--browser-height) - var(--browser-header-height) + var(--scroll-buffer-height));
+        padding-bottom: calc(var(--scroll-buffer-height) + var(--scroll-padding));
+    }
+
     background-color: $color-background-1;
     display: flex;
     flex-direction: column;
@@ -350,6 +377,9 @@
 
     @media (min-width: 451px) {
         height: 32px;
+    }
+    @media (max-width: 450px) {
+        height: 29px;
     }
 
     &_text {

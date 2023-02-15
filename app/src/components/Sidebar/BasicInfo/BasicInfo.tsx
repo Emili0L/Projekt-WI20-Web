@@ -125,6 +125,87 @@ const BasicInfo = () => {
             <div className={styles.l} />
           </div>
         </div>
+        <div className={styles.mobileContainer}>
+          <div className={styles.backgroundElement} />
+          <div className={styles.mobileContent}>
+            <div className={styles.station}>
+              <div className={styles.titleContainer}>
+                <div className={styles.title}>
+                  {selectedMarker === null
+                    ? t.basicnfo.sellect
+                    : selectedMarker.name}
+                </div>
+                <div className={styles.subtitle}>
+                  {selectedMarker === null
+                    ? t.basicnfo.insights
+                    : `${displayGPS({
+                        lat: selectedMarker.lat,
+                        lon: selectedMarker.lon,
+                      })} - ${selectedMarker.country || ""}`}
+                </div>
+              </div>
+            </div>
+            <div className={styles.mobileBtnContainer}>
+              {selectedMarker !== null && (
+                <div
+                  className={cn(styles.btnBlock, styles.hoverbg)}
+                  onClick={() => {
+                    if (selectedMarker === null || selectedMarker === undefined)
+                      return;
+                    if (
+                      selectedMarker !== null &&
+                      favorites.some((fav) => fav.id === selectedMarker.id)
+                    ) {
+                      setFavorites(
+                        favorites.filter((fav) => fav.id !== selectedMarker.id)
+                      );
+                    } else {
+                      setFavorites(
+                        [...favorites, selectedMarker].filter((f) => f !== null)
+                      );
+                    }
+                  }}
+                >
+                  <Icon
+                    path={
+                      selectedMarker !== null &&
+                      favorites.some((fav) => fav.id === selectedMarker.id)
+                        ? mdiHeart
+                        : mdiHeartOutline
+                    }
+                    size={1}
+                    color={
+                      selectedMarker !== null &&
+                      favorites.some((fav) => fav.id === selectedMarker.id)
+                        ? "var(--color-primary)"
+                        : "var(--color-map-foreground)"
+                    }
+                  />
+                  <div className={styles.cH}>
+                    <div className={styles.b} />
+                  </div>
+                </div>
+              )}
+              <div
+                className={cn(
+                  styles.btnBlock,
+                  styles.hoverbg,
+                  selectedMarker === null && styles.fullHeight
+                )}
+                onClick={() => {
+                  if (selectedMarker !== null) setIsOpen(true);
+                  else setShowDatasetModal(true);
+                }}
+              >
+                <Icon
+                  path={mdiChartBoxOutline}
+                  size={1}
+                  color="var(--color-map-foreground)"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <BasicDialog
         open={isOpen}
