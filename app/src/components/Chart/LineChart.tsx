@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDialogContext } from "../Modal";
 import type { EChartsOption, ECharts, SetOptionOpts } from "echarts";
 import { init, getInstanceByDom } from "echarts";
@@ -20,6 +20,24 @@ const LineChart = () => {
   const router = useRouter();
   const { resolvedTheme: theme } = useTheme();
 
+  const tooltipHTMLTemplate = useCallback(
+    (seriesName: string, value: number, color: any) => {
+      return (
+        "<br />" +
+        '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' +
+        color +
+        ';"></span>' +
+        seriesName +
+        ": " +
+        '<strong style="font-weight: bold">' +
+        value?.toFixed(2) +
+        " °C" +
+        "</strong>"
+      );
+    },
+    []
+  );
+
   const [option, setOption] = useState<EChartsOption>({
     currentView: "all",
     title: {
@@ -32,64 +50,77 @@ const LineChart = () => {
         var color2 = params[1].color;
         var color3 = undefined;
         var color4 = undefined;
+        var color5 = undefined;
+        var color6 = undefined;
+        var color7 = undefined;
+        var color8 = undefined;
+        var color9 = undefined;
+        var color10 = undefined;
         if (params[2]) {
           color3 = params[2].color;
         }
         if (params[3]) {
           color4 = params[3].color;
         }
+        if (params[4]) {
+          color5 = params[4].color;
+        }
+        if (params[5]) {
+          color6 = params[5].color;
+        }
+        if (params[6]) {
+          color7 = params[6].color;
+        }
+        if (params[7]) {
+          color8 = params[7].color;
+        }
+        if (params[8]) {
+          color9 = params[8].color;
+        }
+        if (params[9]) {
+          color10 = params[9].color;
+        }
         return (
           params[0].name +
-          "<br />" +
-          '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' +
-          color1 +
-          ';"></span>' +
-          params[0].seriesName +
-          ": " +
-          '<strong style="font-weight: bold">' +
-          params[0].value?.toFixed(2) +
-          " °C" +
-          "</strong>" +
-          "<br />" +
-          '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' +
-          color2 +
-          ';"></span>' +
-          params[1].seriesName +
-          ": " +
-          '<strong style="font-weight: bold">' +
-          params[1].value?.toFixed(2) +
-          " °C" +
-          "</strong>" +
-          // if there is a third series
+          tooltipHTMLTemplate(params[0].seriesName, params[0].value, color1) +
+          tooltipHTMLTemplate(params[1].seriesName, params[1].value, color2) +
           (color3
-            ? "<br />" +
-              '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' +
-              color3 +
-              ';"></span>' +
-              params[2].seriesName +
-              ": " +
-              '<strong style="font-weight: bold">' +
-              params[2].value?.toFixed(2) +
-              " °C" +
-              "</strong>"
+            ? tooltipHTMLTemplate(params[2].seriesName, params[2].value, color3)
             : "") +
-          // if there is a fourth series
           (color4
-            ? "<br />" +
-              '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:' +
-              color4 +
-              ';"></span>' +
-              params[3].seriesName +
-              ": " +
-              '<strong style="font-weight: bold">' +
-              params[3].value?.toFixed(2) +
-              " °C" +
-              "</strong>"
+            ? tooltipHTMLTemplate(params[3].seriesName, params[3].value, color4)
+            : "") +
+          (color5
+            ? tooltipHTMLTemplate(params[4].seriesName, params[4].value, color5)
+            : "") +
+          (color6
+            ? tooltipHTMLTemplate(params[5].seriesName, params[5].value, color6)
+            : "") +
+          (color7
+            ? tooltipHTMLTemplate(params[6].seriesName, params[6].value, color7)
+            : "") +
+          (color8
+            ? tooltipHTMLTemplate(params[7].seriesName, params[7].value, color8)
+            : "") +
+          (color9
+            ? tooltipHTMLTemplate(params[8].seriesName, params[8].value, color9)
+            : "") +
+          (color10
+            ? tooltipHTMLTemplate(
+                params[9].seriesName,
+                params[9].value,
+                color10
+              )
             : "")
         );
       },
     },
-    legend: {},
+    legend: {
+      top: "3%",
+      orient: "horizontal",
+      align: "left",
+      padding: [5, 90, 0, 90],
+    },
     grid: {
       left: "3%",
       right: "4%",
