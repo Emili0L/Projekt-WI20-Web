@@ -37,17 +37,65 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
     const result = await client.search({
       index: process.env.ELASTICSEARCH_INDEX,
       size: Number(size) || 10,
-      q: q as string,
       body: {
         query: {
           bool: {
             should: [
               {
-                query_string: {
-                  query: q as string,
+                match_phrase: {
+                  name: {
+                    query: q as string,
+                    boost: 3,
+                  },
+                },
+              },
+              {
+                match_phrase: {
+                  city: {
+                    query: q as string,
+                    boost: 1.5,
+                  },
+                },
+              },
+              {
+                match_phrase: {
+                  country_name: {
+                    query: q as string,
+                    boost: 1.5,
+                  },
+                },
+              },
+              {
+                match_phrase: {
+                  location_name: {
+                    query: q as string,
+                    boost: 2,
+                  },
+                },
+              },
+              {
+                fuzzy: {
+                  name: {
+                    value: q as string,
+                    fuzziness: 2,
+                  },
+                },
+              },
+              {
+                fuzzy: {
+                  city: {
+                    value: q as string,
+                    fuzziness: 2,
+                  },
+                },
+              },
+              {
+                match: {
+                  id: q as string,
                 },
               },
             ],
+            minimum_should_match: 1,
             filter: [
               {
                 range: {
@@ -69,6 +117,7 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
             ],
           },
         },
+        // min_score: 1,
       },
     });
 

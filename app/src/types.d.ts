@@ -74,7 +74,7 @@ declare global {
     type: "text" | "coordinates";
     query: SearchQuery;
     country: string | null;
-    distance: number;
+    distance?: number;
     maxResults: number;
     startYear: number;
     endYear: number;

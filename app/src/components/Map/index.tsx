@@ -17,17 +17,11 @@ type Props = {
 
 const Map = memo(({ children }: Props) => {
   const router = useRouter();
-  const { setSelectedMarker, searchResults, map, setMap } = useMainContext();
+  const { setSelectedMarker, selectedMarker, map, setMap } = useMainContext();
   const [bounds, setBounds] = useState(null);
   const [zoom, setZoom] = useState(6);
 
-  const { data } = useSWR("/api/markers?bounds=" + bounds + "&zoom=" + zoom, {
-    onSuccess: (data) => {
-      // console.log(data);
-    },
-    // revalidateOnFocus: false,
-    // revalidateOnReconnect: false,
-  });
+  const { data } = useSWR("/api/markers?bounds=" + bounds + "&zoom=" + zoom);
 
   function createClusterIcon(feature, latlng) {
     if (!feature.properties.cluster) return L.marker(latlng);
@@ -98,38 +92,12 @@ const Map = memo(({ children }: Props) => {
     };
   }, [map]);
 
-  // useEffect(() => {
-  //   if (!map) return;
-  //   // @TODO
-  //   // check the current path and center the map on the marker if provided
-  //   const path = router.asPath.split("/");
-  //   if (path[1] === "explore" && path[2]) {
-  //     // check if we have search results and if so, if the marker is in the results
-  //     // if (searchResults && searchResults.length > 0) {
-  //     //   const marker = searchResults.find((m) => m._source.id === path[2]);
-  //     //   if (marker) {
-  //     //     // animate the map to the marker
-  //     //     map.setView(
-  //     //       marker._source.coordinates,
-  //     //       5,
-  //     //       {
-  //     //         animate: true,
-  //     //         duration: 1,
-  //     //       },
-  //     //       () => {
-  //     //         // set the selected marker id
-  //     //         setSelectedMarkerId(marker._source.id);
-  //     //       }
-  //     //     );
-  //     //   }
-  //     // }
-  //   }
-  // }, [map, data, searchResults, router.asPath]);
-
   let mapClassName = "map";
 
-  const markerIcon = () => {
-    const svg = `<svg class="map-marker" fill="#000000" version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 395.71 395.71" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M197.849,0C122.131,0,60.531,61.609,60.531,137.329c0,72.887,124.591,243.177,129.896,250.388l4.951,6.738 c0.579,0.792,1.501,1.255,2.471,1.255c0.985,0,1.901-0.463,2.486-1.255l4.948-6.738c5.308-7.211,129.896-177.501,129.896-250.388 C335.179,61.609,273.569,0,197.849,0z M197.849,88.138c27.13,0,49.191,22.062,49.191,49.191c0,27.115-22.062,49.191-49.191,49.191 c-27.114,0-49.191-22.076-49.191-49.191C148.658,110.2,170.734,88.138,197.849,88.138z"></path> </g> </g></svg>`;
+  const markerIcon = (id: string) => {
+    const svg = `<svg class="map-marker ${
+      selectedMarker && selectedMarker.id === id ? "selected" : ""
+    }" fill="#000000" version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 395.71 395.71" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M197.849,0C122.131,0,60.531,61.609,60.531,137.329c0,72.887,124.591,243.177,129.896,250.388l4.951,6.738 c0.579,0.792,1.501,1.255,2.471,1.255c0.985,0,1.901-0.463,2.486-1.255l4.948-6.738c5.308-7.211,129.896-177.501,129.896-250.388 C335.179,61.609,273.569,0,197.849,0z M197.849,88.138c27.13,0,49.191,22.062,49.191,49.191c0,27.115-22.062,49.191-49.191,49.191 c-27.114,0-49.191-22.076-49.191-49.191C148.658,110.2,170.734,88.138,197.849,88.138z"></path> </g> </g></svg>`;
     return divIcon({
       html: svg,
     });
@@ -137,12 +105,6 @@ const Map = memo(({ children }: Props) => {
 
   const handleMarkerClick = useCallback(
     (cluster: GeoPoint) => {
-      // setSelectedMarker({
-      //   lat: cluster.geometry.coordinates[1],
-      //   lon: cluster.geometry.coordinates[0],
-      //   ...cluster.properties,
-      // });
-
       const id = cluster.properties.id;
       router.push(`/explore/${id}`, undefined, { shallow: true });
     },
@@ -160,17 +122,6 @@ const Map = memo(({ children }: Props) => {
       ref={setMap}
       preferCanvas
     >
-      {/* <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      /> */}
-      {/* <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        maxZoom={20}
-        subdomains="abcd"
-      /> */}
-
       <TileLayer
         url={`https://api.maptiler.com/maps/basic-v2-dark/{z}/{x}/{y}.png?key=${key}`}
         attribution={
@@ -190,7 +141,7 @@ const Map = memo(({ children }: Props) => {
 
         return (
           <Marker
-            icon={markerIcon()}
+            icon={markerIcon(cluster.properties.id)}
             key={`marker-${cluster.properties.id}`}
             position={[lat, lng]}
             eventHandlers={{
@@ -203,8 +154,6 @@ const Map = memo(({ children }: Props) => {
           </Marker>
         );
       })}
-
-      {/* <ScaleControl position={"bottomright"} /> */}
       <ZoomControl position={"bottomright"} />
       {children}
     </MapContainer>

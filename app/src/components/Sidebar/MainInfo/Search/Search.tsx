@@ -327,7 +327,7 @@ const Search = () => {
         const data = results.map((result: any) => {
           return {
             name: result._source.name,
-            id: result._source.id,
+            id: result._id,
           };
         });
         setTextSearchResults(data);
@@ -356,21 +356,22 @@ const Search = () => {
           const data = await res.json();
           setSearchResults(data);
           setFilterContainerOpen(false);
-          // setHistory((prev) => {
-          //   return [
-          //     ...prev,
-          //     {
-          //       type: "text",
-          //       query: {
-          //         text: value,
-          //       },
-          //       country: "",
-          //       distance: Number(distance.toFixed(2)),
-          //       maxResults: Number(maxResults.toFixed(0)),
-          //       nrReturnedResults: data.length || 0,
-          //     },
-          //   ] as HistoryItem[];
-          // });
+          setHistory((prev) => {
+            return [
+              ...prev,
+              {
+                type: "text",
+                query: val,
+                country: countryCode,
+                maxResults: Number(maxResults.toFixed(0)),
+                nrReturnedResults: data.length || 0,
+                startYear: startYear,
+                endYear: endYear,
+                timestamp: new Date().getTime(),
+                results: data,
+              },
+            ] as HistoryItem[];
+          });
         }
       } catch (err) {
         console.error(err);
@@ -738,7 +739,7 @@ const Search = () => {
                           <div className={styles.itemContainer}>
                             <div className={styles.itemTitleContainer}>
                               <div className={styles.title}>
-                                {`See all ${suggestionStations.length} countries`}
+                                {`${t.searching.seeAll} ${suggestionStations.length} ${t.searching.countries}`}
                               </div>
                             </div>
 

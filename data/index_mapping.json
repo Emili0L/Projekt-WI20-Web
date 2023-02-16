@@ -1,5 +1,9 @@
 {
     "properties": {
+        "city": {
+            "type": "text",
+            "analyzer": "standard"
+        },
         "coordinates": {
             "type": "geo_point"
         },
@@ -13,7 +17,15 @@
         "elevation": {
             "type": "double"
         },
+        "location_name": {
+            "type": "text",
+            "analyzer": "standard"
+        },
         "name": {
+            "type": "text",
+            "analyzer": "standard"
+        },
+        "state": {
             "type": "text",
             "analyzer": "standard"
         },

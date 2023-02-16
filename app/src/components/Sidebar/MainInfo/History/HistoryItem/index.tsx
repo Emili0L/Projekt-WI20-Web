@@ -54,6 +54,21 @@ const HistoryItem = ({ item, isEditMode }: HistoryItemProps) => {
             }),
         },
       });
+    } else if (item.type === "text") {
+      setSearchResults(item.results);
+      router.push({
+        pathname: "/search",
+        query: {
+          q: item.query,
+          size: item.maxResults,
+          start_year: item.startYear,
+          end_year: item.endYear,
+          ...(item.country &&
+            item.country !== "" && {
+              country: item.country,
+            }),
+        },
+      });
     }
   };
 
@@ -91,6 +106,30 @@ const HistoryItem = ({ item, isEditMode }: HistoryItemProps) => {
                 >{`Lat: ${item.query[0]}, Lon: ${item.query[1]}`}</div>
                 <div className={styles.subtitle}>
                   {`${item.distance} km, ${item.maxResults}x, ${item.startYear} - ${item.endYear}`}
+                </div>
+              </div>
+              <div className={styles.itemIconContainer}>
+                <div className={styles.icon}>
+                  <Icon path={mdiChevronRight} size={1} />
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+        {item && item.type === "text" && (
+          <>
+            <div className={styles.itemContainer} onClick={handleItemClick}>
+              <div className={styles.countContainer}>
+                <div className={styles.content}>
+                  <div className={styles.circle}>
+                    <div className={styles.count}>{item.nrReturnedResults}</div>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.titleContainer}>
+                <div className={styles.title}>{item.query}</div>
+                <div className={styles.subtitle}>
+                  {`${item.maxResults}x, ${item.startYear} - ${item.endYear}`}
                 </div>
               </div>
               <div className={styles.itemIconContainer}>

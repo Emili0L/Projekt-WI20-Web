@@ -5,6 +5,8 @@ import { init, getInstanceByDom } from "echarts";
 import { useMainContext } from "../Layout/Layout";
 import { useRouter } from "next/router";
 import { useTheme } from "next-themes";
+import en from "../../locales/en";
+import de from "../../locales/de";
 
 const LineChart = () => {
   const { selectedMarker } = useMainContext();
@@ -18,6 +20,7 @@ const LineChart = () => {
     setShouldReset,
   } = useDialogContext();
   const router = useRouter();
+  const t = router.locale === "en" ? en : de;
   const { resolvedTheme: theme } = useTheme();
 
   const tooltipHTMLTemplate = useCallback(
@@ -155,22 +158,22 @@ const LineChart = () => {
     },
     series: [
       {
-        name: "TMAX",
+        name: t.chart.seriesNames.tmax,
         data: data.map((d) => d.tmax),
         type: "line",
       },
       {
-        name: "TMIN",
+        name: t.chart.seriesNames.tmin,
         data: data.map((d) => d.tmin),
         type: "line",
       },
       {
-        name: "TMAX Summer",
+        name: t.chart.seriesNames.tmax_summer,
         data: data.map((d) => d.tmax_summer),
         type: "line",
       },
       {
-        name: "TMIN Winter",
+        name: t.chart.seriesNames.tmin_winter,
         data: data.map((d) => d.tmin_winter),
         type: "line",
       },
@@ -202,29 +205,16 @@ const LineChart = () => {
             xAxis: {
               type: "category",
               boundaryGap: false,
-              data: [
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
-              ],
+              data: t.chart.months,
             },
             series: [
               {
-                name: "TMIN",
+                name: t.chart.seriesNames.tmin,
                 type: "line",
                 data: data.data.map((d: any) => d.tmin),
               },
               {
-                name: "TMAX",
+                name: t.chart.seriesNames.tmax,
                 type: "line",
                 data: data.data.map((d: any) => d.tmax),
               },
@@ -244,13 +234,14 @@ const LineChart = () => {
     } else if (chartOptions.currentView?.includes("year")) {
       chart.showLoading();
       var selectedMonth = params.name;
+      selectedMonth = t.chart.months.indexOf(selectedMonth);
+      if (selectedMonth === -1) {
+        return chart.hideLoading();
+      } else {
+        selectedMonth = selectedMonth + 1;
+      }
       // @ts-expect-error
       var year = chartOptions.currentView.split("year - ")[1];
-      // if selectedMonth is in the format of a year return
-      if (selectedMonth.length === 4) {
-        return chart.hideLoading();
-      }
-      selectedMonth = new Date(selectedMonth + " 1, 2021").getMonth() + 1;
       fetch(
         `/api/station/${selectedMarker.id}?year=${year}&month=${selectedMonth}`
       )
@@ -266,12 +257,12 @@ const LineChart = () => {
             },
             series: [
               {
-                name: "TMIN",
+                name: t.chart.seriesNames.tmin,
                 type: "line",
                 data: data.data.map((d: any) => d.tmin),
               },
               {
-                name: "TMAX",
+                name: t.chart.seriesNames.tmax,
                 type: "line",
                 data: data.data.map((d: any) => d.tmax),
               },
@@ -310,22 +301,22 @@ const LineChart = () => {
         },
         series: [
           {
-            name: "TMAX",
+            name: t.chart.seriesNames.tmax,
             type: "line",
             data: data.map((d) => d.tmax),
           },
           {
-            name: "TMIN",
+            name: t.chart.seriesNames.tmin,
             type: "line",
             data: data.map((d) => d.tmin),
           },
           {
-            name: "TMAX Summer",
+            name: t.chart.seriesNames.tmax_summer,
             type: "line",
             data: data.map((d) => d.tmax_summer),
           },
           {
-            name: "TMIN Winter",
+            name: t.chart.seriesNames.tmin_winter,
             type: "line",
             data: data.map((d) => d.tmin_winter),
           },

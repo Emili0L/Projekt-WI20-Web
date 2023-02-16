@@ -44,68 +44,48 @@ def read_file(file_name):
 df = pd.read_csv('station_data2.csv', sep=',', header=0)
 # create an jsonnd file to store the data, where each row looks like this:
 # {"id": "ACW00011604", "elevation": 10.1, "country_code": "AC", "country_name": "Antigua and Barbuda", "coordinates": [-61.7833, 17.1167], "name": "St. John's", "years": []}
-# with open('station.ndjson', 'w') as f:
+with open('station_final.ndjson', 'w') as f:
+    for i, row in tqdm(df.iterrows()):
+        stationId = row['station_id']
+        elevation = row['elevation']
+        countryCode = row['country_code']
+        countryName = row['country_name']
+        coordinates = [row['longitude'], row['latitude']]
+        name = row['name'].replace('"', "'")
+        city = row['city']
+        if pd.isna(city):
+            city = ''
+        state = row['state']
+        if pd.isna(state):
+            state = ''
+        location_name = str(row['location_name']).replace('\t', ' ').replace('\n', ' ').replace('"', "'")
+        years = row['years'].replace('[', '').replace(']', '').replace(' ', '').replace("'", '').replace('\n', '')
+        years = [int(year) for year in [years[i:i+4] for i in range(0, len(years), 4)]] if years != '' else []
+        f.write(f'{{"id": "{stationId}", "elevation": {elevation}, "country_code": "{countryCode}", "country_name": "{countryName}", "state": "{state}", "coordinates": {coordinates}, "name": "{name}", "city": "{city}", "location_name": "{location_name}", "years": {str(years)}}}\n')
+
+
+# ghcnd-stations
+
+# create a tsv file to store the data, where each row looks like this:
+# ACW00011604	10.1	AC	Antigua and Barbuda	-61.7833	17.1167	St. John's	St. John's	St. John's	St. John's	[1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020]
+# with open('station_final.tsv', 'w') as f:
+#     f.write('station_id\televation\tcountry_code\tcountry_name\tcoordinates\tname\tcity\tstate\tlocation_name\tyears\n')
 #     for i, row in tqdm(df.iterrows()):
 #         stationId = row['station_id']
 #         elevation = row['elevation']
 #         countryCode = row['country_code']
 #         countryName = row['country_name']
 #         coordinates = [row['longitude'], row['latitude']]
-#         name = row['name']
+#         name = row['name'].replace('\t', ' ').replace('\n', ' ').replace('"', "'")
+#         city = row['city']
+#         if pd.isna(city):
+#             city = ''
+#         state = row['state']
+#         if pd.isna(state):
+#             state = ''
+#         location_name = str(row['location_name']).replace('\t', ' ').replace('\n', ' ').replace('"', "'")
 #         years = row['years'].replace('[', '').replace(']', '').replace(' ', '').replace("'", '').replace('\n', '')
 #         # convert years to a list of integers, split it every 4 characters and convert it to a list of integers
 #         years = [int(year) for year in [years[i:i+4] for i in range(0, len(years), 4)]] if years != '' else []
-#         f.write(f'{{"id": "{stationId}", "elevation": {elevation}, "country_code": "{countryCode}", "country_name": "{countryName}", "coordinates": {coordinates}, "name": "{name}", "years": {str(years)}}}\n')
-
-
-# For every station, request the city name from the nominatim API
-# and add it to the station data
-
-# # create a new column for the city name
-# df['city'] = ''
-# # create a new column for the state name
-# df['state'] = ''
-# # create a new column for the location name
-# df['location_name'] = ''
-
-# iterate over all rows
-for i, row in tqdm(df.iterrows()):
-    # if the city name is already known, skip this row (check if its not nan)
-    if not pd.isna(row['city']):
-        continue
-    # get the latitude and longitude
-    lat = row['latitude']
-    lon = row['longitude']
-    # request the city name from the nominatim API
-    url = f"https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lon}&zoom=18&addressdetails=1"
-    response = urllib.request.urlopen(url)
-    data = json.loads(response.read())
-    # if the city name is found, add it to the station data
-    try:
-        if 'town' in data['address']:
-            df.at[i, 'city'] = data['address']['town']
-    except:
-        pass
-    try:        
-        # if the state name is found, add it to the station data
-        if 'state' in data['address']:
-            df.at[i, 'state'] = data['address']['state']
-    except:
-        pass
-    # if a display name is found, add it to the station data
-    if 'display_name' in data:
-        df.at[i, 'location_name'] = data['display_name']
-    # save the station data to a csv file
-    df.to_csv('station_data2.csv', index=False)
-
-
-# # read data2
-# df2 = pd.read_csv('station_data2.csv', sep=',', header=0)
-# # create for all missing stationids a new row in the station data2
-# for i, row in tqdm(df.iterrows()):
-#     stationId = row['station_id']
-#     if stationId not in df2['station_id'].values:
-#         df2 = df2.append(row)
-
-# # save the station data to a csv file
-# df2.to_csv('station_metadata.csv', index=False)
+#         years = str(years).replace('[', '').replace(']', '').replace(' ', '')
+#         f.write(f'{stationId}\t{elevation}\t{countryCode}\t{countryName}\t{coordinates[0]},{coordinates[1]}\t{name}\t{city}\t{state}\t{location_name}\t{years}\n')

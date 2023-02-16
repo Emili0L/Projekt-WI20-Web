@@ -150,7 +150,7 @@ const BasicDialog = memo(
           selectedYear,
           selectedMonth - 1,
           1
-        ).toLocaleString("default", { month: "long" });
+        ).toLocaleString(router.locale, { month: "long" });
         rightSide = `${month} ${selectedYear}`;
       }
       return `${selectedMarker.name} - ${rightSide}`;

@@ -52,6 +52,10 @@
 	top: -1rem;
 	left: -7px;
 	cursor: pointer;
+
+	&.selected {
+		fill: #1d61b9;
+	}
 }
 
 .marker-cluster-small {
