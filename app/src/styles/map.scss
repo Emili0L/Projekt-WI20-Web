@@ -53,49 +53,71 @@
 	left: -7px;
 	cursor: pointer;
 
-	&.selected {
-		fill: #1d61b9;
+	#VividJS {
+		stroke: #1DB95496;
 	}
+
+	#Oval {
+		fill: black;
+	}
+
+	#Shape {
+		fill: #1DB95496;
+	}
+
+	&.selected {
+		#VividJS {
+			stroke: #fff;
+		}
+	 stroke: #fff;
+	 stroke-width: 2px;
+	}
+}
+.map-marker-wrapper {
+    margin-left: -3px !important;
+    margin-top: -8px !important;
+    width: 16px !important;
+	height: 16px !important;
 }
 
 .marker-cluster-small {
-	background-color: rgba(181, 226, 140, 0.6);
+	background-color: rgba(9, 164, 14, 0.5);
 }
 
 .marker-cluster-small div {
-	background-color: rgba(110, 204, 57, 0.6);
+	background-color: #1DB95496;
 }
 
 .marker-cluster-medium {
-	background-color: rgba(241, 211, 87, 0.6);
+	background-color: rgba(88, 170, 26, 0.5);
 }
 
 .marker-cluster-medium div {
-	background-color: rgba(240, 194, 12, 0.6);
+	background-color: rgba(88, 170, 26, 0.8);
 }
 
 .marker-cluster-large {
-	background-color: rgba(253, 156, 115, 0.6);
+	background-color: rgba(163, 185, 8, 0.5);
 }
 
 .marker-cluster-large div {
-	background-color: rgba(245, 0, 87, 0.6);
+	background-color: rgba(163, 185, 8, 0.8);
 }
 
 .marker-cluster-xlarge {
-	background-color: rgba(252, 78, 42, 0.6);
+	background-color: rgba(217, 186, 30, 0.5);
 }
 
 .marker-cluster-xlarge div {
-	background-color: rgba(245, 0, 87, 0.6);
+	background-color: rgba(217, 186, 30, 0.8);
 }
 
 .marker-cluster-xxlarge {
-	background-color: rgba(252, 78, 42, 0.6);
+	background-color: rgba(197, 137, 16, 0.5);
 }
 
 .marker-cluster-xxlarge div {
-	background-color: rgba(245, 0, 87, 0.6);
+	background-color: rgba(197, 137, 16, 0.8);
 }
 
 .marker-cluster {

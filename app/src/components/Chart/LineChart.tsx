@@ -43,6 +43,7 @@ const LineChart = () => {
 
   const [option, setOption] = useState<EChartsOption>({
     currentView: "all",
+    backgroundColor: theme === "dark" ? "#2A2A2A" : "#fff",
     title: {
       text: null,
     },
@@ -161,21 +162,25 @@ const LineChart = () => {
         name: t.chart.seriesNames.tmax,
         data: data.map((d) => d.tmax),
         type: "line",
+        color: "#FF8F39",
       },
       {
         name: t.chart.seriesNames.tmin,
         data: data.map((d) => d.tmin),
         type: "line",
+        color: "#416DFF",
       },
       {
         name: t.chart.seriesNames.tmax_summer,
         data: data.map((d) => d.tmax_summer),
         type: "line",
+        color: "#FF2020",
       },
       {
         name: t.chart.seriesNames.tmin_winter,
         data: data.map((d) => d.tmin_winter),
         type: "line",
+        color: "#0000FF",
       },
     ],
   });
@@ -212,11 +217,29 @@ const LineChart = () => {
                 name: t.chart.seriesNames.tmin,
                 type: "line",
                 data: data.data.map((d: any) => d.tmin),
+                color: "#416DFF",
+                markLine: {
+                  data: [
+                    {
+                      type: "average",
+                      name: "Avg",
+                    },
+                  ],
+                },
               },
               {
                 name: t.chart.seriesNames.tmax,
                 type: "line",
                 data: data.data.map((d: any) => d.tmax),
+                color: "#FF8F39",
+                markLine: {
+                  data: [
+                    {
+                      type: "average",
+                      name: "Avg",
+                    },
+                  ],
+                },
               },
             ],
             dataZoom: [],
@@ -260,11 +283,25 @@ const LineChart = () => {
                 name: t.chart.seriesNames.tmin,
                 type: "line",
                 data: data.data.map((d: any) => d.tmin),
+                color: "#416DFF",
+                markLine: {
+                  data: [{ type: "average", name: "Avg" }],
+                },
+                markPoint: {
+                  data: [{ type: "min", name: "Min" }],
+                },
               },
               {
                 name: t.chart.seriesNames.tmax,
                 type: "line",
                 data: data.data.map((d: any) => d.tmax),
+                color: "#FF8F39",
+                markLine: {
+                  data: [{ type: "average", name: "Avg" }],
+                },
+                markPoint: {
+                  data: [{ type: "max", name: "Max" }],
+                },
               },
             ],
             dataZoom: [],
@@ -302,23 +339,27 @@ const LineChart = () => {
         series: [
           {
             name: t.chart.seriesNames.tmax,
-            type: "line",
             data: data.map((d) => d.tmax),
+            type: "line",
+            color: "#FF8F39",
           },
           {
             name: t.chart.seriesNames.tmin,
-            type: "line",
             data: data.map((d) => d.tmin),
+            type: "line",
+            color: "#416DFF",
           },
           {
             name: t.chart.seriesNames.tmax_summer,
-            type: "line",
             data: data.map((d) => d.tmax_summer),
+            type: "line",
+            color: "#FF2020",
           },
           {
             name: t.chart.seriesNames.tmin_winter,
-            type: "line",
             data: data.map((d) => d.tmin_winter),
+            type: "line",
+            color: "#0000FF",
           },
         ],
       });

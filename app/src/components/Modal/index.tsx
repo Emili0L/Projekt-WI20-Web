@@ -94,6 +94,9 @@ const BasicDialog = memo(
           default: theme === "dark" ? "none" : "#fff",
           paper: theme === "dark" ? "none" : "#fff",
         },
+        primary: {
+          main: "#BBBBBB",
+        },
       },
     });
 
@@ -113,6 +116,8 @@ const BasicDialog = memo(
       PaperProps: {
         style: {
           overflow: "visible",
+          backgroundImage:
+            "linear-gradient(rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.22))",
         },
       },
       ...dialogProps,

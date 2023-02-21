@@ -32,9 +32,9 @@ const Map = memo(({ children }: Props) => {
         ? "small"
         : count < 100
         ? "medium"
-        : count < 200
-        ? "large"
         : count < 500
+        ? "large"
+        : count < 1000
         ? "xlarge"
         : "xxlarge";
 
@@ -97,9 +97,10 @@ const Map = memo(({ children }: Props) => {
   const markerIcon = (id: string) => {
     const svg = `<svg class="map-marker ${
       selectedMarker && selectedMarker.id === id ? "selected" : ""
-    }" fill="#000000" version="1.1"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 395.71 395.71" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M197.849,0C122.131,0,60.531,61.609,60.531,137.329c0,72.887,124.591,243.177,129.896,250.388l4.951,6.738 c0.579,0.792,1.501,1.255,2.471,1.255c0.985,0,1.901-0.463,2.486-1.255l4.948-6.738c5.308-7.211,129.896-177.501,129.896-250.388 C335.179,61.609,273.569,0,197.849,0z M197.849,88.138c27.13,0,49.191,22.062,49.191,49.191c0,27.115-22.062,49.191-49.191,49.191 c-27.114,0-49.191-22.076-49.191-49.191C148.658,110.2,170.734,88.138,197.849,88.138z"></path> </g> </g></svg>`;
+    }" viewBox="-3.6 -3.6 43.20 43.20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" stroke="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <defs> </defs> <g id="VividJS" stroke-width="1.8719999999999999" fill="none" fill-rule="evenodd"> <g id="Vivid-Icons" transform="translate(-125.000000, -643.000000)"> <g id="Icons" transform="translate(37.000000, 169.000000)"> <g id="mm" transform="translate(78.000000, 468.000000)"> <g transform="translate(10.000000, 6.000000)"> <path d="M14,0 C21.732,0 28,5.641 28,12.6 C28,23.963 14,36 14,36 C14,36 0,24.064 0,12.6 C0,5.641 6.268,0 14,0 Z" id="Shape" fill="#FF6E6E"> </path> <circle id="Oval" fill="#0C0058" fill-rule="nonzero" cx="14" cy="14" r="7"> </circle> </g> </g> </g> </g> </g> </g></svg>`;
     return divIcon({
       html: svg,
+      className: "map-marker-wrapper",
     });
   };
 
@@ -129,6 +130,7 @@ const Map = memo(({ children }: Props) => {
         }
         accessToken={"LZOQu9WlJCxUdwYAm9W9"}
         crossOrigin
+        noWrap
       />
 
       {data?.map((cluster) => {

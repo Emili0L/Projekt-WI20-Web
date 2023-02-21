@@ -17,9 +17,7 @@ const History = ({ isEditMode }: Props) => {
     <>
       {history && history.length === 0 && (
         <div className={styles.empty}>
-          <span>
-            {"You have not searched yet. Start a new search in the search tab."}
-          </span>
+          <span>{t.history.empty}</span>
         </div>
       )}
       {history && history.length > 0 && (

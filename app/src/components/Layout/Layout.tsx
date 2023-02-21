@@ -184,6 +184,14 @@ const Layout: FC<Props> = ({ children, title }) => {
 
   return (
     <>
+      <noscript>
+        Please{" "}
+        <a href="https://www.enable-javascript.com" rel="nofollow">
+          enable JavaScript
+        </a>
+        <br />
+        in order to view this website.
+      </noscript>
       <LoadingIndicator />
       <div className="flex h-screen flex-col">
         <Head>
@@ -202,8 +210,24 @@ const Layout: FC<Props> = ({ children, title }) => {
           <meta name="robots" content="index, follow" />
           <meta name="googlebot" content="index, follow" />
           <meta name="google" content="notranslate" />
-        </Head>
 
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+          />
+          <meta
+            name="apple-mobile-web-app-title"
+            content="GHCND Station Explorer"
+          />
+
+          <meta property="og:type" content="website" />
+          <meta property="og:title" content="GHCND Station Explorer" />
+          <meta
+            property="og:description"
+            content="Explore GHCND weather stations"
+          />
+        </Head>
         <div className="flex h-full relative overflow-hidden z-0">
           <main className={cn("dark:bg-grey app__main", styles.app__main)}>
             <MainContext.Provider

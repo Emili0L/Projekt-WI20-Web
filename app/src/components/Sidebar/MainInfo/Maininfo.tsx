@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import styles from "./MainInfo.module.scss";
 import { motion as m } from "framer-motion";
 import { useMainContext } from "../../Layout/Layout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FavoriteItem from "./Favorites/FavoriteItem";
 import Settings from "./Settings/Settings";
 import Icon from "@mdi/react";
@@ -45,6 +45,29 @@ const MainInfo = () => {
 
   const [isFavoriteEditMode, setIsFavoriteEditMode] = useState(false);
   const [isHistoryEditMode, setIsHistoryEditMode] = useState(false);
+  const [closedWrapperPixelHeight, setClosedWrapperPixelHeight] = useState(514);
+
+  useEffect(() => {
+    // Calculate the height of the closed wrapper based on the height of the device
+
+    // get the vars (--playbar-height, --tabbar-height)
+    const playbarHeight = getComputedStyle(
+      document.documentElement
+    ).getPropertyValue("--playbar-height");
+    const tabbarHeight = getComputedStyle(
+      document.documentElement
+    ).getPropertyValue("--tabbar-height");
+
+    // convert to px
+    const playbarHeightPx = parseInt(playbarHeight);
+    const tabbarHeightPx = parseInt(tabbarHeight);
+    const visibleHeight = playbarHeightPx === 100 ? 150 : 120;
+
+    // calculate the height of the closed wrapper
+    const closedWrapperHeight =
+      window.innerHeight - tabbarHeightPx - playbarHeightPx - visibleHeight;
+    setClosedWrapperPixelHeight(closedWrapperHeight);
+  }, []);
 
   const handleOpen = () => {
     if (pathArray && pathArray.includes("explore")) return;
@@ -63,7 +86,7 @@ const MainInfo = () => {
     },
     closed: {
       opacity: 1,
-      y: "514px",
+      y: `${closedWrapperPixelHeight}px`,
       transition: animation,
     },
   };

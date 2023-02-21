@@ -14,6 +14,9 @@ const t = {
     your: "Your",
     appear: "stations will appear here.",
   },
+  history: {
+    empty: "You have not searched yet. Start a new search in the search tab.",
+  },
   setting: {
     general: "General",
     language: "Language",

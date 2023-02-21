@@ -7,6 +7,7 @@
         overflow: hidden;
         position: relative;
     }
+
     @media (max-width: 450px) {
         height: calc(var(--tabbar-height) + var(--safe-area-inset-bottom));
         padding-bottom: var(--safe-area-inset-bottom);
@@ -61,9 +62,15 @@
     &_title {
         text-transform: capitalize;
         font-size: 0.75rem;
+
+        @media (max-width: 374px) { 
+                display: none;
+            
+        }
     }
 
-    &:focus, &:hover:not(.tabbar_link_active) {
+    &:focus,
+    &:hover:not(.tabbar_link_active) {
         background-color: $color-background-hover;
     }
 
@@ -72,7 +79,7 @@
 .grow_container {
     display: flex;
     flex-grow: 1;
-    max-height: 780px;
+    // max-height: 780px;
     overflow: hidden;
     pointer-events: none;
 }
@@ -86,6 +93,7 @@
         right: 0;
         top: 0;
     }
+
     &_ct {
         background-color: $color-background-5;
         top: 0;

@@ -31,6 +31,12 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
       error: "Parameter size must be a number",
     });
   }
+  // Max size is 200
+  if (size !== undefined && Number(size) > 200) {
+    res.status(400).json({
+      error: "Parameter size must be less than 200",
+    });
+  }
   // check that start_year and end_year are numbers and valid years
   Object.entries({ start_year, end_year }).forEach(([key, value]) => {
     if (value !== undefined && isNaN(Number(value))) {

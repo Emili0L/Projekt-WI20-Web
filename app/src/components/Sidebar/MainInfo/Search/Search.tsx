@@ -327,7 +327,7 @@ const Search = () => {
         const data = results.map((result: any) => {
           return {
             name: result._source.name,
-            id: result._id,
+            id: `${result._id}--${result._source.id}`,
           };
         });
         setTextSearchResults(data);
@@ -385,8 +385,9 @@ const Search = () => {
       const station = textSearchResults.find(
         (result) => result.id === value.id
       );
+      const id = value.id.split("--")[1];
       if (station) {
-        router.push(`/explore/${station.id}`);
+        router.push(`/explore/${id}`);
       }
     } else if (typeof value === "string") {
       setTextSearch(value);

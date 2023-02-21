@@ -7,6 +7,7 @@ import "../styles/index.css";
 import "../styles/map.scss";
 import "leaflet/dist/leaflet.css";
 import MuiThemeProvider from "../providers/MuiThemeProvider";
+import { useEffect } from "react";
 
 type AppLayoutProps = AppProps & {
   Component: ExtendedNextPage;
@@ -18,6 +19,22 @@ const MyApp = ({
   pageProps: { session, ...pageProps },
 }: AppLayoutProps) => {
   const Layout = Component.layout ?? ((page: any) => <>{page.children}</>);
+
+  useEffect(() => {
+    var userAgent = window.navigator.userAgent;
+    console.log(userAgent);
+    // create a use Effect function to set the vh variable
+    const setVh = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+    // add the event listener
+    window.addEventListener("resize", setVh);
+    // call the function to set the variable for the first time
+    setVh();
+    // remove the event listener on cleanup
+    return () => window.removeEventListener("resize", setVh);
+  }, []);
 
   return (
     <SwrProvider>
