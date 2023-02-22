@@ -127,9 +127,21 @@
                 color: $color-background-1;
                 line-height: 0;
                 margin-left: 0;
+            }
+
+            .countTripleDigit {
+                font-size: .63rem;
 
                 @media (min-width: 451px) {
                     font-size: .7rem;
+                }
+            }
+
+            .countDoubleDigit {
+                font-size: .85rem;
+
+                @media (min-width: 451px) {
+                    font-size: .9rem;
                 }
             }
         }

@@ -61,8 +61,12 @@ const t = {
     seriesNames: {
       tmax: "TMAX",
       tmin: "TMIN",
+      tmin_spring: "TMIN (Frühling)",
+      tmax_spring: "TMAX (Frühling)",
       tmax_summer: "TMAX (Sommer)",
       tmin_summer: "TMIN (Sommer)",
+      tmin_autumn: "TMIN (Herbst)",
+      tmax_autumn: "TMAX (Herbst)",
       tmax_winter: "TMAX (Winter)",
       tmin_winter: "TMIN (Winter)",
     },
