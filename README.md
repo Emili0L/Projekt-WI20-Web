@@ -4,34 +4,11 @@
 
 
 - [Projekt-WI20-Web](#projekt-wi20-web)
-  - [Problem statement](#problem-statement)
-  - [Main objective](#main-objective)
   - [Dataset description](#dataset-description)
-  - [Proposal](#proposal)
-    - [Technologies](#technologies)
-    - [Repository organization](#repository-organization)
     - [Solution](#solution)
   - [Results](#results)
       - [Live production demo:](#live-production-demo)
   - [License](#license)
-
-## Problem statement
-Global historical weather data is large, collected from year 1763 until today. There are over 160K weather stations across the world, each of them generating several observations on a daily basis. This sum up a total of more than 1.75B observations.  
-The data is also not ready to perform analytics tasks over the entire dataset or those requiring geolocation information.
-All that information has to be processed (ELT) to enable analytics tasks using information from several years, locations, observation date and type and so on  
-As an example:  
-- Max daily temperature in France (over all territory) in 1992.
-- Plot a comparison of the main daily minimum temperature by year between NewYork and Miami.
-- Overall ten hottest days in Madrid.
-It is advisable that joins and aggregations will be needed for such kind of analysis.
-
-## Main objective
-Develop the data infrastructure including data pipeline and dashboard for users to perform advanced analytics tasks on the global historical weather data:
-- Select a dataset.
-- Create a pipeline for processing this dataset and putting it to a data-lake.
-- Create a pipeline for moving the data from the lake to a data warehouse.
-- Transform the data in the data warehouse: prepare it for the frontend.
-- Create a frontend to view the dashboard.
 
 ## Dataset description
 
@@ -78,17 +55,9 @@ Format of ghcnd-countries.txt
 - CODE          1-2    Character
 - NAME         4-50    Character
 
-## Proposal
 
-### Technologies
-- Infrastructure as code (IaC): Terraform
-- Nextjs (Reactjs) for the frontend
 
-### Repository organization
-- \airflow: airflow files (docker-compose.yaml, Dockerfile, requirements, dags folder, etc.).  
-- \assets: pictures.   
-- \infra: terraform files for the definition of the infrastructure to deploy.  
-- \README.md: this document.  
+  
 
 ### Solution
 

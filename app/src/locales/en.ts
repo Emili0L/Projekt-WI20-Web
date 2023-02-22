@@ -6,6 +6,10 @@ const t = {
     settings: "Settings",
     history: "History",
   },
+  datasetModal: {
+    learnMore: "Learn more",
+    title: "Global Surface Temperature Analysis 1800 - 2022",
+  },
   basicnfo: {
     sellect: "Select a station",
     insights: "Click the button to see global temperature data",
@@ -67,7 +71,6 @@ const t = {
   edit: "Edit",
   reset: "Reset",
   close: "Close",
-  dataset: "Global Surface Temperature Analysis 1800 - 2022",
   no_data: "For this station are no temperature records",
 };
 

@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { useTheme } from "next-themes";
 import en from "../../locales/en";
 import de from "../../locales/de";
+import type { ElementEvent } from "zrender/lib/Element";
 
 const LineChart = () => {
   const { selectedMarker } = useMainContext();
@@ -318,6 +319,37 @@ const LineChart = () => {
     }
   };
 
+  const handleCanvasClick = (event: ElementEvent) => {
+    const chart = getInstanceByDom(chartRef.current);
+    const chartOptions = chart.getOption();
+    if (!event.target && event.topTarget) {
+      if (event.topTarget.type === "Line") {
+        const xAxisIndex = chart.convertFromPixel(
+          {
+            seriesIndex: 0,
+            xAxisIndex: 0,
+          },
+          [event.offsetX, event.offsetY]
+        )[0];
+        const xAxisValue = chartOptions.xAxis[0].data[xAxisIndex];
+        var dataObj = data.find((d) => d.year === xAxisValue);
+        if (dataObj) {
+          const dataArr = Object.values(dataObj);
+          dataArr.shift();
+          if (dataArr.some((d) => d !== null)) {
+            return handleChartClick({ name: xAxisValue });
+          }
+        }
+        if (
+          chartOptions.series[0].data[xAxisIndex] ||
+          chartOptions.series[1].data[xAxisIndex]
+        ) {
+          return handleChartClick({ name: xAxisValue });
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     if (shouldReset) {
       setOption({
@@ -378,6 +410,7 @@ const LineChart = () => {
         locale: router.locale,
       });
       chart.on("click", handleChartClick);
+      chart.getZr().on("click", handleCanvasClick);
     }
 
     // Add chart resize listener

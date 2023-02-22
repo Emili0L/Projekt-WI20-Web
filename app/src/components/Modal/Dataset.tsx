@@ -67,7 +67,7 @@ const DatasetModal = memo(
       <ThemeProvider theme={muiTheme}>
         <Dialog {...createDialogProps}>
           <DialogTitle id={titleProps?.id}>
-            {t.dataset}
+            {t.datasetModal.title}
             <IconButton
               type="reset"
               aria-label="close"
@@ -103,7 +103,7 @@ const DatasetModal = memo(
               variant="outlined"
               startIcon={<Icon path={mdiInformationOutline} size={1.0} />}
             >
-              {"Learn more"}
+              {t.datasetModal.learnMore}
             </Button>
             <Button onClick={handleClose} color="primary">
               {t.close}

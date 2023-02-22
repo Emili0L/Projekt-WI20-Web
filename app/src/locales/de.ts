@@ -10,6 +10,10 @@ const t = {
     sellect: "Wähle eine Station",
     insights: "Klick auf das Symbol, um den Datensatz zu sehen",
   },
+  datasetModal: {
+    learnMore: "Mehr erfahren",
+    title: "Globale Oberflächentemperaturanalyse 1800 - 2022",
+  },
   favorite: {
     your: "Deine",
     appear: "Stationen erscheinen hier.",
@@ -67,7 +71,6 @@ const t = {
   edit: "Bearbeiten",
   reset: "Zurücksetzen",
   close: "Schließen",
-  dataset: "Global Surface Temperature Analysis 1800 - 2022",
   no_data: "Für diese Station liegen keine Temperaturaufzeichnungen vor",
 };
 
