@@ -112,7 +112,7 @@ const Map = memo(({ children }: Props) => {
     [setSelectedMarker]
   );
 
-  const key = "LZOQu9WlJCxUdwYAm9W9";
+  const key = "eHUbjCnrs1XM5VQHN2AV";
 
   return (
     <MapContainer
@@ -128,7 +128,7 @@ const Map = memo(({ children }: Props) => {
         attribution={
           '\u003ca href="https://www.maptiler.com/copyright/" target="_blank"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href="https://www.openstreetmap.org/copyright" target="_blank"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e'
         }
-        accessToken={"LZOQu9WlJCxUdwYAm9W9"}
+        accessToken={"eHUbjCnrs1XM5VQHN2AV"}
         crossOrigin
         noWrap
       />
