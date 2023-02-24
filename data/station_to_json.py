@@ -44,24 +44,24 @@ def read_file(file_name):
 df = pd.read_csv('station_data2.csv', sep=',', header=0)
 # create an jsonnd file to store the data, where each row looks like this:
 # {"id": "ACW00011604", "elevation": 10.1, "country_code": "AC", "country_name": "Antigua and Barbuda", "coordinates": [-61.7833, 17.1167], "name": "St. John's", "years": []}
-with open('station_final.ndjson', 'w') as f:
-    for i, row in tqdm(df.iterrows()):
-        stationId = row['station_id']
-        elevation = row['elevation']
-        countryCode = row['country_code']
-        countryName = row['country_name']
-        coordinates = [row['longitude'], row['latitude']]
-        name = row['name'].replace('"', "'")
-        city = row['city']
-        if pd.isna(city):
-            city = ''
-        state = row['state']
-        if pd.isna(state):
-            state = ''
-        location_name = str(row['location_name']).replace('\t', ' ').replace('\n', ' ').replace('"', "'")
-        years = row['years'].replace('[', '').replace(']', '').replace(' ', '').replace("'", '').replace('\n', '')
-        years = [int(year) for year in [years[i:i+4] for i in range(0, len(years), 4)]] if years != '' else []
-        f.write(f'{{"id": "{stationId}", "elevation": {elevation}, "country_code": "{countryCode}", "country_name": "{countryName}", "state": "{state}", "coordinates": {coordinates}, "name": "{name}", "city": "{city}", "location_name": "{location_name}", "years": {str(years)}}}\n')
+# with open('station_final.ndjson', 'w') as f:
+#     for i, row in tqdm(df.iterrows()):
+#         stationId = row['station_id']
+#         elevation = row['elevation']
+#         countryCode = row['country_code']
+#         countryName = row['country_name']
+#         coordinates = [row['longitude'], row['latitude']]
+#         name = row['name'].replace('"', "'")
+#         city = row['city']
+#         if pd.isna(city):
+#             city = ''
+#         state = row['state']
+#         if pd.isna(state):
+#             state = ''
+#         location_name = str(row['location_name']).replace('\t', ' ').replace('\n', ' ').replace('"', "'")
+#         years = row['years'].replace('[', '').replace(']', '').replace(' ', '').replace("'", '').replace('\n', '')
+#         years = [int(year) for year in [years[i:i+4] for i in range(0, len(years), 4)]] if years != '' else []
+#         f.write(f'{{"id": "{stationId}", "elevation": {elevation}, "country_code": "{countryCode}", "country_name": "{countryName}", "state": "{state}", "coordinates": {coordinates}, "name": "{name}", "city": "{city}", "location_name": "{location_name}", "years": {str(years)}}}\n')
 
 
 # ghcnd-stations
@@ -89,3 +89,65 @@ with open('station_final.ndjson', 'w') as f:
 #         years = [int(year) for year in [years[i:i+4] for i in range(0, len(years), 4)]] if years != '' else []
 #         years = str(years).replace('[', '').replace(']', '').replace(' ', '')
 #         f.write(f'{stationId}\t{elevation}\t{countryCode}\t{countryName}\t{coordinates[0]},{coordinates[1]}\t{name}\t{city}\t{state}\t{location_name}\t{years}\n')
+
+df2 = pd.read_json('data.geojson')
+
+# interate over every row and get the station id from features.properties.id
+# then get the coordinates from features.geometry.coordinates
+# then check if the coordinates match the coordinates in df
+
+error_count = 0
+
+for i, row in tqdm(df2.iterrows()):
+    stationId = row['features']['properties']['id']
+    coordinates = row['features']['geometry']['coordinates']
+    coordinates = [coordinates[1], coordinates[0]]
+    df3 = df.loc[df['station_id'] == stationId]
+    if len(df3) == 0:
+        print(f'Error: {stationId} not found.')
+    elif len(df3) > 1:
+        print(f'Error: {stationId} found more than once.')
+    else:
+        if df3['latitude'].values[0] != coordinates[0] or df3['longitude'].values[0] != coordinates[1]:
+            print(f'Error: {stationId} coordinates do not match.')
+            # replace the coordinates in df2 with the coordinates from df
+            df2.at[i, 'features']['geometry']['coordinates'] = [df3['longitude'].values[0], df3['latitude'].values[0]]
+            error_count += 1
+
+# create a for loop to wrtie a file in the geojson format
+# {
+#     "type": "FeatureCollection",
+#     "features": [
+    # {
+    #         "type": "Feature",
+    #         "properties": {
+    #             "name": "ST JOHNS COOLIDGE FIELD, AC",
+    #             "id": "ACW00011604",
+    #             "elevation": 10.1,
+    #             "mindate": "1949-01-01",
+    #             "maxdate": "1949-08-14"
+    #         },
+    #         "geometry": {
+    #             "type": "Point",
+    #             "coordinates": [
+    #                 -61.78333,
+    #                 17.11667
+    #             ]
+    #         }
+    #     },
+
+with open('data2.geojson', 'w') as f:
+    f.write('{"type": "FeatureCollection", "features": [')
+    for i, row in tqdm(df2.iterrows()):
+        stationId = row['features']['properties']['id']
+        elevation = row['features']['properties']['elevation']
+        startYear = row['features']['properties']['mindate']
+        endYear = row['features']['properties']['maxdate']
+        coordinates = row['features']['geometry']['coordinates']
+        name = row['features']['properties']['name']
+        f.write('{"type": "Feature", "properties": {"name": "' + name + '", "id": "' + stationId + '", "elevation": ' + str(elevation) + ', "mindate": "' + startYear + '", "maxdate": "' + endYear + '"}, "geometry": {"type": "Point", "coordinates": [' + str(coordinates[0]) + ', ' + str(coordinates[1]) + ']}}')
+        if i != len(df2) - 1:
+            f.write(',')
+    f.write(']}')
+    
+print(f'Error count: {error_count}')
