@@ -16,6 +16,7 @@ const HistoryItem = ({ item, isEditMode }: HistoryItemProps) => {
   const router = useRouter();
   const t = router.locale === "en" ? en : de;
   const {
+    map,
     setHistory,
     setSearchResults,
     setLat,
@@ -54,6 +55,18 @@ const HistoryItem = ({ item, isEditMode }: HistoryItemProps) => {
             }),
         },
       });
+
+      if (map) {
+        var zoom = 8;
+        if (item.distance > 1000) {
+          zoom = 5;
+        } else if (item.distance > 500) {
+          zoom = 6;
+        } else if (item.distance > 100) {
+          zoom = 7;
+        }
+        map.flyTo([item.query[0], item.query[1]], zoom);
+      }
     } else if (item.type === "text") {
       setSearchResults(item.results);
       router.push({
