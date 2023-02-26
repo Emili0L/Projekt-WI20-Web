@@ -1,4 +1,3 @@
-import Ad from "./Ads";
 import BasicInfo from "./BasicInfo/BasicInfo";
 import styles from "./Sidebar.module.scss";
 import Tabbar from "./Tabbar/Tabbar";
@@ -10,7 +9,6 @@ const Sidebar = () => {
         <BasicInfo />
         <Tabbar />
       </aside>
-      <Ad />
     </>
   );
 };
