@@ -55,6 +55,7 @@ const Search = () => {
     setCountryCode,
     setEndYear,
     setHistory,
+    map,
   } = useMainContext();
 
   const [filterContainerOpen, setFilterContainerOpen] =
@@ -302,6 +303,30 @@ const Search = () => {
           },
         ] as HistoryItem[];
       });
+      if (map) {
+        // based on the distance, zoom to the correct level
+        var zoom = 8;
+        if (distance > 1000) {
+          zoom = 5;
+        } else if (distance > 500) {
+          zoom = 6;
+        } else if (distance > 100) {
+          zoom = 7;
+        }
+
+        map.flyTo([parseFloat(lat), parseFloat(lon)], zoom);
+      }
+      router.push(
+        {
+          pathname: pathArray[0],
+          query: {
+            ...router.query,
+            sp: true,
+          },
+        },
+        undefined,
+        { shallow: true }
+      );
     } catch (err) {
       console.error(err);
     }

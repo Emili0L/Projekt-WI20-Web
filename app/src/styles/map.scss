@@ -72,6 +72,16 @@
 	 stroke: #fff;
 	 stroke-width: 2px;
 	}
+
+	&.search {
+		#VividJS {
+			stroke: rgb(11, 11, 156);
+		}
+
+		#Shape {
+			fill: rgb(11, 11, 156);
+		}
+	}
 }
 .map-marker-wrapper {
     margin-left: -3px !important;

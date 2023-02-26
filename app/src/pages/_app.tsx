@@ -22,7 +22,7 @@ const MyApp = ({
 
   useEffect(() => {
     var userAgent = window.navigator.userAgent;
-    console.log(userAgent);
+
     // create a use Effect function to set the vh variable
     const setVh = () => {
       const vh = window.innerHeight * 0.01;

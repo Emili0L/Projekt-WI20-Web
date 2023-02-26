@@ -6,6 +6,7 @@ import {
   TileLayer,
   ZoomControl,
   Popup,
+  Circle,
 } from "react-leaflet";
 import { useMainContext } from "../Layout/Layout";
 import useSWR from "swr";
@@ -17,7 +18,10 @@ type Props = {
 
 const Map = memo(({ children }: Props) => {
   const router = useRouter();
-  const { setSelectedMarker, selectedMarker, map, setMap } = useMainContext();
+  const { pathArray: queryPaths } = router.query;
+  var pathArray = queryPaths as string[];
+  const { setSelectedMarker, selectedMarker, map, setMap, lat, lon, distance } =
+    useMainContext();
   const [bounds, setBounds] = useState(null);
   const [zoom, setZoom] = useState(6);
 
@@ -95,9 +99,10 @@ const Map = memo(({ children }: Props) => {
   let mapClassName = "map";
 
   const markerIcon = (id: string) => {
-    const svg = `<svg class="map-marker ${
-      selectedMarker && selectedMarker.id === id ? "selected" : ""
-    }" viewBox="-3.6 -3.6 43.20 43.20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" stroke="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <defs> </defs> <g id="VividJS" stroke-width="1.8719999999999999" fill="none" fill-rule="evenodd"> <g id="Vivid-Icons" transform="translate(-125.000000, -643.000000)"> <g id="Icons" transform="translate(37.000000, 169.000000)"> <g id="mm" transform="translate(78.000000, 468.000000)"> <g transform="translate(10.000000, 6.000000)"> <path d="M14,0 C21.732,0 28,5.641 28,12.6 C28,23.963 14,36 14,36 C14,36 0,24.064 0,12.6 C0,5.641 6.268,0 14,0 Z" id="Shape" fill="#FF6E6E"> </path> <circle id="Oval" fill="#0C0058" fill-rule="nonzero" cx="14" cy="14" r="7"> </circle> </g> </g> </g> </g> </g> </g></svg>`;
+    const svg = `<svg class="map-marker 
+    ${selectedMarker && selectedMarker.id === id ? "selected" : ""}
+    ${id === "search" ? "search" : ""}
+    " viewBox="-3.6 -3.6 43.20 43.20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" stroke="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <defs> </defs> <g id="VividJS" stroke-width="1.8719999999999999" fill="none" fill-rule="evenodd"> <g id="Vivid-Icons" transform="translate(-125.000000, -643.000000)"> <g id="Icons" transform="translate(37.000000, 169.000000)"> <g id="mm" transform="translate(78.000000, 468.000000)"> <g transform="translate(10.000000, 6.000000)"> <path d="M14,0 C21.732,0 28,5.641 28,12.6 C28,23.963 14,36 14,36 C14,36 0,24.064 0,12.6 C0,5.641 6.268,0 14,0 Z" id="Shape" fill="#FF6E6E"> </path> <circle id="Oval" fill="#0C0058" fill-rule="nonzero" cx="14" cy="14" r="7"> </circle> </g> </g> </g> </g> </g> </g></svg>`;
     return divIcon({
       html: svg,
       className: "map-marker-wrapper",
@@ -156,6 +161,26 @@ const Map = memo(({ children }: Props) => {
           </Marker>
         );
       })}
+
+      {pathArray &&
+        pathArray.includes("search") &&
+        lat &&
+        lon &&
+        distance &&
+        router.query?.sp && (
+          <>
+            <Marker
+              icon={markerIcon("search")}
+              key={`marker-search`}
+              position={[parseFloat(lat), parseFloat(lon)]}
+            />
+            <Circle
+              center={[parseFloat(lat), parseFloat(lon)]}
+              radius={distance * 1000}
+            />
+          </>
+        )}
+
       <ZoomControl position={"bottomright"} />
       {children}
     </MapContainer>
