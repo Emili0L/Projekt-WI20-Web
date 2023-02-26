@@ -20,8 +20,16 @@ const Map = memo(({ children }: Props) => {
   const router = useRouter();
   const { pathArray: queryPaths } = router.query;
   var pathArray = queryPaths as string[];
-  const { setSelectedMarker, selectedMarker, map, setMap, lat, lon, distance } =
-    useMainContext();
+  const {
+    setSelectedMarker,
+    selectedMarker,
+    map,
+    setMap,
+    lat,
+    lon,
+    distance,
+    searchResults,
+  } = useMainContext();
   const [bounds, setBounds] = useState(null);
   const [zoom, setZoom] = useState(6);
 
@@ -162,12 +170,13 @@ const Map = memo(({ children }: Props) => {
         );
       })}
 
-      {pathArray &&
-        pathArray.includes("search") &&
+      {router.query.lat &&
+        router.query.lon &&
         lat &&
         lon &&
         distance &&
-        router.query?.sp && (
+        searchResults !== null &&
+        searchResults !== undefined && (
           <>
             <Marker
               icon={markerIcon("search")}
