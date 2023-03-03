@@ -1,4 +1,10 @@
 const t = {
+  title: {
+    search: "Suche nach GHCND Stationen",
+    favorites: "Deine Favoriten",
+    history: "Dein Such-Verlauf",
+    settings: "Einstellungen",
+  },
   tabbar: {
     explore: "Entdecken",
     search: "Suche",

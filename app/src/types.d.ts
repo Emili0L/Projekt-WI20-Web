@@ -4,7 +4,6 @@ import { DefaultSession } from "next-auth";
 import { SearchResult } from "./interfaces";
 
 declare global {
-  // declare ts types here
   type ExtendedNextPage<P = {}> = NextPage<P> & {
     layout?: any;
     auth?: {
@@ -82,17 +81,6 @@ declare global {
     timestamp: number;
     results: SearchResult[];
   };
-}
-
-declare module "next-auth" {
-  /**
-   * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
-   */
-  interface Session {
-    user: {
-      // your cutom props
-    } & DefaultSession["user"];
-  }
 }
 
 export {};

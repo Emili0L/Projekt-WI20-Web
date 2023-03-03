@@ -5,6 +5,7 @@ import {
   useEffect,
   createContext,
   useContext,
+  useMemo,
 } from "react";
 import Head from "next/head";
 import { LoadingIndicator } from "../../components/LoadingIndicator";
@@ -16,6 +17,8 @@ import { Map } from "..";
 import { SearchResult } from "../../interfaces";
 import { useLocalStorage } from "../../hooks";
 import useSWRImmutable from "swr/immutable";
+import en from "../../locales/en";
+import de from "../../locales/de";
 
 type Props = {
   title?: string;
@@ -98,10 +101,11 @@ const environment = () => {
   return isStaging ? "Staging" : isLocal ? "Localhost" : null;
 };
 
-const Layout: FC<Props> = ({ children, title }) => {
+const Layout: FC<Props> = ({ children }) => {
   const env = environment();
   const suffix = env ? ` - ${env}` : "";
   const router = useRouter();
+  const t = router.locale === "de" ? de : en;
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
@@ -182,6 +186,23 @@ const Layout: FC<Props> = ({ children, title }) => {
     }
   }, [router.asPath]);
 
+  const title = useMemo(() => {
+    switch (router.asPath.split("?")[0]) {
+      case "/search":
+        return t.title.search;
+      case "/history":
+        return t.title.history;
+      case "/favorites":
+        return t.title.favorites;
+      case "/settings":
+        return t.title.settings;
+      default:
+      case "/":
+      case "/explore":
+        return "GHCND Station Explorer";
+    }
+  }, [router.asPath]);
+
   return (
     <>
       <noscript>
@@ -205,7 +226,7 @@ const Layout: FC<Props> = ({ children, title }) => {
           <meta name="author" content="Sven Huepers" />
           <meta
             name="keywords"
-            content="GHCND, Station, Explorer, Weather, Temperature, Climate"
+            content="GHCND, Station, Explorer, Weather, Temperature, Climate, Search"
           />
           <meta name="robots" content="index, follow" />
           <meta name="googlebot" content="index, follow" />
@@ -225,7 +246,7 @@ const Layout: FC<Props> = ({ children, title }) => {
           <meta property="og:title" content="GHCND Station Explorer" />
           <meta
             property="og:description"
-            content="Explore GHCND weather stations"
+            content="Explore and search for GHCND weather stations"
           />
         </Head>
         <div className="flex h-full relative overflow-hidden z-0">

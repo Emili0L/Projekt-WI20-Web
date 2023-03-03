@@ -16,6 +16,12 @@ function handle(req: NextApiRequest, res: NextApiResponse) {
   var { bounds, zoom } = req.query;
   bounds = bounds as string;
 
+  Object.entries({ bounds, zoom }).forEach(([key, value]) => {
+    if (value === undefined) {
+      res.status(400).json({ error: `${key} is undefined` });
+    }
+  });
+
   // Parse the bounds string to an array of numbers
   const parsedBounds = bounds.split(",").map(Number);
   const zoomLevel = Number(zoom);

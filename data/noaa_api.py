@@ -5,7 +5,7 @@ import pandas as pd
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-# TOKEN = "WHoafMPysedYUsuguWaAPMXYLwBIrzjC"
+# TOKEN = "YOUR_TOKEN_HERE"
 
 # # Page from 0 to 39
 # def get_data(page):

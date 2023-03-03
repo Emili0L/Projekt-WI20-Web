@@ -18,21 +18,6 @@ services:
       - default
       - ghcnd
 
-  mongodb-service-ghcnd:
-    image: mongo:latest
-    container_name: mongodb-ghcnd
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
-      MONGO_INITDB_DATABASE: ghcnd
-    volumes:
-      - ./data:/data/db
-    ports:
-      - "27017:27017"
-    networks:
-      - default
-      - ghcnd
-
 networks:
   ghcnd:
     name: ghcnd

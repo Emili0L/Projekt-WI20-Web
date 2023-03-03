@@ -132,7 +132,13 @@ const Map = memo(({ children }: Props) => {
       className={mapClassName}
       center={[53.559196, 9.994773]}
       zoom={6}
+      minZoom={3}
       scrollWheelZoom={true}
+      maxBoundsViscosity={1.0}
+      maxBounds={[
+        [-90, -180],
+        [90, 180],
+      ]}
       ref={setMap}
       preferCanvas
     >
