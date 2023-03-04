@@ -60,11 +60,15 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
         }
       );
 
-      const data = await response.json();
+      if (response.ok) {
+        const data = await response.json();
 
-      cache.set(url, data);
+        cache.set(url, data);
 
-      return res.status(200).json(data);
+        return res.status(200).json(data);
+      } else {
+        return res.status(response.status).json(await response.json());
+      }
     }
 
     if (year) {
@@ -79,11 +83,15 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
         }
       );
 
-      const data = await response.json();
+      if (response.ok) {
+        const data = await response.json();
 
-      cache.set(url, data);
+        cache.set(url, data);
 
-      return res.status(200).json(data);
+        return res.status(200).json(data);
+      } else {
+        return res.status(response.status).json(await response.json());
+      }
     }
 
     const response = await fetch(
@@ -97,11 +105,15 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
       }
     );
 
-    const data = await response.json();
+    if (response.ok) {
+      const data = await response.json();
 
-    cache.set(url, data);
+      cache.set(url, data);
 
-    return res.status(200).json(data);
+      return res.status(200).json(data);
+    } else {
+      return res.status(response.status).json(await response.json());
+    }
   } catch (e) {
     res.status(500).json({ message: e.message });
   }

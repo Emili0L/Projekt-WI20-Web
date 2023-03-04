@@ -150,21 +150,21 @@ const BasicDialog = memo(
     );
 
     const title = React.useMemo(() => {
-      if (selectedMarker === null) return "Loading...";
+      if (selectedMarker === null) return " - Loading...";
       var rightSide = "";
       if (currentView === "all" && data?.length > 0) {
-        rightSide = `(${data[0].year} - ${data[data.length - 1].year})`;
+        rightSide = ` - (${data[0].year} - ${data[data.length - 1].year})`;
       } else if (currentView === "year") {
-        rightSide = `${selectedYear}`;
+        rightSide = ` - ${selectedYear}`;
       } else if (currentView === "month") {
         const month = new Date(
           selectedYear,
           selectedMonth - 1,
           1
         ).toLocaleString(router.locale, { month: "long" });
-        rightSide = `${month} ${selectedYear}`;
+        rightSide = ` - ${month} ${selectedYear}`;
       }
-      return `${selectedMarker.name} - ${rightSide}`;
+      return `${selectedMarker.name}${rightSide}`;
     }, [currentView, selectedMarker, data]);
 
     return (
