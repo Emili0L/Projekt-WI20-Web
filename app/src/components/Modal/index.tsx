@@ -138,11 +138,15 @@ const BasicDialog = memo(
     const [data, setData] = React.useState<ChartData[]>([]);
     const [shouldReset, setShouldReset] = React.useState<boolean>(false);
 
-    const { isValidating } = useSWR(
+    const { isValidating, error } = useSWR(
       selectedMarker !== null && `/api/station/${selectedMarker.id}`,
       {
         onSuccess: (data) => {
           setData(data.data);
+          setLoading(false);
+        },
+        onError: (error) => {
+          setData(null);
           setLoading(false);
         },
         revalidateOnFocus: false,
@@ -217,6 +221,12 @@ const BasicDialog = memo(
                 {!isValidating && data?.length === 0 && (
                   <div className="flex justify-center items-center h-[20rem] w-full">
                     <p>{t.no_data}</p>
+                  </div>
+                )}
+                {!isValidating && error && (
+                  <div className="flex justify-center items-center h-[20rem] w-full">
+                    {/* <p>{t.error}</p> */}
+                    <p className="text-red-500">{error.message}</p>
                   </div>
                 )}
               </div>
