@@ -1,0 +1,30 @@
+name: Build Next.js create SBOM
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    name: Install and build javascript
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+      - run: npm install
+      - name: Create SBOM with CycloneDX
+        uses: CycloneDX/gh-node-module-generatebom@v1
+        with: 
+          path: './app'
+          output: './sbom.json'
+      - uses: actions/upload-artifact@v3
+        with:
+          name: sbom
+          path: sbom.json
