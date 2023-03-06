@@ -1,25 +1,59 @@
 import json
 import pandas as pd
+from urllib.error import HTTPError
 
 
-# import time
+# set the default timeout for urllib to 5 seconds
+import socket
+socket.setdefaulttimeout(5)
 
 
-def lambda_handler(event, context):
-    station_id = event["queryStringParameters"]["stationID"]
-    year = event["queryStringParameters"].get("year")
-    month = event["queryStringParameters"].get("month")
+def lambda_handler(event: dict, context: dict) -> dict:
+    """
+    Lambda handler for getting and calculating the temperature data from the NOAA API.
+    This API is used to retrieve the yearly, monthly average temperature for a given stationId.
+    :param event: The event dict passed in by the AWS Lambda
+    :param context: The context dict passed in by the AWS Lambda
+    :return: A dict containing the response to the API call
+    """
+    try:
+        station_id = event["queryStringParameters"]["stationID"]
+        year = event["queryStringParameters"].get("year")
+        month = event["queryStringParameters"].get("month")
+    except KeyError as e:
+        return {
+            "statusCode": 400,
+            "body": "Missing parameter: " + str(e)
+        }
+    except Exception as e:
+        return {
+            "statusCode": 500,
+            "body": "Internal server error: " + str(e)
+        }
 
-    # t0 = time.time()
-
-    df = pd.read_csv(f"https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_station/{station_id}.csv.gz", header=None,
+    try:
+        df = pd.read_csv(f"https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_station/{station_id}.csv.gz", header=None,
                      index_col=0, usecols=[1, 2, 3],
                      names=['DATE',
                             'ELEMENT',
                             'DATA VALUE'],
                      parse_dates=['DATE'])
+    except HTTPError as e:
+        return {
+            "statusCode": 404,
+            "body": "Station not found: " + str(e)
+        }
+    except TimeoutError as e:
+        return {
+            "statusCode": 504,
+            "body": "Timeout: " + str(e)
+        }
+    except Exception as e:
+        return {
+            "statusCode": 504,
+            "body": "Internal server error: " + str(e)
+        }
 
-    # t1 = time.time()
 
     if station_id and not year and not month:
         df_tmax = df[df['ELEMENT'] == 'TMAX']  # filter for TMAX element
@@ -72,15 +106,8 @@ def lambda_handler(event, context):
             "data": []
         }
 
-        # given_years = result_df.index.values.tolist()
-
         # get all relevant years
-        given_years_max = yearly_averages_tmax.index.values.tolist()
-        given_years_min = yearly_averages_tmin.index.values.tolist()
-        set1 = set(given_years_max)
-        set2 = set(given_years_min)
-        union_set = set1.union(set2)
-        given_years = list(union_set)
+        given_years = list(set(yearly_averages_tmax.index.values.tolist()).union(set(yearly_averages_tmin.index.values.tolist())))
 
         start_year = given_years[0]
         end_year = given_years[-1]
@@ -94,63 +121,43 @@ def lambda_handler(event, context):
                 dict_years[y] = False
 
         for y in dict_years:
-            if dict_years[y] == False:
-                tmax = None
-                tmin = None
-                tmax_summer = None
-                tmin_summer = None
-                tmax_winter = None
-                tmin_winter = None
-                tmax_autumn = None
-                tmin_autumn = None
-                tmax_spring = None
-                tmin_spring = None
-            else:
-                tmax = result_df.loc[[y]].values.flatten().tolist()[0]
-                tmin = result_df.loc[[y]].values.flatten().tolist()[1]
-                tmax_summer = result_df.loc[[y]].values.flatten().tolist()[2]
-                tmin_summer = result_df.loc[[y]].values.flatten().tolist()[3]
-                tmax_winter = result_df.loc[[y]].values.flatten().tolist()[4]
-                tmin_winter = result_df.loc[[y]].values.flatten().tolist()[5]
-                tmax_autumn = result_df.loc[[y]].values.flatten().tolist()[6]
-                tmin_autumn = result_df.loc[[y]].values.flatten().tolist()[7]
-                tmax_spring = result_df.loc[[y]].values.flatten().tolist()[8]
-                tmin_spring = result_df.loc[[y]].values.flatten().tolist()[9]
-
-                if tmax == "":
-                    tmax = None
-                if tmin == "":
-                    tmin = None
-                if tmax_summer == "":
-                    tmax_summer = None
-                if tmin_summer == "":
-                    tmin_summer = None
-                if tmax_winter == "":
-                    tmax_winter = None
-                if tmin_winter == "":
-                    tmin_winter = None
-                if tmax_autumn == "":
-                    tmax_autumn = None
-                if tmin_autumn == "":
-                    tmin_autumn = None
-                if tmax_spring == "":
-                    tmax_spring = None
-                if tmin_spring == "":
-                    tmin_spring = None
-
             data = {
                 "year": y,
-                "tmin": tmin,
-                "tmax": tmax,
-                "tmax_summer": tmax_summer,
-                "tmin_summer": tmin_summer,
-                "tmax_winter": tmax_winter,
-                "tmin_winter": tmin_winter,
-                "tmax_autumn": tmax_autumn,
-                "tmin_autumn": tmin_autumn,
-                "tmax_spring": tmax_spring,
-                "tmin_spring": tmin_spring
+                "tmin": None,
+                "tmax": None,
+                "tmax_summer": None,
+                "tmin_summer": None,
+                "tmax_winter": None,
+                "tmin_winter": None,
+                "tmax_autumn": None,
+                "tmin_autumn": None,
+                "tmax_spring": None,
+                "tmin_spring": None
             }
+            if dict_years[y] != False:
+                data_list = result_df.loc[[y]].values.flatten().tolist()
+                for i in range(len(data_list)):
+                    if not data_list[i] == '':
+                        if i == 0:
+                            data["tmax"] = data_list[i]
+                        elif i == 1:
+                            data["tmin"] = data_list[i]
+                        elif i == 2:
+                            data["tmax_summer"] = data_list[i]
+                        elif i == 3:
+                            data["tmin_summer"] = data_list[i]
+                        elif i == 4:
+                            data["tmax_winter"] = data_list[i]
+                        elif i == 5:
+                            data["tmin_winter"] = data_list[i]
+                        elif i == 6:
+                            data["tmax_autumn"] = data_list[i]
+                        elif i == 7:
+                            data["tmin_autumn"] = data_list[i]
+                        elif i == 8:
+                            data["tmax_spring"] = data_list[i]
+                        elif i == 9:
+                            data["tmin_spring"] = data_list[i]
             final_result["data"].append(data)
 
     if station_id and year and not month:
@@ -221,15 +228,27 @@ def lambda_handler(event, context):
             }
             final_result["data"].append(data)
 
-    # t2 = time.time()
-
-    # time_download = t1-t0
-    # time_calc = t2-t1
-    # print(time_download)
-    # print(time_calc)
-    # print(f"Download: {time_download}. Calc: {time_calc})
-
     return {
         'statusCode': 200,
         'body': json.dumps(final_result)
     }
+
+if __name__ == '__main__':
+    import warnings
+    warnings.filterwarnings("ignore")
+    pd.options.mode.chained_assignment = None
+    import cProfile
+    import pstats
+    pr = cProfile.Profile()
+    pr.enable()
+    lambda_handler({
+        "queryStringParameters": {
+            "stationID": "USW00014732",
+            # "year": "2018",
+            # "month": "1"
+        }
+    }, None)
+    pr.disable()
+    sortby = 'tottime'
+    ps = pstats.Stats(pr).sort_stats(sortby)
+    ps.print_stats()
