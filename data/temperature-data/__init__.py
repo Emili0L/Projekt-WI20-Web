@@ -140,6 +140,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         # get all relevant years
         given_years = list(set(yearly_averages_tmax.index.values.tolist()).union(
             set(yearly_averages_tmin.index.values.tolist())))
+        
+        # sort the years
+        given_years.sort()
 
         start_year = given_years[0]
         end_year = given_years[-1]
