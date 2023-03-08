@@ -33,7 +33,9 @@ const Map = memo(({ children }: Props) => {
   const [bounds, setBounds] = useState(null);
   const [zoom, setZoom] = useState(6);
 
-  const { data } = useSWR("/api/markers?bounds=" + bounds + "&zoom=" + zoom);
+  const { data } = useSWR(
+    bounds !== null && "/api/markers?bounds=" + bounds + "&zoom=" + zoom
+  );
 
   function createClusterIcon(feature, latlng) {
     if (!feature.properties.cluster) return L.marker(latlng);

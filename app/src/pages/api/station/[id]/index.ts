@@ -64,7 +64,7 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
         const data = await response.json();
 
         cache.set(url, data);
-
+        res.setHeader("Cache-Control", "max-age=0, s-maxage=86400");
         return res.status(200).json(data);
       } else {
         return res.status(response.status).json(await response.json());
@@ -87,7 +87,7 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
         const data = await response.json();
 
         cache.set(url, data);
-
+        res.setHeader("Cache-Control", "max-age=0, s-maxage=86400");
         return res.status(200).json(data);
       } else {
         return res.status(response.status).json(await response.json());
@@ -109,7 +109,7 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
       const data = await response.json();
 
       cache.set(url, data);
-
+      res.setHeader("Cache-Control", "max-age=0, s-maxage=86400");
       return res.status(200).json(data);
     } else {
       return res.status(response.status).json(await response.json());
