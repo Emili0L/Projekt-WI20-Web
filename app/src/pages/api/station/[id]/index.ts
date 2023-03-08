@@ -50,12 +50,11 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
   try {
     if (year && month) {
       const response = await fetch(
-        `${process.env.AWS_LAMBDA_URL}?stationID=${stationId}&year=${year}&month=${month}`,
+        `${process.env.AWS_LAMBDA_URL}?stationID=${stationId}&year=${year}&month=${month}&code=${process.env.AWS_LAMBDA_API_KEY}`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "x-api-key": process.env.AWS_LAMBDA_API_KEY,
           },
         }
       );
@@ -73,12 +72,11 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
 
     if (year) {
       const response = await fetch(
-        `${process.env.AWS_LAMBDA_URL}?stationID=${stationId}&year=${year}`,
+        `${process.env.AWS_LAMBDA_URL}?stationID=${stationId}&year=${year}&code=${process.env.AWS_LAMBDA_API_KEY}`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "x-api-key": process.env.AWS_LAMBDA_API_KEY,
           },
         }
       );
@@ -95,12 +93,11 @@ async function handle(req: NextApiRequest, res: NextApiResponse) {
     }
 
     const response = await fetch(
-      `${process.env.AWS_LAMBDA_URL}?stationID=${stationId}`,
+      `${process.env.AWS_LAMBDA_URL}?stationID=${stationId}&code=${process.env.AWS_LAMBDA_API_KEY}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": process.env.AWS_LAMBDA_API_KEY,
         },
       }
     );
