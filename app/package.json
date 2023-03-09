@@ -14,7 +14,7 @@
     "@emotion/styled": "^11.10.5",
     "@mdi/js": "^7.1.96",
     "@mdi/react": "^1.6.1",
-    "@mui/material": "^5.11.4",
+    "@mui/material": "^5.11.9",
     "@sentry/nextjs": "^7.37.1",
     "@tailwindcss/line-clamp": "^0.4.2",
     "@types/leaflet": "^1.7.11",
