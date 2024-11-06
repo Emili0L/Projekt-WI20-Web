@@ -27,7 +27,7 @@
     "leaflet": "^1.8.0",
     "ml-regression": "^5.0.0",
     "next": "13.0.1",
-    "next-superjson": "^0.0.4",
+    "next-superjson": "^1.0.0",
     "next-themes": "^0.2.1",
     "node-cache": "^5.1.2",
     "react": "18.2.0",
