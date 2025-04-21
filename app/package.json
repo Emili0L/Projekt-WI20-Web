@@ -9,7 +9,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@elastic/elasticsearch": "^8.6.0",
+    "@elastic/elasticsearch": "^9.0.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mdi/js": "^7.1.96",
